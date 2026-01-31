@@ -9,6 +9,8 @@
 # include <iostream>
 # include <sstream>
 
+std::string		code_to_string(short code);
+
 //SOCKET
 # define DEFAULT_PROTOCOL	0
 # define IPV4				AF_INET
@@ -37,6 +39,14 @@
 # define RPL_CREATED_STR		"This server was created <timestamp>"
 # define RPL_MYINFO_STR(nick)	std::string(nick) + SERVER_NAME VERSION " 0 " CMODES
 # define RPL_ISUPPORT_STR		""
+
+class User
+{
+};
+
+class Channel
+{
+};
 
 //server:
 //	- channels:
