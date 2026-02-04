@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/02 21:23:27 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/04 01:10:02 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,35 +19,21 @@
 class Client
 {
     private:
-        int			_fd;
-        bool		 _registered;
-        bool		_isOperator;
-        bool		_passed;
-        std::string	_nickname;
-        std::string	_username;
-        std::string	_realname;
-        std::string	_hostname;
-        std::string	_buffer;
+        int			fd;
+        std::string	nick;
+        std::string	realname;
+        std::string	buffer;
 
     public:
+		Client(void);
         Client(int fd);
+		Client(Client const &copy);
+		Client &operator=(Client const &copy);
         ~Client(void);
 
-        int getFd(void) const;
-        const std::string& getNick(void) const;
-        const std::string& getUser(void) const;
-        bool isRegistered(void) const;
-        bool isOperator(void) const;
-        bool isPassed(void) const;
-
-        void setNick(const std::string& n);
-        void setUser(const std::string& u);
-        void setReal(const std::string& r);
-        void setRegistered(bool v);
-        void setOperator(bool v);
-        void setPassed(bool v);
-
-        void appendBuffer(const std::string& data);
-        bool hasLine(void) const;
-        std::string popLine(void);
+        const int			&getFd(void) const;
+        const std::string&	getNick(void) const;
+		void				setNick(std::string const &nick);
+        const std::string&	getName(void) const;
+		void				setName(std::string const &name);
 };

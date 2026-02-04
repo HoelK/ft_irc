@@ -1,6 +1,6 @@
 CC=c++
 FLAGS=-Werror -Wall -Wextra -g3
-SRCS=main.cpp
+SRCS=main.cpp Server.cpp Client.cpp Channel.cpp RPL.cpp MSG.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 
@@ -11,17 +11,17 @@ all: start $(NAME)
 start:
 	@echo "\e[1;33m===============FT_IRC==============="
 
-$(NAME): $(OBJS) $(HEADER)
-	@echo "\e[1;32m [LIBFT] Building ..."
+$(NAME): $(OBJS)
+	@echo "\e[1;32m [FT_IRC] Building ..."
 	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-	@echo "\e[1;32m [LIBFT] Build Complete !"
+	@echo "\e[1;32m [FT_IRC] Build Complete !"
 
-%.o: %.c
-	@echo "\e[1;32m [LIBFT] Compiling $^"
+%.o: %.cpp
+	@echo "\e[1;32m [FT_IRC] Compiling $^"
 	@$(CC) $(FLAGS) $^ -c -o $@
 
 fclean: clean
-	@echo "\e[1;31m [DELETING LIBRARY]"
+	@echo "\e[1;31m [DELETING EXECUTABLE]"
 	@rm -f $(NAME)
 
 clean:
