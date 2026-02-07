@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 18:28:19 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 20:26:04 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,17 @@ void	Server::acceptMessage(Client &client)
 			break ;
 		while (!buffer.empty())
 		{
-			line = Ft::extractLine(buffer);
+			line = client.getBuffer() + Ft::extractLine(buffer);
+			client.setBuffer("");
+			this->clients_i[client.getId()].setBuffer("");
+			this->clients_s[client.getName()].setBuffer("");
+			if (!Ft::endsWithCRLF(line))
+			{
+				client.setBuffer(line);
+				this->clients_i[client.getId()].setBuffer(line);
+				this->clients_s[client.getName()].setBuffer(line);
+				return ;
+			}
 			MSG::sendData(&client, line);
 			CMD::apply();
 			RPL::reply();
@@ -112,7 +122,17 @@ void	Server::authenticate(Client &client)
 		return ;
 	while (!buffer.empty())
 	{
-		line = Ft::extractLine(buffer);
+		line = client.getBuffer() + Ft::extractLine(buffer);
+		client.setBuffer("");
+		this->clients_i[client.getId()].setBuffer("");
+		this->clients_s[client.getName()].setBuffer("");
+		if (!Ft::endsWithCRLF(line))
+		{
+			client.setBuffer(line);
+			this->clients_i[client.getId()].setBuffer(line);
+			this->clients_s[client.getName()].setBuffer(line);
+			return ;
+		}
 		MSG::sendData(&client, line);
 		CMD::apply();
 	}

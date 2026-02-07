@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:06 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 16:29:06 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 20:05:17 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 
 namespace Ft
 {
-	std::string extractLine(std::string &buffer);
 	std::string	getFdContent(const int fd);
+	std::string extractLine(std::string &buffer);
+	bool		endsWithCRLF(const std::string& s);
 }
 
