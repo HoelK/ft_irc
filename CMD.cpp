@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CMD.cpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
+/*   Updated: 2026/02/07 18:26:37 by hkeromne         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "CMD.hpp"
 
 static std::map<std::string, void (*)()> cmds = {
 	{CMD_NICK, &CMD::Nick},
-	{CMD_USER, &CMD::User}
+	{CMD_USER, &CMD::User},
+	{CMD_PASS, &CMD::Pass}
 };
 
 void	CMD::apply(void)
@@ -15,6 +28,7 @@ void	CMD::apply(void)
 	it->second();
 }
 
+void	CMD::Pass(void) { package.client->setPass(package.data[PASS_PASS]); };
 void	CMD::Nick(void) { package.client->setNick(package.data[NICK_NICK]); };
 void	CMD::User(void)
 {

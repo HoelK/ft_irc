@@ -1,13 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Ft.cpp                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
+/*   Updated: 2026/02/07 18:42:31 by hkeromne         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "Ft.hpp"
 # include <iostream>
 
 std::string Ft::extractLine(std::string &buffer)
 {
 	std::string	line;
-	char		sep = '\n';
+	std::string	sep = "\n";
 
-	if (!buffer.find(sep) || buffer.empty())
-		sep = 0;
+	if (buffer.empty())
+		return ("");
+	if (buffer.find(sep) == std::string::npos)
+		sep = "\0";
 	line = buffer.substr(0, buffer.find(sep));
 	buffer.erase(0, buffer.find(sep) + 1);
 

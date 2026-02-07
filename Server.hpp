@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 02:21:09 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 17:56:45 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <string>
 # include <poll.h>
 # include <fcntl.h>
+# include <unistd.h>
 # include <sstream>
 # include <iostream>
 # include <sys/types.h>
@@ -57,10 +58,13 @@ class Server
 		void	kill(void);
 		bool	init(void);
 
-		void									acceptClient(void);
-		bool									disconnectClient(std::string const &name, const int &id);
-		std::map<std::string, Client>::iterator	getClient(std::string const &name);
-		std::map<int, Client>::iterator	getClient(int const &id);
+		void										addPollFd(const int &fd);
+		void										authenticate(Client &client);
+
+		void										acceptClient(void);
+		bool										disconnectClient(std::string const &name, const int &id);
+		std::map<std::string, Client>::iterator		getClient(std::string const &name);
+		std::map<int, Client>::iterator				getClient(int const &id);
 
 		void										createChannel(std::string const &name, Channel &channel);
 		bool										deleteChannel(std::string const &name);

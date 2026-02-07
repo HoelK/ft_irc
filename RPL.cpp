@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   RPL.cpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
+/*   Updated: 2026/02/07 18:00:39 by hkeromne         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "RPL.hpp"
 
 std::string		RPL::getMessage(short code, std::string nick)
@@ -13,7 +25,7 @@ std::string		RPL::getMessage(short code, std::string nick)
 	else if (code == RPL_ISUPPORT)
 		return (RPL_ISUPPORT_STR);
 	else if (code == RPL_NICK)
-		return (RPL_NICK_STR(package.oldClient.getNick(), package.client->getNick(), package.client->getNick()));
+		return (RPL_NICK_STR(package.oldClient.getNick(), package.client->getNick(), package.client->getUser()));
 
 	return ("");
 }
@@ -71,8 +83,9 @@ static short	cmdToCode(std::string const &cmd)
 
 void RPL::reply(void)
 {
-	std::string sent_message = RPL::getMessage(::cmdToCode(package.cmd), package.client->getNick()) + "\r\n";
+	std::string sent_message = RPL::getMessage(::cmdToCode(package.cmd), package.client->getNick())
+	+ "\r\n";
 
-	std::cout << sent_message;
+	std::cout << "REPLY : " << sent_message;
 	send(package.client->getFd(), sent_message.c_str(), sent_message.size(), 0);
 }

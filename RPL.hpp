@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 03:17:44 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 16:37:11 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@
 
 # define RPL_HEADER(code, nick)	":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " :"
 
-# define RPL_WELCOME_STR(nick)		"Welcome to " NETWORK_NAME ", " + std::string(nick)
-# define RPL_YOURHOST_STR			"Your host is " SERVER_NAME ", running version " VERSION
-# define RPL_CREATED_STR			"This server was created <timestamp>"
-# define RPL_MYINFO_STR(nick)		std::string(nick) + " " + SERVER_NAME + " " + VERSION " 0 " CMODES
-# define RPL_ISUPPORT_STR			""
+# define RPL_WELCOME_STR(nick)				"Welcome to " NETWORK_NAME ", " + std::string(nick)
+# define RPL_YOURHOST_STR					"Your host is " SERVER_NAME ", running version " VERSION
+# define RPL_CREATED_STR					"This server was created <timestamp>"
+# define RPL_MYINFO_STR(nick)				std::string(nick) + " " + SERVER_NAME + " " + VERSION " 0 " CMODES
+# define RPL_ISUPPORT_STR					""
+
 # define RPL_NICK_STR(oldnick, nick, user)	":" + std::string(oldnick) + "!" + std::string(user) + "@" SERVER_NAME " NICK :" + std::string(nick)
+
 
 //RPL MESSAGES
 enum RPL_ID

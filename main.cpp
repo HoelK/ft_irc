@@ -1,34 +1,16 @@
-# include <arpa/inet.h>
-# include <poll.h>
-# include <netinet/in.h>
-# include <unistd.h>
-# include <cstring>
-# include <cstdio>
-# include <cstdlib>
-# include <iostream>
-# include <sstream>
-# include <sys/types.h>
-# include <sys/socket.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/07 16:26:31 by hkeromne          #+#    #+#             */
+/*   Updated: 2026/02/07 16:26:54 by hkeromne         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "Server.hpp"
-
-std::string		code_to_string(short code);
-
-// SERVER
-# define VERSION "1.0"
-# define CMODES "itkol"
-# define SERVER_NAME "ft.irc"
-# define NETWORK_NAME "CACA"
-
-//RPL MESSAGES
-# define RPL_WELCOME	1
-# define RPL_YOURHOST	2
-# define RPL_CREATED	3
-# define RPL_MYINFO		4
-# define RPL_ISUPPORT	5
-
-void	acceptClient()
-{
-}
 
 bool	argCheck(int ac, char **av)
 {
