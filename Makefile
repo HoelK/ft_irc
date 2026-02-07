@@ -1,6 +1,14 @@
 CC=c++
 FLAGS=-Werror -Wall -Wextra -g3
-SRCS=main.cpp Server.cpp Client.cpp Channel.cpp RPL.cpp MSG.cpp CMD.cpp Package.cpp Ft.cpp
+SRCS=srcs/main.cpp \
+	 srcs/Server.cpp \
+	 srcs/Client.cpp \
+	 srcs/Channel.cpp \
+	 srcs/RPL.cpp \
+	 srcs/MSG.cpp \
+	 srcs/CMD.cpp \
+	 srcs/Package.cpp \
+	 srcs/Ft.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 
@@ -18,7 +26,7 @@ $(NAME): $(OBJS)
 
 %.o: %.cpp
 	@echo "\e[1;32m [FT_IRC] Compiling $^"
-	@$(CC) $(FLAGS) $^ -c -o $@
+	@$(CC) $(FLAGS) $^ -c -o $@ -I./headers/
 
 fclean: clean
 	@echo "\e[1;31m [DELETING EXECUTABLE]"
