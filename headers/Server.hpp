@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 17:56:45 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 22:17:18 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
-# define MAX_CLIENT			1024
 # define DEFAULT_PROTOCOL	0
 # define IPV4				AF_INET
 # define PORT				htons(this->port)
@@ -47,9 +46,7 @@ class Server
 		std::map<int, Client>				clients_i;
 		std::map<std::string, Client>		clients_s;
 		std::map<std::string, Channel>		channels;
-		struct pollfd						fds[MAX_CLIENT];
-		nfds_t								nfds;
-
+		std::vector<struct pollfd>			fds;
 	
 	public:
 		Server(std::string password, int port);

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 18:26:37 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 22:00:11 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 static std::map<std::string, void (*)()> cmds = {
 	{CMD_NICK, &CMD::Nick},
 	{CMD_USER, &CMD::User},
-	{CMD_PASS, &CMD::Pass}
+	{CMD_PASS, &CMD::Pass},
+	{CMD_QUIT, &CMD::Quit}
 };
 
 void	CMD::apply(void)
@@ -30,6 +31,7 @@ void	CMD::apply(void)
 
 void	CMD::Pass(void) { package.client->setPass(package.data[PASS_PASS]); };
 void	CMD::Nick(void) { package.client->setNick(package.data[NICK_NICK]); };
+void	CMD::Quit(void) { package.quit = true; package.quit_message = package.data[QUIT_REASON]; };
 void	CMD::User(void)
 {
 	package.client->setUser(package.data[USER_USERNAME]);

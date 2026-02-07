@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 16:37:11 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 21:36:44 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define RPL_ISUPPORT_STR					""
 
 # define RPL_NICK_STR(oldnick, nick, user)	":" + std::string(oldnick) + "!" + std::string(user) + "@" SERVER_NAME " NICK :" + std::string(nick)
+# define RPL_QUIT_STR(nick, user, reason)	":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " QUIT :" + std::string(reason)
 
 
 //RPL MESSAGES
@@ -44,7 +45,8 @@ enum RPL_ID
 	RPL_ISUPPORT,
 	RPL_PONG,
 	RPL_NICK,
-	RPL_USER
+	RPL_USER,
+	RPL_QUIT
 };
 
 class RPL

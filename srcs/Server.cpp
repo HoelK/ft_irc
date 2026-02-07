@@ -6,25 +6,19 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 20:26:04 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 22:23:53 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
 
 Server::~Server(void) {};
-Server::Server(std::string password, int port): fd(0), port(port), password(password), nfds(0) {};
-
-void	Server::addPollFd(const int &fd)
-{
-	this->fds[nfds].fd = fd;
-	this->fds[nfds].events = POLLIN;
-	this->fds[nfds].revents = 0;
-	this->nfds++;
-}
+Server::Server(std::string password, int port): fd(0), port(port), password(password) {};
 
 bool	Server::init(void)
 {
+	struct pollfd	p;
+
 	this->fd = socket(IPV4, SOCK_STREAM, DEFAULT_PROTOCOL);
 	if (this->fd == -1 || fcntl(this->fd, F_SETFL, O_NONBLOCK))
 		return (false);
@@ -36,8 +30,10 @@ bool	Server::init(void)
 	if (bind(this->fd, (sockaddr *) &this->addr, socklen) == -1
 	|| listen(this->fd, 10) == -1)
 		return (false);
-
-	this->addPollFd(this->fd);
+	p.fd = fd;
+	p.events = POLLIN;
+	p.revents = 0;
+	this->fds.push_back(p);
 	return (true);
 }
 
@@ -47,8 +43,8 @@ void	Server::launch(void)
 
 	while (true)
 	{
-		fds_ready = poll(this->fds, this->nfds, 10);
-		for (int id = 0; id < (int)this->nfds && fds_ready > 0; id++)
+		fds_ready = poll(this->fds.data(), this->fds.size(), 10);
+		for (int id = 0; id < (int)this->fds.size() && fds_ready > 0; id++)
 		{
 			if (fds[id].revents & POLLIN)
 			{
@@ -96,17 +92,18 @@ void	Server::acceptMessage(Client &client)
 
 void	Server::acceptClient(void)
 {
-	std::string line;
-	std::string	buffer;
+	struct pollfd	p;
 
-	if (nfds >= MAX_CLIENT)
-		return ;
 	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
 	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
-	client.setId(nfds);
-	this->clients_i[nfds] =	client;
-	this->clients_s[client.getName()] =	client;
-	this->addPollFd(client.getFd());
+	client.setId(this->fds.size());
+	this->clients_i[client.getId()] = client;
+	this->clients_s[client.getName()] = client;
+
+	p.fd = fd;
+	p.events = POLLIN;
+	p.revents = 0;
+	this->fds.push_back(p);
 	this->authenticate(client);
 }
 
@@ -135,6 +132,8 @@ void	Server::authenticate(Client &client)
 		}
 		MSG::sendData(&client, line);
 		CMD::apply();
+		if (package.quit)
+			return ((void)this->disconnectClient(client.getName(), client.getId()));
 	}
 	if (!client.isAuth(this->password))
 		return ;

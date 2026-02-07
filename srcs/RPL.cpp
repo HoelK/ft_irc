@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 18:00:39 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 21:46:06 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ std::string		RPL::getMessage(short code, std::string nick)
 		return (RPL_ISUPPORT_STR);
 	else if (code == RPL_NICK)
 		return (RPL_NICK_STR(package.oldClient.getNick(), package.client->getNick(), package.client->getUser()));
+	else if (code == RPL_QUIT)
+		return (RPL_QUIT_STR(package.client->getNick(), package.client->getUser(), package.quit_message));
 
 	return ("");
 }
@@ -78,6 +80,8 @@ static short	cmdToCode(std::string const &cmd)
 		return (RPL_NICK);
 	else if (cmd == CMD_USER)
 		return (RPL_USER);
+	else if (cmd == CMD_QUIT)
+		return (RPL_QUIT);
 	return (-1);
 }
 
