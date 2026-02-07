@@ -6,7 +6,7 @@ Server::Server(std::string password, int port): fd(0), port(port), password(pass
 bool	Server::init(void)
 {
 	this->fd = socket(IPV4, SOCK_STREAM, DEFAULT_PROTOCOL);
-	if (this->fd == -1) //|| fcntl(this->fd, F_SETFL, fcntl(this->fd, F_GETFL) | O_NONBLOCK) == -1)
+	if (this->fd == -1 || fcntl(this->fd, F_SETFL, O_NONBLOCK))
 		return (false);
 	this->addr.sin_family		= IPV4;
 	this->addr.sin_addr.s_addr	= ANY_ADDRESS;
@@ -30,47 +30,69 @@ void	Server::launch(void)
 	while (true)
 	{
 		fds_ready = poll(this->fds, this->nfds, 10);
-		for (int i = 0; i < (int)this->nfds && fds_ready > 0; i++)
+		for (int id = 0; id < (int)this->nfds && fds_ready > 0; id++)
 		{
-			if (fds[i].revents & POLLIN)
+			if (fds[id].revents & POLLIN)
 			{
-				if (i == 0)
-				{
+				if (id == 0)
 					this->acceptClient();
-					fds_ready--;
-				}
+				else
+					this->acceptMessage(this->clients_i[id]);
+				fds_ready--;
 			}
 		}
 	}
 }
 
-void	Server::acceptClient()
+void	Server::acceptMessage(Client &client)
 {
-	std::string token;
-	char		buffer[4096];
+	std::string	line;
+	std::string	buffer;
 
-	std::cerr << "waiting" << std::endl;
-	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
-	std::cout << "accepted" << std::endl;
-	if (recv(client.getFd(), buffer, 4096, 0) > 0)
+	while (true)
 	{
+		buffer = Ft::getFdContent(client.getFd());
+		if (buffer.empty())
+			break ;
 		std::cout << buffer;
-		std::stringstream	stream(buffer);
-		MSG::getToCmd(stream, "NICK");
-		stream >> token;
-		client.setNick(token);
-		MSG::getToCmd(stream, "USER");
-		stream >> token;
-		client.setName(token);
+		while (!buffer.empty())
+		{
+			line = client.getBuffer() + Ft::extractLine(buffer);
+			MSG::sendData(&client, line);
+			CMD::apply();
+			RPL::reply();
+		}
+	}
+}
+
+void	Server::acceptClient(void)
+{
+	std::string line;
+	std::string	buffer;
+
+	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
+	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
+	buffer = Ft::getFdContent(client.getFd());
+
+	while (!buffer.empty())
+	{
+		line = Ft::extractLine(buffer);
+		MSG::sendData(&client, line);
+		CMD::apply();
 	}
 	RPL::connection(client.getFd(), client.getNick());
 
-	//this->clients[name] = client;
-};
+	client.setId(nfds);
+	this->clients_i[nfds] =	client;
+	this->clients_s[client.getName()] =	client;
+	this->fds[this->nfds].fd = client.getFd();
+	this->fds[this->nfds++].events = POLLIN;
+}
 
-bool	Server::disconnectClient(std::string const &name) { return (this->clients.erase(name)); };
-std::map<std::string, Client>::iterator Server::getClient(std::string const &name) { return (this->clients.find(name)); };
+bool										Server::disconnectClient(std::string const &name, const int &id) { return (this->clients_s.erase(name) && this->clients_i.erase(id)); };
+std::map<std::string, Client>::iterator		Server::getClient(std::string const &name) { return (this->clients_s.find(name)); };
+std::map<int, Client>::iterator				Server::getClient(int const &id) { return (this->clients_i.find(id)); };
 
-void	Server::createChannel(std::string const &name, Channel &channel) { this->channels[name] = channel; };
-bool	Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
-std::map<std::string, Channel>::iterator Server::getChannel(std::string const &name) { return (this->channels.find(name)); };
+void										Server::createChannel(std::string const &name, Channel &channel) { this->channels[name] = channel; };
+bool										Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
+std::map<std::string, Channel>::iterator	Server::getChannel(std::string const &name) { return (this->channels.find(name)); };

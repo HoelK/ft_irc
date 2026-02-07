@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/03 18:08:18 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/06 19:12:37 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # include <set>
 # include <map>
 # include "Client.hpp"
+
+class Client;
 
 class Channel
 {

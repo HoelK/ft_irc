@@ -12,11 +12,13 @@ std::string		RPL::getMessage(short code, std::string nick)
 		return (RPL_MYINFO_STR(nick));
 	else if (code == RPL_ISUPPORT)
 		return (RPL_ISUPPORT_STR);
+	else if (code == RPL_NICK)
+		return (RPL_NICK_STR(package.oldClient.getNick(), package.client->getNick(), package.client->getNick()));
 
 	return ("");
 }
 
-std::string		RPL::code_to_string(short code)
+std::string		RPL::codeToStr(short code)
 {
 	std::stringstream	stream;
 
@@ -28,28 +30,49 @@ std::string		RPL::code_to_string(short code)
 	return (stream.str());
 }
 
-std::string		RPL::createMessage(short code, std::string nick)
+std::string		RPL::createMessage(short code, std::string const &nick)
 {
 	std::stringstream	stream;
 
-	stream << RPL_HEADER(code_to_string(code), nick);
+	stream << RPL_HEADER(codeToStr(code), nick);
 	stream << RPL::getMessage(code, nick);
 	stream << "\r\n";
 
 	return (stream.str());
 }
 
-
 void RPL::connection(int fd, std::string const &nick)
 {
 	std::string sent_message = RPL::createMessage(RPL_WELCOME,	nick);
+	std::cout << sent_message;
 	send(fd, sent_message.c_str(), sent_message.size(), 0);
 	sent_message = RPL::createMessage(RPL_YOURHOST, nick);
+	std::cout << sent_message;
 	send(fd, sent_message.c_str(), sent_message.size(), 0);
 	sent_message = RPL::createMessage(RPL_CREATED,	nick);
+	std::cout << sent_message;
 	send(fd, sent_message.c_str(), sent_message.size(), 0);
 	sent_message = RPL::createMessage(RPL_MYINFO,	nick);
+	std::cout << sent_message;
 	send(fd, sent_message.c_str(), sent_message.size(), 0);
 	sent_message = RPL::createMessage(RPL_ISUPPORT, nick);
+	std::cout << sent_message;
 	send(fd, sent_message.c_str(), sent_message.size(), 0);
+}
+
+static short	cmdToCode(std::string const &cmd)
+{
+	if (cmd == CMD_NICK)
+		return (RPL_NICK);
+	else if (cmd == CMD_USER)
+		return (RPL_USER);
+	return (-1);
+}
+
+void RPL::reply(void)
+{
+	std::string sent_message = RPL::getMessage(::cmdToCode(package.cmd), package.client->getNick()) + "\r\n";
+
+	std::cout << sent_message;
+	send(package.client->getFd(), sent_message.c_str(), sent_message.size(), 0);
 }

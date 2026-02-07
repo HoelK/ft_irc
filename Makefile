@@ -1,6 +1,6 @@
 CC=c++
 FLAGS=-Werror -Wall -Wextra -g3
-SRCS=main.cpp Server.cpp Client.cpp Channel.cpp RPL.cpp MSG.cpp
+SRCS=main.cpp Server.cpp Client.cpp Channel.cpp RPL.cpp MSG.cpp CMD.cpp Package.cpp Ft.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 

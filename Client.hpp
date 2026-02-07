@@ -6,23 +6,28 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/04 01:10:02 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/07 04:16:31 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
+# include <iostream>
+# include "Channel.hpp"
+# define MAX_BUFFER_SIZE 8192
 
-#define MAX_BUFFER_SIZE 8192
+class Channel;
 
 class Client
 {
     private:
-        int			fd;
-        std::string	nick;
-        std::string	realname;
-        std::string	buffer;
+		unsigned int	id;
+        int				fd;
+        std::string		nick;
+		std::string		username;
+        std::string		realname;
+        std::string		buffer;
+		Channel			*channel;
 
     public:
 		Client(void);
@@ -32,8 +37,14 @@ class Client
         ~Client(void);
 
         const int			&getFd(void) const;
+		const unsigned int	&getId(void) const;
         const std::string&	getNick(void) const;
-		void				setNick(std::string const &nick);
         const std::string&	getName(void) const;
+		const std::string&	getUser(void) const;
+		const std::string&	getBuffer(void) const;
+		void				setId(const int id);
+		void				setNick(std::string const &nick);
 		void				setName(std::string const &name);
+		void				setUser(std::string const &name);
+		void				setBuffer(std::string const &buff);
 };
