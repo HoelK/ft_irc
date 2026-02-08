@@ -43,8 +43,7 @@ class Server
 		struct sockaddr_in					addr;
 		int									port;
 		std::string							password;
-		std::map<int, Client>				clients_i;
-		std::map<std::string, Client>		clients_s;
+		std::map<int, Client>				clients;
 		std::map<std::string, Channel>		channels;
 		std::vector<struct pollfd>			fds;
 		std::vector<int>					ids;
@@ -60,8 +59,7 @@ class Server
 		void										authenticate(Client &client);
 
 		void										acceptClient(void);
-		void										disconnectClient(std::string const &name, const int &id);
-		std::map<std::string, Client>::iterator		getClient(std::string const &name);
+		void										disconnectClient(const int &id);
 		std::map<int, Client>::iterator				getClient(int const &id);
 
 		void										createChannel(std::string const &name, Channel &channel);

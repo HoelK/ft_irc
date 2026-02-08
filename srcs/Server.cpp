@@ -34,6 +34,7 @@ bool	Server::init(void)
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
+	this->ids.push_back(0);
 	return (true);
 }
 
@@ -51,7 +52,7 @@ void	Server::launch(void)
 				if (x == 0)
 					this->acceptClient();
 				else
-					this->acceptMessage(this->clients_i[this->ids[x]]);
+					this->acceptMessage(this->clients[this->ids[x]]);
 				fds_ready--;
 			}
 		}
@@ -68,24 +69,25 @@ void	Server::acceptMessage(Client &client)
 	while (true)
 	{
 		buffer = Ft::getFdContent(client.getFd());
+		std::cout << buffer;
 		if (buffer.empty())
 			break ;
 		while (!buffer.empty())
 		{
 			line = client.getBuffer() + Ft::extractLine(buffer);
 			client.setBuffer("");
-			this->clients_i[client.getId()].setBuffer("");
-			this->clients_s[client.getName()].setBuffer("");
+			this->clients[client.getId()].setBuffer("");
 			if (!Ft::endsWithCRLF(line))
 			{
 				client.setBuffer(line);
-				this->clients_i[client.getId()].setBuffer(line);
-				this->clients_s[client.getName()].setBuffer(line);
+				this->clients[client.getId()].setBuffer(line);
 				return ;
 			}
 			MSG::sendData(&client, line);
 			CMD::apply();
 			RPL::reply();
+			if (package.quit)
+				return ((void)this->disconnectClient(client.getId()));
 		}
 	}
 }
@@ -97,14 +99,13 @@ void	Server::acceptClient(void)
 	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
 	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
 	client.setId(this->fds.size());
-	this->ids.push_back(this->fds.size());
-	this->clients_i[client.getId()] = client;
-	this->clients_s[client.getName()] = client;
 
-	p.fd = fd;
+	p.fd = client.getFd();
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
+	this->ids.push_back(this->ids.size());
+	this->clients[client.getId()] = client;
 	this->authenticate(client);
 }
 
@@ -122,38 +123,32 @@ void	Server::authenticate(Client &client)
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
 		client.setBuffer("");
-		this->clients_i[client.getId()].setBuffer("");
-		this->clients_s[client.getName()].setBuffer("");
+		this->clients[client.getId()].setBuffer("");
 		if (!Ft::endsWithCRLF(line))
 		{
 			client.setBuffer(line);
-			this->clients_i[client.getId()].setBuffer(line);
-			this->clients_s[client.getName()].setBuffer(line);
+			this->clients[client.getId()].setBuffer(line);
 			return ;
 		}
 		MSG::sendData(&client, line);
 		CMD::apply();
-		if (package.quit)
-			return ((void)this->disconnectClient(client.getName(), client.getId()));
 	}
 	if (!client.isAuth(this->password))
 		return ;
 	RPL::connection(client.getFd(), client.getNick());
 	client.setAuth(true);
-	this->clients_i[client.getId()].setAuth(true);
-	this->clients_s[client.getName()].setAuth(true);
+	this->clients[client.getId()].setAuth(true);
 }
 
-void										Server::disconnectClient(std::string const &name, const int &id)
+void										Server::disconnectClient(const int &id)
 {
+	Client &client = this->clients[id];
+	close(client.getFd());
 	this->fds.erase(this->fds.begin() + id);
 	this->ids.erase(this->ids.begin() + id);
-	this->clients_s.erase(name);
-	this->clients_i.erase(id);
-
+	this->clients.erase(id);
 }
-std::map<std::string, Client>::iterator		Server::getClient(std::string const &name) { return (this->clients_s.find(name)); };
-std::map<int, Client>::iterator				Server::getClient(int const &id) { return (this->clients_i.find(id)); };
+std::map<int, Client>::iterator				Server::getClient(int const &id) { return (this->clients.find(id)); };
 
 void										Server::createChannel(std::string const &name, Channel &channel) { this->channels[name] = channel; };
 bool										Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };

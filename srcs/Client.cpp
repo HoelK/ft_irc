@@ -19,6 +19,7 @@ Client::Client(Client const &copy) { (*this) = copy; };
 
 Client &Client::operator=(Client const &copy)
 {
+	this->id = copy.id;
 	this->fd = copy.fd;
 	this->nick = copy.nick;
 	this->auth = copy.auth;
