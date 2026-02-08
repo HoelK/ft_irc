@@ -110,8 +110,6 @@ void	Server::authenticate(Client &client)
 	std::string	buffer;
 
 	buffer = Ft::getFdContent(client.getFd());
-	if (buffer.empty())
-		return ;
 	while (!buffer.empty())
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
@@ -120,10 +118,17 @@ void	Server::authenticate(Client &client)
 			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
 		CMD::apply();
+		if (package.cmd == CMD_PASS
+		&& this->password != client.getPass())
+		{
+			package.error = ERR_PASSWDMISMATCH;
+			RPL::reply();
+			return (this->disconnectClient(client.getId()));
+		}
 	}
 	if (!client.isAuth(this->password))
 		return ;
-	RPL::connection(client.getFd(), client.getNick());
+	RPL::Welcome(client.getFd(), client.getNick());
 	client.setAuth(true);
 }
 

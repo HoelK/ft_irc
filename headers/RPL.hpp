@@ -23,7 +23,7 @@
 # define SERVER_NAME "ft.irc"
 # define NETWORK_NAME "CACA"
 
-# define RPL_HEADER(code, nick)	":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " :"
+# define HEADER_STR(code, nick)	":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " :"
 
 # define RPL_WELCOME_STR(nick)				"Welcome to " NETWORK_NAME ", " + std::string(nick)
 # define RPL_YOURHOST_STR					"Your host is " SERVER_NAME ", running version " VERSION
@@ -31,32 +31,18 @@
 # define RPL_MYINFO_STR(nick)				std::string(nick) + " " + SERVER_NAME + " " + VERSION " 0 " CMODES
 # define RPL_ISUPPORT_STR					""
 
-# define RPL_NICK_STR(oldnick, nick, user)	":" + std::string(oldnick) + "!" + std::string(user) + "@" SERVER_NAME " NICK :" + std::string(nick)
-# define RPL_QUIT_STR(nick, user, reason)	":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " QUIT :" + std::string(reason)
+# define ERR_PASSWDMISMATCH_STR				"Password incorrect"
 
+# define RPL_STR(nick, user, cmd, data)	":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
-//RPL MESSAGES
-enum RPL_ID
+enum ERR_ID
 {
-	RPL_WELCOME = 1,
-	RPL_YOURHOST,
-	RPL_CREATED,
-	RPL_MYINFO,
-	RPL_ISUPPORT,
-	RPL_PONG,
-	RPL_NICK,
-	RPL_USER,
-	RPL_QUIT
+	ERR_PASSWDMISMATCH = 464
 };
 
 class RPL
 {
 	public:
-		static short		cmdToCode();
-		static std::string	codeToStr(short code);
-		static std::string	createMessage(short code, std::string const &nick);
-		static std::string	getMessage(short code, std::string nick);
-
 		static void	reply(void);
-		static void	connection(int fd, std::string const &nick);
+		static void Welcome(const int &fd, std::string const &nick);
 };

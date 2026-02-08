@@ -21,5 +21,6 @@
 class MSG
 {
 	public:
+		static std::string getCmd(std::string const &line);
 		static void	sendData(Client *client, std::string const &line);
 };

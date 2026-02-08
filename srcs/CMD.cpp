@@ -29,11 +29,11 @@ void	CMD::apply(void)
 	it->second();
 }
 
-void	CMD::Pass(void) { package.client->setPass(package.data[PASS_PASS]); };
-void	CMD::Nick(void) { package.client->setNick(package.data[NICK_NICK]); };
-void	CMD::Quit(void) { package.quit = true; package.quit_message = package.data[QUIT_REASON]; };
+void	CMD::Pass(void) { package.client->setPass(package.cmd_data[PASS_PASS]); };
+void	CMD::Nick(void) { package.client->setNick(package.cmd_data[NICK_NICK]); package.rpl_data = package.client->getNick(); };
+void	CMD::Quit(void) { package.quit = true; package.rpl_data = package.cmd_data[QUIT_REASON]; };
 void	CMD::User(void)
 {
-	package.client->setUser(package.data[USER_USERNAME]);
-	package.client->setName(package.data[USER_REALNAME]);
+	package.client->setUser(package.cmd_data[USER_USERNAME]);
+	package.client->setName(package.cmd_data[USER_REALNAME]);
 }

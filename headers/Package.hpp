@@ -18,10 +18,10 @@
 typedef struct	s_package
 {
 	std::string					cmd;
-	std::vector<std::string>	data;
+	std::vector<std::string>	cmd_data;
+	std::string					rpl_data;
 	Client						oldClient;
 	Client						*client;
-	std::string					quit_message;
 	bool						quit;
 	int							error;
 }	t_package;

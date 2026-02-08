@@ -12,84 +12,57 @@
 
 # include "RPL.hpp"
 
-std::string		RPL::getMessage(short code, std::string nick)
+static std::string	codeStr(short code)
 {
-	if (code == RPL_WELCOME)
-		return (RPL_WELCOME_STR(nick));
-	else if (code == RPL_YOURHOST)
-		return (RPL_YOURHOST_STR);
-	else if (code == RPL_CREATED)
-		return (RPL_CREATED_STR);
-	else if (code == RPL_MYINFO)
-		return (RPL_MYINFO_STR(nick));
-	else if (code == RPL_ISUPPORT)
-		return (RPL_ISUPPORT_STR);
-	else if (code == RPL_NICK)
-		return (RPL_NICK_STR(package.oldClient.getNick(), package.client->getNick(), package.client->getUser()));
-	else if (code == RPL_QUIT)
-		return (RPL_QUIT_STR(package.client->getNick(), package.client->getUser(), package.quit_message));
+	std::stringstream	s;
+	std::string			res;
+
+	s << code;
+	s >> res;
+	if (code < 10)
+		res = "00" + s.str();
+	else if (code < 100)
+		res = "0" + s.str();
+
+	return (res);
+}
+
+static std::string	codeToErr(short code)
+{
+	if (code == ERR_PASSWDMISMATCH)
+		return (ERR_PASSWDMISMATCH_STR);
 
 	return ("");
 }
 
-std::string		RPL::codeToStr(short code)
+static std::string	getError(short code, std::string const &nick) { return (HEADER_STR(codeStr(code), nick) + codeToErr(code)); };
+static std::string	getRPL(void) { return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rpl_data)); };
+
+void RPL::Welcome(const int &fd, std::string const &nick)
 {
-	std::stringstream	stream;
+	std::string msg;
 
-	if (code < 10)
-		stream << "00";
-	else if (code >= 10 && code < 100)
-		stream << "0";
-	stream << code;
-	return (stream.str());
-}
-
-std::string		RPL::createMessage(short code, std::string const &nick)
-{
-	std::stringstream	stream;
-
-	stream << RPL_HEADER(codeToStr(code), nick);
-	stream << RPL::getMessage(code, nick);
-	stream << "\r\n";
-
-	return (stream.str());
-}
-
-void RPL::connection(int fd, std::string const &nick)
-{
-	std::string sent_message = RPL::createMessage(RPL_WELCOME,	nick);
-	std::cout << sent_message;
-	send(fd, sent_message.c_str(), sent_message.size(), 0);
-	sent_message = RPL::createMessage(RPL_YOURHOST, nick);
-	std::cout << sent_message;
-	send(fd, sent_message.c_str(), sent_message.size(), 0);
-	sent_message = RPL::createMessage(RPL_CREATED,	nick);
-	std::cout << sent_message;
-	send(fd, sent_message.c_str(), sent_message.size(), 0);
-	sent_message = RPL::createMessage(RPL_MYINFO,	nick);
-	std::cout << sent_message;
-	send(fd, sent_message.c_str(), sent_message.size(), 0);
-	sent_message = RPL::createMessage(RPL_ISUPPORT, nick);
-	std::cout << sent_message;
-	send(fd, sent_message.c_str(), sent_message.size(), 0);
-}
-
-static short	cmdToCode(std::string const &cmd)
-{
-	if (cmd == CMD_NICK)
-		return (RPL_NICK);
-	else if (cmd == CMD_USER)
-		return (RPL_USER);
-	else if (cmd == CMD_QUIT)
-		return (RPL_QUIT);
-	return (-1);
+	msg = HEADER_STR("001", nick) + RPL_WELCOME_STR(nick) + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("002", nick) + RPL_YOURHOST_STR + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("003", nick) + RPL_CREATED_STR + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("004", nick) + RPL_MYINFO_STR(nick) + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("005", nick) + RPL_ISUPPORT_STR + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
 }
 
 void RPL::reply(void)
 {
-	std::string sent_message = RPL::getMessage(::cmdToCode(package.cmd), package.client->getNick())
-	+ "\r\n";
+	std::string	msg;
 
-	std::cout << "REPLY : " << sent_message;
-	send(package.client->getFd(), sent_message.c_str(), sent_message.size(), 0);
+	msg = getRPL();
+	if (package.error)
+		msg = getError(package.error, package.oldClient.getNick());
+	msg = msg + "\r\n";
+
+	std::cout << "REPLY : " << msg;
+	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }

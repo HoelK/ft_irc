@@ -12,7 +12,7 @@
 
 # include "MSG.hpp"
 
-static std::string getCmd(std::string const &line)
+std::string MSG::getCmd(std::string const &line)
 { 
 	char	sep = ' ';
 	
@@ -50,7 +50,7 @@ void	MSG::sendData(Client *client, std::string const &line)
 {
 	package.oldClient = *client;
 	package.cmd = getCmd(line);
-	package.data = getCmdData(line);
+	package.cmd_data = getCmdData(line);
 	package.client = client;
 	package.error = 0;
 }
