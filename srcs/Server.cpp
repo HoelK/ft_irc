@@ -44,14 +44,14 @@ void	Server::launch(void)
 	while (true)
 	{
 		fds_ready = poll(this->fds.data(), this->fds.size(), 10);
-		for (int id = 0; id < (int)this->fds.size() && fds_ready > 0; id++)
+		for (int x = 0; x < (int)this->fds.size() && fds_ready > 0; x++)
 		{
-			if (fds[id].revents & POLLIN)
+			if (fds[x].revents & POLLIN)
 			{
-				if (id == 0)
+				if (x == 0)
 					this->acceptClient();
 				else
-					this->acceptMessage(this->clients_i[id]);
+					this->acceptMessage(this->clients_i[this->ids[x]]);
 				fds_ready--;
 			}
 		}
@@ -97,6 +97,7 @@ void	Server::acceptClient(void)
 	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
 	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
 	client.setId(this->fds.size());
+	this->ids.push_back(this->fds.size());
 	this->clients_i[client.getId()] = client;
 	this->clients_s[client.getName()] = client;
 
@@ -143,7 +144,14 @@ void	Server::authenticate(Client &client)
 	this->clients_s[client.getName()].setAuth(true);
 }
 
-bool										Server::disconnectClient(std::string const &name, const int &id) { return (this->clients_s.erase(name) && this->clients_i.erase(id)); };
+void										Server::disconnectClient(std::string const &name, const int &id)
+{
+	this->fds.erase(this->fds.begin() + id);
+	this->ids.erase(this->ids.begin() + id);
+	this->clients_s.erase(name);
+	this->clients_i.erase(id);
+
+}
 std::map<std::string, Client>::iterator		Server::getClient(std::string const &name) { return (this->clients_s.find(name)); };
 std::map<int, Client>::iterator				Server::getClient(int const &id) { return (this->clients_i.find(id)); };
 

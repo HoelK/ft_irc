@@ -47,6 +47,7 @@ class Server
 		std::map<std::string, Client>		clients_s;
 		std::map<std::string, Channel>		channels;
 		std::vector<struct pollfd>			fds;
+		std::vector<int>					ids;
 	
 	public:
 		Server(std::string password, int port);
@@ -59,7 +60,7 @@ class Server
 		void										authenticate(Client &client);
 
 		void										acceptClient(void);
-		bool										disconnectClient(std::string const &name, const int &id);
+		void										disconnectClient(std::string const &name, const int &id);
 		std::map<std::string, Client>::iterator		getClient(std::string const &name);
 		std::map<int, Client>::iterator				getClient(int const &id);
 
