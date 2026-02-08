@@ -51,8 +51,10 @@ void	Server::launch(void)
 			{
 				if (x == 0)
 					this->acceptClient();
+				else if  (this->clients[this->ids[x]]->getAuth())
+					this->acceptMessage(*(this->clients[this->ids[x]]));
 				else
-					this->acceptMessage(this->clients[this->ids[x]]);
+					this->authenticate(*(this->clients[this->ids[x]]));
 				fds_ready--;
 			}
 		}
@@ -64,8 +66,6 @@ void	Server::acceptMessage(Client &client)
 	std::string	line;
 	std::string	buffer;
 
-	if (!client.getAuth())
-		return (this->authenticate(client));
 	while (true)
 	{
 		buffer = Ft::getFdContent(client.getFd());
@@ -76,13 +76,8 @@ void	Server::acceptMessage(Client &client)
 		{
 			line = client.getBuffer() + Ft::extractLine(buffer);
 			client.setBuffer("");
-			this->clients[client.getId()].setBuffer("");
 			if (!Ft::endsWithCRLF(line))
-			{
-				client.setBuffer(line);
-				this->clients[client.getId()].setBuffer(line);
-				return ;
-			}
+				return (client.setBuffer(line));
 			MSG::sendData(&client, line);
 			CMD::apply();
 			RPL::reply();
@@ -105,8 +100,8 @@ void	Server::acceptClient(void)
 	p.revents = 0;
 	this->fds.push_back(p);
 	this->ids.push_back(this->ids.size());
-	this->clients[client.getId()] = client;
-	this->authenticate(client);
+	this->clients[client.getId()] = new Client(client);
+	this->authenticate(*(this->clients[client.getId()]));
 }
 
 void	Server::authenticate(Client &client)
@@ -114,8 +109,6 @@ void	Server::authenticate(Client &client)
 	std::string line;
 	std::string	buffer;
 
-	if (client.getAuth())
-		return ;
 	buffer = Ft::getFdContent(client.getFd());
 	if (buffer.empty())
 		return ;
@@ -123,13 +116,8 @@ void	Server::authenticate(Client &client)
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
 		client.setBuffer("");
-		this->clients[client.getId()].setBuffer("");
 		if (!Ft::endsWithCRLF(line))
-		{
-			client.setBuffer(line);
-			this->clients[client.getId()].setBuffer(line);
-			return ;
-		}
+			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
 		CMD::apply();
 	}
@@ -137,18 +125,18 @@ void	Server::authenticate(Client &client)
 		return ;
 	RPL::connection(client.getFd(), client.getNick());
 	client.setAuth(true);
-	this->clients[client.getId()].setAuth(true);
 }
 
 void										Server::disconnectClient(const int &id)
 {
-	Client &client = this->clients[id];
-	close(client.getFd());
+	Client *client = this->clients[id];
+	close(client->getFd());
 	this->fds.erase(this->fds.begin() + id);
 	this->ids.erase(this->ids.begin() + id);
 	this->clients.erase(id);
+	delete (client);
 }
-std::map<int, Client>::iterator				Server::getClient(int const &id) { return (this->clients.find(id)); };
+std::map<int, Client *>::iterator				Server::getClient(int const &id) { return (this->clients.find(id)); };
 
 void										Server::createChannel(std::string const &name, Channel &channel) { this->channels[name] = channel; };
 bool										Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
