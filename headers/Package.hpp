@@ -24,6 +24,8 @@ typedef struct	s_package
 	Client						*client;
 	bool						quit;
 	int							error;
+
+	void						clear();
 }	t_package;
 
 extern t_package package;

@@ -21,7 +21,6 @@ class Channel;
 class Client
 {
     private:
-		unsigned int	id;
         int				fd;
 		bool			auth;
         std::string		nick;
@@ -39,14 +38,12 @@ class Client
         ~Client(void);
 
         const int			&getFd(void) const;
-		const unsigned int	&getId(void) const;
 		const bool			&getAuth(void) const;
         const std::string	&getNick(void) const;
         const std::string	&getName(void) const;
 		const std::string	&getUser(void) const;
 		const std::string	&getPass(void) const;
 		const std::string	&getBuffer(void) const;
-		void				setId(const int id);
 		void				setAuth(bool auth);
 		void				setNick(std::string const &nick);
 		void				setName(std::string const &name);

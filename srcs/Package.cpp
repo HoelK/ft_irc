@@ -11,5 +11,17 @@
 /* ************************************************************************** */
 
 # include "Package.hpp"
+# include <strings.h>
 
 t_package package;
+
+void	t_package::clear(void)
+{
+	cmd.clear();
+	cmd_data.clear();
+	rpl_data.clear();
+	client = NULL;
+	quit = 0;
+	error = 0;
+
+}

@@ -48,9 +48,11 @@ static std::vector<std::string>	getCmdData(std::string const &line)
 
 void	MSG::sendData(Client *client, std::string const &line)
 {
+	package.clear();
 	package.oldClient = *client;
 	package.cmd = getCmd(line);
 	package.cmd_data = getCmdData(line);
 	package.client = client;
 	package.error = 0;
+	package.quit = false;
 }

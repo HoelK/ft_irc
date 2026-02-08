@@ -34,7 +34,6 @@ bool	Server::init(void)
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
-	this->ids.push_back(0);
 	return (true);
 }
 
@@ -51,10 +50,10 @@ void	Server::launch(void)
 			{
 				if (x == 0)
 					this->acceptClient();
-				else if  (this->clients[this->ids[x]]->getAuth())
-					this->acceptMessage(*(this->clients[this->ids[x]]));
+				else if  (this->clients[this->fds[x].fd]->getAuth())
+					this->acceptMessage(*(this->clients[this->fds[x].fd]));
 				else
-					this->authenticate(*(this->clients[this->ids[x]]));
+					this->authenticate(*(this->clients[this->fds[x].fd]));
 				fds_ready--;
 			}
 		}
@@ -82,7 +81,7 @@ void	Server::acceptMessage(Client &client)
 			CMD::apply();
 			RPL::reply();
 			if (package.quit)
-				return ((void)this->disconnectClient(client.getId()));
+				return ((void)this->disconnectClient(client.getFd()));
 		}
 	}
 }
@@ -93,15 +92,13 @@ void	Server::acceptClient(void)
 
 	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
 	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
-	client.setId(this->fds.size());
 
 	p.fd = client.getFd();
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
-	this->ids.push_back(this->ids.size());
-	this->clients[client.getId()] = new Client(client);
-	this->authenticate(*(this->clients[client.getId()]));
+	this->clients[p.fd] = new Client(client);
+	this->authenticate(*(this->clients[p.fd]));
 }
 
 void	Server::authenticate(Client &client)
@@ -123,7 +120,7 @@ void	Server::authenticate(Client &client)
 		{
 			package.error = ERR_PASSWDMISMATCH;
 			RPL::reply();
-			return (this->disconnectClient(client.getId()));
+			return (this->disconnectClient(client.getFd()));
 		}
 	}
 	if (!client.isAuth(this->password))
@@ -132,13 +129,18 @@ void	Server::authenticate(Client &client)
 	client.setAuth(true);
 }
 
-void										Server::disconnectClient(const int &id)
+void	Server::disconnectClient(const int &fd)
 {
-	Client *client = this->clients[id];
+	Client *client = this->clients[fd];
 	close(client->getFd());
-	this->fds.erase(this->fds.begin() + id);
-	this->ids.erase(this->ids.begin() + id);
-	this->clients.erase(id);
+	for (std::vector<struct pollfd>::iterator it = this->fds.begin(); it != this->fds.end(); it++)
+	{
+		if (it->fd == fd)
+		{
+			this->fds.erase(it);
+			break ;
+		}
+	}
 	delete (client);
 }
 std::map<int, Client *>::iterator				Server::getClient(int const &id) { return (this->clients.find(id)); };

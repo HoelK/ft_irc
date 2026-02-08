@@ -19,7 +19,6 @@ Client::Client(Client const &copy) { (*this) = copy; };
 
 Client &Client::operator=(Client const &copy)
 {
-	this->id = copy.id;
 	this->fd = copy.fd;
 	this->nick = copy.nick;
 	this->auth = copy.auth;
@@ -33,7 +32,6 @@ Client &Client::operator=(Client const &copy)
 }
 
 const int			&Client::getFd(void) const { return (this->fd); };
-const unsigned int	&Client::getId(void) const { return (this->id); }; 
 const bool			&Client::getAuth(void) const { return (this->auth); };
 const std::string	&Client::getNick(void) const { return (this->nick); };
 const std::string	&Client::getName(void) const { return (this->realname); };
@@ -46,7 +44,6 @@ void				Client::setName(std::string const &name) { this->realname = name; };
 void				Client::setUser(std::string const &user) { this->username = user; };
 void				Client::setPass(std::string const &pass) { this->password = pass; };
 void				Client::setBuffer(std::string const &buff) { this->buffer = buff; };
-void				Client::setId(const int id) { this->id = id; };
 
 bool				Client::isAuth(std::string const &password)
 {
