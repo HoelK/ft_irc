@@ -40,6 +40,7 @@ const std::string	&Client::getName(void) const { return (this->realname); };
 const std::string	&Client::getUser(void) const { return (this->username); };
 const std::string	&Client::getPass(void) const { return (this->password); };
 const std::string	&Client::getBuffer(void) const { return (this->buffer); };
+Channel				&Client::getChannel(void) const { return (*(this->channel)); };
 void				Client::setAuth(bool auth) { this->auth = auth; };
 void				Client::setNick(std::string const &nick) { this->nick = nick; };
 void				Client::setName(std::string const &name) { this->realname = name; };
@@ -47,6 +48,7 @@ void				Client::setUser(std::string const &user) { this->username = user; };
 void				Client::setPass(std::string const &pass) { this->password = pass; };
 void				Client::setBuffer(std::string const &buff) { this->buffer = buff; };
 void				Client::setOp(bool op) { this->op = op; };
+void				Client::setChannel(Channel *channel) { this->channel = channel; };
 
 bool				Client::isAuth(std::string const &password)
 {

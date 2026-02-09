@@ -66,10 +66,12 @@ void	CMD::Join(Server &server)
 	{
 		Channel *ch = server.getChannel(package.cmd_data[JOIN_CHANNEL]);
 		ch->addClient(package.client);
+		package.client->setChannel(ch);
 		return ;
 	}
 	package.client->setOp(true);
 	channel.setName(package.cmd_data[JOIN_CHANNEL]);
 	channel.addClient(package.client);
 	server.createChannel(channel);
+	package.client->setChannel(server.getChannel(package.cmd_data[JOIN_CHANNEL]));
 }

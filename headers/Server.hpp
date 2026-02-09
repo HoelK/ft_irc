@@ -50,23 +50,23 @@ class Server
 	public:
 		Server(std::string password, int port);
 
-		void										launch(void);
-		void										kill(void);
-		bool										init(void);
+		void								launch(void);
+		void								kill(void);
+		bool								init(void);
 
-		void										addPollFd(const int &fd);
-		void										authenticate(Client &client);
+		void								addPollFd(const int &fd);
+		void								authenticate(Client &client);
 
-		void										acceptClient(void);
-		void										disconnectClient(const int &id);
-		std::map<int, Client *>::iterator			getClient(int const &id);
+		void								acceptClient(void);
+		void								disconnectClient(const int &id);
+		Client								*getClient(int const &id);
 
-		void										createChannel(Channel &channel);
-		bool										deleteChannel(std::string const &name);
-		Channel										*getChannel(std::string const &name);
+		void								createChannel(Channel &channel);
+		bool								deleteChannel(std::string const &name);
+		Channel								*getChannel(std::string const &name);
 
-		void										acceptMessage(Client &client);
-		bool										isChannel(std::string const &name);
+		void								acceptMessage(Client &client);
+		bool								isChannel(std::string const &name);
 
 		~Server(void);
 };

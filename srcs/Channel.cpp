@@ -18,12 +18,10 @@ Channel::Channel(Channel const &copy) { (*this) = copy; };
 Channel::Channel(const std::string& name): name(name) {};
 Channel	&Channel::operator=(Channel const &copy) { this->name = copy.name; this->clients = copy.clients; return (*this); };
 
+void	Channel::setName(std::string const &name) { this->name = name; };
 const	std::string& Channel::getName(void) const { return (this->name); };
 void	Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
 bool	Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
-
-void	Channel::setName(std::string const &name) { this->name = name; };
-
 
 std::string			Channel::getNameList(void)
 {

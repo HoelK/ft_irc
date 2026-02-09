@@ -107,7 +107,7 @@ void	Server::authenticate(Client &client)
 	std::string	buffer;
 
 	buffer = Ft::getFdContent(client.getFd());
-	std::cout << "BUFFER : " << buffer << std::endl;
+	std::cout << "BUFFER : " << buffer;
 	while (!buffer.empty())
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
@@ -144,9 +144,9 @@ void	Server::disconnectClient(const int &fd)
 	}
 	delete (client);
 }
-std::map<int, Client *>::iterator				Server::getClient(int const &id) { return (this->clients.find(id)); };
 
-void										Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
-bool										Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
-Channel										*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
-bool										Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };
+Client	*Server::getClient(int const &id) { return (this->clients.find(id)->second); };
+void	Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
+bool	Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
+bool	Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };
+Channel	*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };

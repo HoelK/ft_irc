@@ -46,6 +46,7 @@ class Client
 		const std::string	&getUser(void) const;
 		const std::string	&getPass(void) const;
 		const std::string	&getBuffer(void) const;
+		Channel				&getChannel(void) const;
 		void				setOp(bool op);
 		void				setAuth(bool auth);
 		void				setNick(std::string const &nick);
@@ -54,4 +55,5 @@ class Client
 		void				setPass(std::string const &pass);
 		void				setBuffer(std::string const &buff);
 		bool				isAuth(std::string const &password);
+		void				setChannel(Channel *channel);
 };
