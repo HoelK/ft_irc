@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 02:22:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:49:49 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@
 # define ERR_PASSWDMISMATCH_STR				"Password incorrect"
 
 # define RPL_STR(nick, user, cmd, data)	":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
+
+# define RPL_PRIV(data) " :" + std::string(data)
 
 class Server;
 

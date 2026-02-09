@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/09 02:09:49 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:38:54 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class Client
 		const std::string	&getUser(void) const;
 		const std::string	&getPass(void) const;
 		const std::string	&getBuffer(void) const;
-		Channel				&getChannel(void) const;
+		Channel				*getChannel(void) const;
 		void				setOp(bool op);
 		void				setAuth(bool auth);
 		void				setNick(std::string const &nick);

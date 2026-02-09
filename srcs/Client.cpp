@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 02:32:45 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:39:11 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ const std::string	&Client::getName(void) const { return (this->realname); };
 const std::string	&Client::getUser(void) const { return (this->username); };
 const std::string	&Client::getPass(void) const { return (this->password); };
 const std::string	&Client::getBuffer(void) const { return (this->buffer); };
-Channel				&Client::getChannel(void) const { return (*(this->channel)); };
+Channel				*Client::getChannel(void) const { return (this->channel); };
 void				Client::setAuth(bool auth) { this->auth = auth; };
 void				Client::setNick(std::string const &nick) { this->nick = nick; };
 void				Client::setName(std::string const &name) { this->realname = name; };

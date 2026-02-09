@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/09 02:15:45 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 22:31:58 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,21 @@ void	Channel::setName(std::string const &name) { this->name = name; };
 const	std::string& Channel::getName(void) const { return (this->name); };
 void	Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
 bool	Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
+void	Channel::broadcastMessage(Client *sender, std::string const &msg)
+{
+	Client *client;
+
+	if (this->clients.empty())
+		return ;
+	for (std::map<std::string, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	{
+		client = it->second;
+		if (client == sender)
+			continue ;
+		send(client->getFd(), msg.c_str(), msg.size(), 0);
+	}
+
+}
 
 std::string			Channel::getNameList(void)
 {

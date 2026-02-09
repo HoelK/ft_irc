@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 02:55:34 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:40:35 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static std::map<std::string, void (*)(Server &server)> cmds = {
 	{CMD_USER, &CMD::User},
 	{CMD_PASS, &CMD::Pass},
 	{CMD_QUIT, &CMD::Quit},
-	{CMD_JOIN, &CMD::Join}
+	{CMD_JOIN, &CMD::Join},
+	{CMD_PRIV, &CMD::Priv}
 };
 
 void	CMD::apply(Server &server)
@@ -74,4 +75,10 @@ void	CMD::Join(Server &server)
 	channel.addClient(package.client);
 	server.createChannel(channel);
 	package.client->setChannel(server.getChannel(package.cmd_data[JOIN_CHANNEL]));
+}
+
+void	CMD::Priv(Server &server)
+{
+	(void) server;
+	package.rpl_data = package.cmd_data[PRIV_TARGET];
 }

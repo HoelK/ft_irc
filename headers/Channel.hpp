@@ -6,13 +6,15 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/09 02:02:36 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 20:44:51 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 # include <set>
 # include <map>
+# include <sys/types.h>
+# include <sys/socket.h>
 # include "Client.hpp"
 
 class Client;
@@ -37,4 +39,5 @@ class Channel
 
         void addClient(Client *client);
         bool removeClient(std::string const &name);
+		void broadcastMessage(Client *sender, std::string const &msg);
 };

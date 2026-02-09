@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 03:38:07 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 23:00:53 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,10 @@ void RPL::reply(Server &server)
 		return (RPL::Join(package.client->getFd(), package.client->getNick(), package.rpl_data, *(server.getChannel(package.rpl_data))));
 	msg = msg + "\r\n";
 
-	std::cout << "REPLY : " << msg;
-	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+	if (package.client->getChannel() && package.cmd == CMD_PRIV)
+		msg = getRPL() + RPL_PRIV(package.cmd_data[PRIV_MSG]) + "\r\n";
+	else
+		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+	if (package.client->getChannel())
+		package.client->getChannel()->broadcastMessage(package.client, msg);
 }
