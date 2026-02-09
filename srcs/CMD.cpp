@@ -6,34 +6,65 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 22:00:11 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 02:55:34 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "CMD.hpp"
 
-static std::map<std::string, void (*)()> cmds = {
+static std::map<std::string, void (*)(Server &server)> cmds = {
 	{CMD_NICK, &CMD::Nick},
 	{CMD_USER, &CMD::User},
 	{CMD_PASS, &CMD::Pass},
-	{CMD_QUIT, &CMD::Quit}
+	{CMD_QUIT, &CMD::Quit},
+	{CMD_JOIN, &CMD::Join}
 };
 
-void	CMD::apply(void)
+void	CMD::apply(Server &server)
 {
-	std::map<std::string, void (*)()>::iterator it;
+	std::map<std::string, void (*)(Server &server)>::iterator it;
 
 	it = cmds.find(package.cmd);
 	if (it == cmds.end())
 		return ;
-	it->second();
+	it->second(server);
 }
 
-void	CMD::Pass(void) { package.client->setPass(package.cmd_data[PASS_PASS]); };
-void	CMD::Nick(void) { package.client->setNick(package.cmd_data[NICK_NICK]); package.rpl_data = package.client->getNick(); };
-void	CMD::Quit(void) { package.quit = true; package.rpl_data = package.cmd_data[QUIT_REASON]; };
-void	CMD::User(void)
+void	CMD::Pass(Server &server)
 {
+	(void) server;
+	package.client->setPass(package.cmd_data[PASS_PASS]);
+}
+
+void	CMD::Nick(Server &server)
+{
+	(void) server;
+	package.client->setNick(package.cmd_data[NICK_NICK]);
+	package.rpl_data = package.client->getNick();
+}
+
+void	CMD::Quit(Server &server)
+{
+	(void) server;
+	package.quit = true;
+	package.rpl_data = package.cmd_data[QUIT_REASON];
+}
+
+void	CMD::User(Server &server)
+{
+	(void) server;
 	package.client->setUser(package.cmd_data[USER_USERNAME]);
 	package.client->setName(package.cmd_data[USER_REALNAME]);
+}
+
+void	CMD::Join(Server &server)
+{
+	Channel channel;
+
+	if (server.getChannel(package.cmd_data[JOIN_CHANNEL]))
+		package.client->setOp(true);
+	channel.setName(package.cmd_data[JOIN_CHANNEL]);
+	channel.addClient(package.client);
+	server.createChannel(channel);
+	package.rpl_data = package.cmd_data[JOIN_CHANNEL];
 }

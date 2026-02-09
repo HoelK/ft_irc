@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/06 19:12:37 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 02:02:36 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Channel
 {
     private:
         std::string						name;
-		std::map<std::string, Client>	clients;
+		std::map<std::string, Client *>	clients;
 
     public:
 		Channel(void);
@@ -30,8 +30,11 @@ class Channel
         Channel(const std::string& name);
         ~Channel(void);
 
-        const std::string& getName(void) const;
+        const std::string&	getName(void) const;
+		void				setName(std::string const &name);
 
-        void addClient(std::string const &name, Client &client);
+		std::string			getNameList(void);
+
+        void addClient(Client *client);
         bool removeClient(std::string const &name);
 };

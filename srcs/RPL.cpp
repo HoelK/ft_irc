@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 21:46:06 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 03:38:07 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,32 +35,49 @@ static std::string	codeToErr(short code)
 	return ("");
 }
 
-static std::string	getError(short code, std::string const &nick) { return (HEADER_STR(codeStr(code), nick) + codeToErr(code)); };
+static std::string	getError(short code, std::string const &nick) { return (HEADER_STR(codeStr(code), nick, "", "") + codeToErr(code)); };
 static std::string	getRPL(void) { return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rpl_data)); };
 
 void RPL::Welcome(const int &fd, std::string const &nick)
 {
 	std::string msg;
 
-	msg = HEADER_STR("001", nick) + RPL_WELCOME_STR(nick) + "\r\n";
+	std::cout << "Connected" << std::endl;
+	msg = HEADER_STR("001", nick, "", "") + RPL_WELCOME_STR(nick) + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("002", nick) + RPL_YOURHOST_STR + "\r\n";
+	msg = HEADER_STR("002", nick, "", "") + RPL_YOURHOST_STR + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("003", nick) + RPL_CREATED_STR + "\r\n";
+	msg = HEADER_STR("003", nick, "", "") + RPL_CREATED_STR + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("004", nick) + RPL_MYINFO_STR(nick) + "\r\n";
+	msg = HEADER_STR("004", nick, "", "") + RPL_MYINFO_STR(nick) + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("005", nick) + RPL_ISUPPORT_STR + "\r\n";
+	msg = HEADER_STR("005", nick, "", "") + RPL_ISUPPORT_STR + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
 }
 
-void RPL::reply(void)
+void	RPL::Join(const int &fd, std::string const &nick, std::string const &topic, Channel &channel)
+{
+	std::string msg;
+	std::string users;
+
+	msg = HEADER_STR("332", nick, " ", topic) + RPL_NOTOPIC + "\r\n";
+	if (!topic.empty())
+		msg = HEADER_STR("332", nick, " ", topic) + RPL_TOPIC(topic) + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("353", nick, " = ", topic) + channel.getNameList() + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("366", nick, " ", topic) + RPL_ENDOFNAMES + "\r\n";
+}
+
+void RPL::reply(Server &server)
 {
 	std::string	msg;
 
 	msg = getRPL();
 	if (package.error)
 		msg = getError(package.error, package.oldClient.getNick());
+	else if (package.cmd == CMD_JOIN)
+		return (RPL::Join(package.client->getFd(), package.client->getNick(), package.rpl_data, *(server.getChannel(package.rpl_data))));
 	msg = msg + "\r\n";
 
 	std::cout << "REPLY : " << msg;

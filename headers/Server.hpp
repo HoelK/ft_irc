@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 22:17:18 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 02:20:18 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,34 +39,33 @@
 class Server
 {
 	private:
-		int									fd;
-		struct sockaddr_in					addr;
-		int									port;
-		std::string							password;
-		std::map<int, Client *>				clients;
-		std::map<std::string, Channel>		channels;
-		std::vector<struct pollfd>			fds;
-		std::vector<int>					ids;
+		int								fd;
+		struct sockaddr_in				addr;
+		int								port;
+		std::string						password;
+		std::map<int, Client *>			clients;
+		std::map<std::string, Channel>	channels;
+		std::vector<struct pollfd>		fds;
 	
 	public:
 		Server(std::string password, int port);
 
-		void	launch(void);
-		void	kill(void);
-		bool	init(void);
+		void										launch(void);
+		void										kill(void);
+		bool										init(void);
 
 		void										addPollFd(const int &fd);
 		void										authenticate(Client &client);
 
 		void										acceptClient(void);
 		void										disconnectClient(const int &id);
-		std::map<int, Client *>::iterator				getClient(int const &id);
+		std::map<int, Client *>::iterator			getClient(int const &id);
 
-		void										createChannel(std::string const &name, Channel &channel);
+		void										createChannel(Channel &channel);
 		bool										deleteChannel(std::string const &name);
-		std::map<std::string, Channel>::iterator	getChannel(std::string const &name);
+		Channel										*getChannel(std::string const &name);
 
-		void	acceptMessage(Client &client);
+		void										acceptMessage(Client &client);
 
 		~Server(void);
 };

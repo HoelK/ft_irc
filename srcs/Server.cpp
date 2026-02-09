@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 22:23:53 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/09 02:28:18 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ void	Server::acceptMessage(Client &client)
 			if (!Ft::endsWithCRLF(line))
 				return (client.setBuffer(line));
 			MSG::sendData(&client, line);
-			CMD::apply();
-			RPL::reply();
+			CMD::apply(*this);
+			RPL::reply(*this);
 			if (package.quit)
 				return ((void)this->disconnectClient(client.getFd()));
 		}
@@ -107,6 +107,7 @@ void	Server::authenticate(Client &client)
 	std::string	buffer;
 
 	buffer = Ft::getFdContent(client.getFd());
+	std::cout << "BUFFER : " << buffer << std::endl;
 	while (!buffer.empty())
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
@@ -114,12 +115,12 @@ void	Server::authenticate(Client &client)
 		if (!Ft::endsWithCRLF(line))
 			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
-		CMD::apply();
+		CMD::apply(*this);
 		if (package.cmd == CMD_PASS
 		&& this->password != client.getPass())
 		{
 			package.error = ERR_PASSWDMISMATCH;
-			RPL::reply();
+			RPL::reply(*this);
 			return (this->disconnectClient(client.getFd()));
 		}
 	}
@@ -145,6 +146,6 @@ void	Server::disconnectClient(const int &fd)
 }
 std::map<int, Client *>::iterator				Server::getClient(int const &id) { return (this->clients.find(id)); };
 
-void										Server::createChannel(std::string const &name, Channel &channel) { this->channels[name] = channel; };
+void										Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
 bool										Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
-std::map<std::string, Channel>::iterator	Server::getChannel(std::string const &name) { return (this->channels.find(name)); };
+Channel										*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
