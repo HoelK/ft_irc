@@ -66,6 +66,7 @@ class Server
 		Channel										*getChannel(std::string const &name);
 
 		void										acceptMessage(Client &client);
+		bool										isChannel(std::string const &name);
 
 		~Server(void);
 };

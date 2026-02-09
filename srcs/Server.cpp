@@ -149,3 +149,4 @@ std::map<int, Client *>::iterator				Server::getClient(int const &id) { return (
 void										Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
 bool										Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
 Channel										*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
+bool										Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };

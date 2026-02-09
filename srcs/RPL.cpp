@@ -67,6 +67,7 @@ void	RPL::Join(const int &fd, std::string const &nick, std::string const &topic,
 	msg = HEADER_STR("353", nick, " = ", topic) + channel.getNameList() + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
 	msg = HEADER_STR("366", nick, " ", topic) + RPL_ENDOFNAMES + "\r\n";
+	send(fd, msg.c_str(), msg.size(), 0);
 }
 
 void RPL::reply(Server &server)
