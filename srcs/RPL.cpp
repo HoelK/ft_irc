@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 01:31:50 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 03:18:01 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,19 @@ void	RPL::Join(const int &fd, std::string const &nick, std::string const &topic,
 	send(fd, msg.c_str(), msg.size(), 0);
 }
 
+std::string	RPL::Topic(void)
+{
+	std::string	msg;
+
+	if (package.cmd_data.size() < 2)
+		msg = HEADER_STR("331", package.client->getName(), " :", package.cmd_data[TOPIC_CHANNEL]) + "\r\n";
+	else if (package.cmd_data[TOPIC_NEW].empty())
+		msg = HEADER_STR("331", package.client->getName(), " :", RPL_NOTOPIC) + "\r\n";
+	else 
+		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[TOPIC_CHANNEL]) + RPL_TOP(package.cmd_data[TOPIC_NEW]) + "\r\n";
+	return (msg);
+}
+
 //this shit is getting less readable at each commit
 void RPL::reply(Server &server)
 {
@@ -82,6 +95,8 @@ void RPL::reply(Server &server)
 		return (RPL::Join(package.client->getFd(), package.client->getNick(), package.rpl_data, *(server.getChannel(package.rpl_data))));
 	msg = msg + "\r\n";
 
+	if (package.cmd == CMD_TOPIC)
+		msg = RPL::Topic();
 	if (package.client->getChannel() && package.cmd == CMD_KICK)
 	{
 		Client	*client =	server.getClient(package.cmd_data[KICK_USER]);
@@ -96,6 +111,5 @@ void RPL::reply(Server &server)
 		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.client->getChannel())
 		package.client->getChannel()->broadcastMessage(package.client, msg);
-
 	std::cout << "REPLY : " << msg;
 }

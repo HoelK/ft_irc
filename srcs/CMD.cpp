@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 01:25:42 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 03:06:25 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static std::map<std::string, void (*)(Server &server)> cmds = {
 	{CMD_QUIT, &CMD::Quit},
 	{CMD_JOIN, &CMD::Join},
 	{CMD_PRIV, &CMD::Priv},
-	{CMD_KICK, &CMD::Kick}
+	{CMD_KICK, &CMD::Kick},
+	{CMD_TOPIC, &CMD::Topic}
 };
 
 void	CMD::apply(Server &server)
@@ -98,5 +99,17 @@ void	CMD::Kick(Server &server)
 		&& channel->isClient(package.cmd_data[KICK_USER]))
 	{
 		channel->removeClient(client->getNick());
+	}
+}
+
+void	CMD::Topic(Server &server)
+{
+	if (package.cmd_data.size() == 2)
+	{
+		std::string	name = package.cmd_data[TOPIC_CHANNEL];
+		Channel		*channel = server.getChannel(name);
+		channel->setName(name);
+		server.deleteChannel(channel->getName());
+		server.createChannel(*channel);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 00:41:47 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 02:05:33 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,31 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 
-# define CMD_PASS			"PASS"
-# define CMD_NICK			"NICK"
-# define CMD_USER			"USER"
-# define CMD_QUIT			"QUIT"
-# define CMD_JOIN			"JOIN"
-# define CMD_PRIV			"PRIVMSG"
-# define CMD_KICK			"KICK"
-# define NICK_NICK			0
-# define PASS_PASS			0
-# define USER_USERNAME		0
-# define USER_REALNAME		3
-# define QUIT_REASON		0
-# define JOIN_CHANNEL		0
-# define PRIV_TARGET		0
-# define PRIV_MSG			1
-# define KICK_CHANNEL		0
-# define KICK_USER			1
-# define KICK_MSG			2
+# define CMD_PASS	"PASS"
+# define CMD_NICK	"NICK"
+# define CMD_USER	"USER"
+# define CMD_QUIT	"QUIT"
+# define CMD_JOIN	"JOIN"
+# define CMD_PRIV	"PRIVMSG"
+# define CMD_KICK	"KICK"
+# define CMD_TOPIC	"TOPIC"
+
+enum	cmdDataIds
+{
+	NICK_NICK		= 0,
+	PASS_PASS		= 0,
+	USER_USERNAME	= 0,
+	USER_REALNAME	= 3,
+	QUIT_REASON		= 0,
+	JOIN_CHANNEL	= 0,
+	PRIV_TARGET		= 0,
+	PRIV_MSG		= 1,
+	KICK_CHANNEL	= 0,
+	KICK_USER		= 1,
+	KICK_MSG		= 2,
+	TOPIC_CHANNEL	= 0,
+	TOPIC_NEW		= 1
+};
 
 class Server;
 
@@ -48,4 +55,5 @@ class CMD
 		static void Join(Server &server);
 		static void	Priv(Server &server);
 		static void	Kick(Server &server);
+		static void Topic(Server &server);
 };
