@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/09 20:44:51 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 00:35:49 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,13 @@ class Channel
 
         const std::string&	getName(void) const;
 		void				setName(std::string const &name);
+		std::string			getNameList(void) const;
+		bool				isClient(std::string const &nick);
+		Client				*getClient(std::string const &nick);
+        void				addClient(Client *client);
+        bool				removeClient(std::string const &name);
 
-		std::string			getNameList(void);
-
-        void addClient(Client *client);
-        bool removeClient(std::string const &name);
-		void broadcastMessage(Client *sender, std::string const &msg);
+		void				broadcastMessage(Client *sender, std::string const &msg);
 };
+
+std::ostream &operator<<(std::ostream &stream, Channel const &channel);

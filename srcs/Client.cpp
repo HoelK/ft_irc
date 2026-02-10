@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 20:39:11 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 00:33:13 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void				Client::setPass(std::string const &pass) { this->password = pass; };
 void				Client::setBuffer(std::string const &buff) { this->buffer = buff; };
 void				Client::setOp(bool op) { this->op = op; };
 void				Client::setChannel(Channel *channel) { this->channel = channel; };
+bool				Client::inChannel(void) const { return (this->channel != NULL); };
 
 bool				Client::isAuth(std::string const &password)
 {
@@ -56,4 +57,19 @@ bool				Client::isAuth(std::string const &password)
 			&& !this->username.empty()
 			&& !this->realname.empty()
 			&& this->password == password);
+}
+
+
+std::ostream &operator<<(std::ostream &stream, Client const &client)
+{
+	stream << "==== CLIENT ====" << std::endl;
+	stream << "Fd : " << client.getFd() << std::endl; 
+	stream << "Name : " << client.getName() << std::endl;
+	stream << "Nick : " << client.getNick() << std::endl;
+	stream << "User : " << client.getUser() << std::endl;
+	stream << "OP : " << client.getOp() << std::endl;
+	if (client.inChannel())
+		stream << "Channel : " << client.getChannel()->getName()  << std::endl;
+
+	return (stream);
 }

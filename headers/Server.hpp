@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 02:20:18 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:22:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Server
 		void								acceptClient(void);
 		void								disconnectClient(const int &id);
 		Client								*getClient(int const &id);
+		Client								*getClient(std::string const &nick);
 
 		void								createChannel(Channel &channel);
 		bool								deleteChannel(std::string const &name);

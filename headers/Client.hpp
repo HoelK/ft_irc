@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/09 20:38:54 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 00:32:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,7 @@ class Client
 		void				setBuffer(std::string const &buff);
 		bool				isAuth(std::string const &password);
 		void				setChannel(Channel *channel);
+		bool				inChannel(void) const;
 };
+
+std::ostream &operator<<(std::ostream &stream, Client const &client);

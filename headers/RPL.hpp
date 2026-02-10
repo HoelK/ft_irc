@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 20:49:49 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:06:57 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@
 
 # define RPL_STR(nick, user, cmd, data)	":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
-# define RPL_PRIV(data) " :" + std::string(data)
+# define RPL_PRIV(data)			" :" + std::string(data)
+# define RPL_KICK(user, data)	" " + std::string(user) + " :" + std::string(data)
 
 class Server;
 
@@ -57,5 +58,5 @@ class RPL
 	public:
 		static void	reply(Server &server);
 		static void Welcome(const int &fd, std::string const &nick);
-		static void	Join(const int &fd, std::string const &nick, std::string const &topic, Channel &channel);
+		static void	Join(const int &fd, std::string const &nick, std::string const &topic, Channel const &channel);
 };

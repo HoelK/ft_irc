@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/09 22:31:58 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 00:36:33 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ Channel::Channel(Channel const &copy) { (*this) = copy; };
 Channel::Channel(const std::string& name): name(name) {};
 Channel	&Channel::operator=(Channel const &copy) { this->name = copy.name; this->clients = copy.clients; return (*this); };
 
-void	Channel::setName(std::string const &name) { this->name = name; };
-const	std::string& Channel::getName(void) const { return (this->name); };
-void	Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
-bool	Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
-void	Channel::broadcastMessage(Client *sender, std::string const &msg)
+void				Channel::setName(std::string const &name) { this->name = name; };
+const std::string&	Channel::getName(void) const { return (this->name); };
+void				Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
+bool				Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
+void				Channel::broadcastMessage(Client *sender, std::string const &msg)
 {
 	Client *client;
 
@@ -38,13 +38,13 @@ void	Channel::broadcastMessage(Client *sender, std::string const &msg)
 
 }
 
-std::string			Channel::getNameList(void)
+std::string			Channel::getNameList(void) const
 {
 	Client		*client;
 	std::string	res;
 	std::string user;
 
-	for (std::map<std::string, Client *>::iterator it = clients.begin(); it != clients.end(); it++)
+	for (std::map<std::string, Client *>::const_iterator it = clients.begin(); it != clients.end(); it++)
 	{
 		client = it->second;
 		if (client->getOp())
@@ -55,4 +55,17 @@ std::string			Channel::getNameList(void)
 	}
 
 	return (res);
+}
+
+
+bool Channel::isClient(std::string const &nick) { return (this->clients.find(nick) != this->clients.end()); };
+Client	*Channel::getClient(std::string const &nick) { return (this->clients.find(nick)->second); };
+
+
+std::ostream &operator<<(std::ostream &stream, Channel const &channel)
+{
+	std::cout << "===== CHANNEL : " << channel.getName() << " =====" << std::endl;
+	std::cout << "USERS : " << channel.getNameList() << std::endl;
+
+	return (stream);
 }

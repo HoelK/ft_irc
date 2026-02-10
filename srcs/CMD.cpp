@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 20:40:35 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:25:42 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static std::map<std::string, void (*)(Server &server)> cmds = {
 	{CMD_PASS, &CMD::Pass},
 	{CMD_QUIT, &CMD::Quit},
 	{CMD_JOIN, &CMD::Join},
-	{CMD_PRIV, &CMD::Priv}
+	{CMD_PRIV, &CMD::Priv},
+	{CMD_KICK, &CMD::Kick}
 };
 
 void	CMD::apply(Server &server)
@@ -81,4 +82,21 @@ void	CMD::Priv(Server &server)
 {
 	(void) server;
 	package.rpl_data = package.cmd_data[PRIV_TARGET];
+}
+
+void	CMD::Kick(Server &server)
+{
+	(void) server;
+
+	Channel *channel =	package.client->getChannel();
+	Client	*client =	channel->getClient(package.cmd_data[KICK_USER]);
+	
+	if (!channel || !client)
+		return ;
+	package.rpl_data = package.cmd_data[KICK_CHANNEL];
+	if (channel->getName() == package.cmd_data[KICK_CHANNEL]
+		&& channel->isClient(package.cmd_data[KICK_USER]))
+	{
+		channel->removeClient(client->getNick());
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 22:27:21 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:25:32 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void	Server::authenticate(Client &client)
 void	Server::disconnectClient(const int &fd)
 {
 	Client *client = this->clients[fd];
+
 	close(client->getFd());
 	for (std::vector<struct pollfd>::iterator it = this->fds.begin(); it != this->fds.end(); it++)
 	{
@@ -150,3 +151,12 @@ void	Server::createChannel(Channel &channel) { this->channels[channel.getName()]
 bool	Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
 bool	Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };
 Channel	*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
+Client	*Server::getClient(std::string const &nick)
+{
+	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	{
+		if (it->second->getNick() == nick)
+			return (it->second);
+	}
+	return (NULL);
+}

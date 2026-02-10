@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/09 23:00:53 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:31:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void RPL::Welcome(const int &fd, std::string const &nick)
 	send(fd, msg.c_str(), msg.size(), 0);
 }
 
-void	RPL::Join(const int &fd, std::string const &nick, std::string const &topic, Channel &channel)
+void	RPL::Join(const int &fd, std::string const &nick, std::string const &topic, Channel const &channel)
 {
 	std::string msg;
 	std::string users;
@@ -70,6 +70,7 @@ void	RPL::Join(const int &fd, std::string const &nick, std::string const &topic,
 	send(fd, msg.c_str(), msg.size(), 0);
 }
 
+//this shit is getting less readable at each commit
 void RPL::reply(Server &server)
 {
 	std::string	msg;
@@ -81,10 +82,20 @@ void RPL::reply(Server &server)
 		return (RPL::Join(package.client->getFd(), package.client->getNick(), package.rpl_data, *(server.getChannel(package.rpl_data))));
 	msg = msg + "\r\n";
 
-	if (package.client->getChannel() && package.cmd == CMD_PRIV)
+	if (package.client->getChannel() && package.cmd == CMD_KICK)
+	{
+		Client	*client =	server.getClient(package.cmd_data[KICK_USER]);
+
+		msg = getRPL() + RPL_KICK(package.cmd_data[KICK_USER], package.cmd_data[KICK_MSG]) + "\r\n";
+		send(client->getFd(), msg.c_str(), msg.size(), 0);
+		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+	}
+	else if (package.client->getChannel() && package.cmd == CMD_PRIV)
 		msg = getRPL() + RPL_PRIV(package.cmd_data[PRIV_MSG]) + "\r\n";
 	else
 		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.client->getChannel())
 		package.client->getChannel()->broadcastMessage(package.client, msg);
+
+	std::cout << "REPLY : " << msg;
 }
