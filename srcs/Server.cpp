@@ -6,11 +6,13 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 22:31:14 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 00:03:28 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
+
+sig_atomic_t	sigShutdown = 0;
 
 Server::~Server(void) {};
 Server::Server(std::string password, int port): fd(0), port(port), password(password) {};
@@ -41,7 +43,7 @@ void	Server::launch(void)
 {
 	int	fds_ready = 0;
 
-	while (true)
+	while (!sigShutdown)
 	{
 		fds_ready = poll(this->fds.data(), this->fds.size(), 10);
 		for (int x = 0; x < (int)this->fds.size() && fds_ready > 0; x++)
@@ -107,13 +109,13 @@ void	Server::authenticate(Client &client)
 	std::string	buffer;
 
 	buffer = Ft::getFdContent(client.getFd());
-	std::cout << "BUFFER : " << buffer;
 	while (!buffer.empty())
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
 		client.setBuffer("");
 		if (!Ft::endsWithCRLF(line))
 			return (client.setBuffer(line));
+		std::cout << "LINE : " << line << std::endl;
 		MSG::sendData(&client, line);
 		CMD::apply(*this);
 		if (package.cmd == CMD_PASS

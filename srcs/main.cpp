@@ -6,11 +6,13 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:26:31 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 20:30:26 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 23:59:14 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
+
+void handleSignal(int) { sigShutdown = 1; };
 
 bool	argCheck(int ac, char **av)
 {
@@ -42,6 +44,7 @@ int	main(int ac, char **av)
 	if (!argCheck(ac, av))
 		return (EXIT_FAILURE);
 
+	std::signal(SIGINT, handleSignal);
 	Server server(std::string(av[1]), std::atoi(av[2]));
 	server.init();
 	server.launch();

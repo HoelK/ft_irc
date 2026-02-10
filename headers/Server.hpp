@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 22:31:21 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 00:02:15 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sstream>
 # include <iostream>
+# include <csignal>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <netinet/in.h>
@@ -35,6 +36,8 @@
 # define IPV4				AF_INET
 # define PORT				htons(this->port)
 # define ANY_ADDRESS		htonl(INADDR_ANY)
+
+extern sig_atomic_t	sigShutdown;
 
 class Server
 {
