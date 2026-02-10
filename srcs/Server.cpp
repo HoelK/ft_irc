@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 01:25:32 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 22:31:14 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ void	Server::disconnectClient(const int &fd)
 Client	*Server::getClient(int const &id) { return (this->clients.find(id)->second); };
 void	Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
 bool	Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
+
 bool	Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };
 Channel	*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
 Client	*Server::getClient(std::string const &nick)

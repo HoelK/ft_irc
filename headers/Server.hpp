@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 02:14:18 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 22:31:21 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,24 @@ class Server
 	public:
 		Server(std::string password, int port);
 
-		void								launch(void);
-		void								kill(void);
-		bool								init(void);
+		void	launch(void);
+		void	kill(void);
+		bool	init(void);
 
-		void								addPollFd(const int &fd);
-		void								authenticate(Client &client);
+		void	addPollFd(const int &fd);
+		void	authenticate(Client &client);
 
-		void								acceptClient(void);
-		void								disconnectClient(const int &id);
-		Client								*getClient(int const &id);
-		Client								*getClient(std::string const &nick);
+		void	acceptClient(void);
+		void	disconnectClient(const int &id);
+		Client	*getClient(int const &id);
+		Client	*getClient(std::string const &nick);
 
-		void								createChannel(Channel &channel);
-		bool								deleteChannel(std::string const &name);
-		Channel								*getChannel(std::string const &name);
+		void	createChannel(Channel &channel);
+		bool	deleteChannel(std::string const &name);
+		Channel	*getChannel(std::string const &name);
 
-		void								acceptMessage(Client &client);
-		bool								isChannel(std::string const &name);
+		void	acceptMessage(Client &client);
+		bool	isChannel(std::string const &name);
 
 		~Server(void);
 };

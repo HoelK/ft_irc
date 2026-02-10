@@ -6,15 +6,15 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 00:33:13 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 22:11:44 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
-Client::Client(void): fd(0), auth(false), op(false), channel(NULL) {};
+Client::Client(void): fd(0), auth(false), op(false) {};
 Client::~Client(void) {};
-Client::Client(int fd): fd(fd), auth(false), op(false), channel(NULL) {};
+Client::Client(int fd): fd(fd), auth(false), op(false) {};
 Client::Client(Client const &copy) { (*this) = copy; };
 
 Client &Client::operator=(Client const &copy)
@@ -27,29 +27,32 @@ Client &Client::operator=(Client const &copy)
 	this->realname = copy.realname;
 	this->password = copy.password;
 	this->buffer = copy.buffer;
-	this->channel = copy.channel;
+	this->channels = copy.channels;
 
 	return (*this);
 }
 
-const bool			&Client::getOp(void) const { return (this->op); };
-const int			&Client::getFd(void) const { return (this->fd); };
-const bool			&Client::getAuth(void) const { return (this->auth); };
-const std::string	&Client::getNick(void) const { return (this->nick); };
-const std::string	&Client::getName(void) const { return (this->realname); };
-const std::string	&Client::getUser(void) const { return (this->username); };
-const std::string	&Client::getPass(void) const { return (this->password); };
-const std::string	&Client::getBuffer(void) const { return (this->buffer); };
-Channel				*Client::getChannel(void) const { return (this->channel); };
-void				Client::setAuth(bool auth) { this->auth = auth; };
-void				Client::setNick(std::string const &nick) { this->nick = nick; };
-void				Client::setName(std::string const &name) { this->realname = name; };
-void				Client::setUser(std::string const &user) { this->username = user; };
-void				Client::setPass(std::string const &pass) { this->password = pass; };
-void				Client::setBuffer(std::string const &buff) { this->buffer = buff; };
-void				Client::setOp(bool op) { this->op = op; };
-void				Client::setChannel(Channel *channel) { this->channel = channel; };
-bool				Client::inChannel(void) const { return (this->channel != NULL); };
+const bool			&Client::getOp(void)		const			{ return (this->op); };
+const int			&Client::getFd(void)		const			{ return (this->fd); };
+const bool			&Client::getAuth(void)		const			{ return (this->auth); };
+const std::string	&Client::getNick(void)		const			{ return (this->nick); };
+const std::string	&Client::getName(void)		const			{ return (this->realname); };
+const std::string	&Client::getUser(void)		const			{ return (this->username); };
+const std::string	&Client::getPass(void)		const			{ return (this->password); };
+const std::string	&Client::getBuffer(void)	const			{ return (this->buffer); };
+Channel				*Client::getChannel(std::string const &topic) const { return (this->channels.find(topic)->second); };
+void				Client::setAuth(bool auth)					{ this->auth = auth; };
+void				Client::setNick(std::string const &nick)	{ this->nick = nick; };
+void				Client::setName(std::string const &name)	{ this->realname = name; };
+void				Client::setUser(std::string const &user)	{ this->username = user; };
+void				Client::setPass(std::string const &pass)	{ this->password = pass; };
+void				Client::setBuffer(std::string const &buff)	{ this->buffer = buff; };
+void				Client::setOp(bool op)						{ this->op = op; };
+void				Client::addChannel(Channel *channel)		{ this->channels[channel->getName()] = channel; };
+void				Client::delChannel(std::string const &topic){ this->channels.erase(topic); };
+bool				Client::isChannel(std::string const &topic) { return (this->channels.find(topic) != this->channels.end()); };
+bool				Client::inChannel(void) const				{ return (!this->channels.size()); };
+const std::map<std::string, Channel *> &Client::getChannels(void) const { return (this->channels); }
 
 bool				Client::isAuth(std::string const &password)
 {
@@ -59,17 +62,23 @@ bool				Client::isAuth(std::string const &password)
 			&& this->password == password);
 }
 
+std::ostream &operator<<(std::ostream &stream, std::map<std::string, Channel *> const &channels)
+{
+	stream << "===== CHANNELS ======";
+	for (std::map<std::string, Channel *>::const_iterator it = channels.begin(); it != channels.end(); it++)
+		stream << *(it->second);
+	return (stream);
+}
 
 std::ostream &operator<<(std::ostream &stream, Client const &client)
 {
-	stream << "==== CLIENT ====" << std::endl;
-	stream << "Fd : " << client.getFd() << std::endl; 
-	stream << "Name : " << client.getName() << std::endl;
-	stream << "Nick : " << client.getNick() << std::endl;
-	stream << "User : " << client.getUser() << std::endl;
-	stream << "OP : " << client.getOp() << std::endl;
-	if (client.inChannel())
-		stream << "Channel : " << client.getChannel()->getName()  << std::endl;
+	stream <<	"==== CLIENT ====" << std::endl;
+	stream << "Fd : "	<<	client.getFd() << std::endl; 
+	stream << "Name : "	<<	client.getName() << std::endl;
+	stream << "Nick : "	<<	client.getNick() << std::endl;
+	stream << "User : "	<<	client.getUser() << std::endl;
+	stream << "OP : "	<<	client.getOp() << std::endl;
+	stream << client.getChannels();
 
 	return (stream);
 }

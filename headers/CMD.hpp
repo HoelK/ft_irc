@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 02:05:33 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 17:19:07 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ enum	cmdDataIds
 	USER_REALNAME	= 3,
 	QUIT_REASON		= 0,
 	JOIN_CHANNEL	= 0,
+	JOIN_KEY		= 1,
 	PRIV_TARGET		= 0,
 	PRIV_MSG		= 1,
 	KICK_CHANNEL	= 0,

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 06:31:21 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 22:37:07 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,57 +62,78 @@ void	CMD::User(Server &server)
 
 void	CMD::Join(Server &server)
 {
-	Channel channel;
+	Channel	channel;
 
+	if (package.cmd_data.size() < JOIN_CHANNEL)
+		return (package.error = ERR_NEEDMOREPARAMS, (void)channel);
 	package.rpl_data = package.cmd_data[JOIN_CHANNEL];
+
 	if (server.isChannel(package.cmd_data[JOIN_CHANNEL]))
 	{
 		Channel *ch = server.getChannel(package.cmd_data[JOIN_CHANNEL]);
+
+		if (ch->getOpInvite())
+			return (package.setError(ERR_NEEDMOREPARAMS));
+		else if (ch->isFull())
+			return (package.setError(ERR_CHANNELISFULL));
+		else if (ch->getOpKey() && !ch->Auth(package.cmd_data[JOIN_KEY]))
+			return (package.setError(ERR_BADCHANNELKEY));
+
 		ch->addClient(package.client);
-		package.client->setChannel(ch);
+		package.client->addChannel(ch);
+		package.channel = ch;
+
 		return ;
 	}
 	package.client->setOp(true);
 	channel.setName(package.cmd_data[JOIN_CHANNEL]);
 	channel.addClient(package.client);
 	server.createChannel(channel);
-	package.client->setChannel(server.getChannel(package.cmd_data[JOIN_CHANNEL]));
+	package.client->addChannel(server.getChannel(package.cmd_data[JOIN_CHANNEL]));
+	package.channel = package.client->getChannel(package.cmd_data[JOIN_CHANNEL]);
 }
 
 void	CMD::Priv(Server &server)
 {
 	(void) server;
 	package.rpl_data = package.cmd_data[PRIV_TARGET];
+	Channel	*channel = server.getChannel(package.rpl_data);
+	if (package.rpl_data[0] == '#' && channel)
+		package.channel = channel;
+
 }
 
 void	CMD::Kick(Server &server)
 {
 	(void) server;
 
-	Channel *channel =	package.client->getChannel();
+	if (!package.client->isChannel(package.cmd_data[KICK_CHANNEL]))
+		return (package.setError(ERR_NOSUCHCHANNEL));
+	Channel *channel =	package.client->getChannel(package.cmd_data[KICK_CHANNEL]);
+	package.channel = channel;
+	if (package.cmd_data[KICK_USER].empty())
+		return (package.setError(ERR_NEEDMOREPARAMS));
+	else if (!channel->isClient(package.cmd_data[KICK_USER]))
+	{
+		package.rpl_data = package.cmd_data[KICK_USER];
+		return (package.setError(ERR_USERNOTINCHANNEL));
+	}
 	Client	*client =	channel->getClient(package.cmd_data[KICK_USER]);
 	package.channel = channel;
 	
-	if (!client || !package.cmd_data[KICK_USER].empty())
-		return (package.error = ERR_USERNOTINCHANNEL, package.rpl_data = package.cmd_data[KICK_USER], (void) server);
-	if (!channel)
-		return ;
 	package.rpl_data = package.cmd_data[KICK_CHANNEL];
-	if (channel->getName() == package.cmd_data[KICK_CHANNEL]
-		&& channel->isClient(package.cmd_data[KICK_USER]))
-	{
-		channel->removeClient(client->getNick());
-	}
+	channel->removeClient(client->getNick());
 }
 
 void	CMD::Topic(Server &server)
 {
-	if (package.cmd_data.size() == 2)
+	if (package.cmd_data.size() == 3)
 	{
-		std::string	name = package.cmd_data[TOPIC_CHANNEL];
-		Channel		*channel = server.getChannel(name);
-		channel->setName(name);
-		server.deleteChannel(channel->getName());
-		server.createChannel(*channel);
+		std::string	name		= package.cmd_data[TOPIC_CHANNEL];
+		Channel		*channel	= server.getChannel(name);
+
+		channel->setTopic(package.cmd_data[TOPIC_NEW]);
+		package.channel = channel;
+		package.rpl_data = package.cmd_data[TOPIC_NEW];
 	}
 }

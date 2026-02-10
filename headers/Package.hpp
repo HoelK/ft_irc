@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:50 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 06:14:01 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 17:03:40 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ typedef struct	s_package
 	bool						quit;
 	int							error;
 
-	void						clear();
+	void						clear(void);
+	void						setError(int error);
 }	t_package;
 
 extern t_package package;

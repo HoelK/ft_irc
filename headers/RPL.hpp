@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 06:42:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 22:37:15 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@
 # define ERR_PASSWDMISMATCH_STR						"Password incorrect"
 # define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) + " :Not enough parameters"
 # define ERR_USERNOTINCHANNEL_STR(nick, channel)	std::string(nick) + " " + std::string(channel) + " :They aren't on that channel"
+# define ERR_INVITEONLYCHAN_STR(channel)			std::string(channel) + " :Cannot join channel (+i)" 
+# define ERR_CHANNELISFULL_STR(channel)				std::string(channel) + " :Cannot join channel (+l)"
+# define ERR_BADCHANNELKEY_STR(channel)				std::string(channel) + " :Cannot join channel (+k)"
+# define ERR_NOSUCHCHANNEL_STR(channel)				std::string(channel) + " :No such channel"
 
 # define RPL_STR(nick, user, cmd, data)			":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
@@ -54,9 +58,12 @@ class Server;
 
 enum ERR_ID
 {
-	ERR_USERNOTINCHANNEL = 441,
-	ERR_NEEDMOREPARAMS = 461,
-	ERR_PASSWDMISMATCH = 464
+	ERR_NOSUCHCHANNEL =		403,
+	ERR_USERNOTINCHANNEL =	441,
+	ERR_NEEDMOREPARAMS =	461,
+	ERR_PASSWDMISMATCH =	464,
+	ERR_CHANNELISFULL =		471,
+	ERR_BADCHANNELKEY =		475
 };
 
 class RPL

@@ -17,23 +17,23 @@ NAME=ft_irc
 all: start $(NAME)
 
 start:
-	@echo "\e[1;33m===============FT_IRC==============="
+	@echo "\e[1;33m===============FT_IRC===============\033[0m"
 
 $(NAME): $(OBJS)
-	@echo "\e[1;32m [FT_IRC] Building ..."
+	@echo "\e[1;32m [FT_IRC] Building ...\033[0m"
 	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-	@echo "\e[1;32m [FT_IRC] Build Complete !"
+	@echo "\e[1;32m [FT_IRC] Build Complete !\033[0m"
 
 %.o: %.cpp
-	@echo "\e[1;32m [FT_IRC] Compiling $^"
+	@echo "\e[1;32m [FT_IRC] Compiling $^\033[0m"
 	@$(CC) $(FLAGS) $^ -c -o $@ -I./headers/
 
 fclean: clean
-	@echo "\e[1;31m [DELETING EXECUTABLE]"
+	@echo "\e[1;31m [DELETING EXECUTABLE]\033[0m"
 	@rm -f $(NAME)
 
 clean:
-	@echo "\e[1;31m [DELETING RESIDUAL FILES]"
+	@echo "\e[1;31m [DELETING RESIDUAL FILES]\033[0m"
 	@rm -f $(OBJS)
 
 re: clean all

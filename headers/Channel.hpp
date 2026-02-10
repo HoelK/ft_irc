@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/10 00:35:49 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 22:30:37 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,13 @@ class Client;
 class Channel
 {
     private:
+		bool							op_key;
+		bool							op_topic;
+		int								op_limit;
+		bool							op_invite;
         std::string						name;
+		std::string						topic;
+		std::string						password;
 		std::map<std::string, Client *>	clients;
 
     public:
@@ -32,9 +38,22 @@ class Channel
         Channel(const std::string& name);
         ~Channel(void);
 
-        const std::string&	getName(void) const;
-		void				setName(std::string const &name);
+		const bool			&getOpKey(void) const;
+		const bool			&getOpTopic(void) const;
+		const bool			&getOpInvite(void) const;
+		const int			&getOpLimit(void) const;
+		const std::string	&getPassword(void) const;
+        const std::string	&getName(void) const;
+		const std::string	&getTopic(void) const;
+		void				setTopic(std::string const &topic);
 		std::string			getNameList(void) const;
+		void				setOpKey(bool const &key, std::string const &password);
+		void				setOpTopic(bool const &topic);
+		void				setOpInvite(bool const &invite);
+		void				setOpLimit(int const &limit);
+		void				setName(std::string const &name);
+		bool				Auth(std::string const &password);
+		bool				isFull(void);
 		bool				isClient(std::string const &nick);
 		Client				*getClient(std::string const &nick);
         void				addClient(Client *client);
