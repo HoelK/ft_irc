@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 03:10:58 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 05:40:28 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,10 @@ class RPL
 	public:
 		static void	reply(Server &server);
 		static void Welcome(const int &fd, std::string const &nick);
-		static void	Join(const int &fd, std::string const &nick, std::string const &topic, Channel const &channel);
-		static std::string	Topic(void);
+		static void	Topic(Server &server);
+		static void	Join(Server &server);
+		static void	Kick(Server &server);
+		static void	Priv(Server &server);
+		static void	Default(Server &server);
+		static void	Error(Server &server);
 };
