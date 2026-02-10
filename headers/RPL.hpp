@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 05:40:28 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 06:42:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define SERVER_NAME "ft.irc"
 # define NETWORK_NAME "CACA"
 
+# define HEADER_ERROR(code, nick)				":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " "
 # define HEADER_STR(code, nick, op, channel)	":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + std::string(op) + std::string(channel) + " :"
 
 //Welcome
@@ -39,18 +40,22 @@
 # define RPL_ENDOFNAMES		"End of /NAMES list"
 
 //Errors
-# define ERR_PASSWDMISMATCH_STR				"Password incorrect"
+# define ERR_PASSWDMISMATCH_STR						"Password incorrect"
+# define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) + " :Not enough parameters"
+# define ERR_USERNOTINCHANNEL_STR(nick, channel)	std::string(nick) + " " + std::string(channel) + " :They aren't on that channel"
 
-# define RPL_STR(nick, user, cmd, data)	":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
+# define RPL_STR(nick, user, cmd, data)			":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
-# define RPL_TOP(topic)					RPL_PRIV(topic)
-# define RPL_PRIV(msg)					" :" + std::string(msg)
-# define RPL_KICK(user, data)			" " + std::string(user) + " :" + std::string(data)
+# define RPL_TOP(topic)							RPL_PRIV(topic)
+# define RPL_PRIV(msg)							" :" + std::string(msg)
+# define RPL_KICK(user, data)					" " + std::string(user) + " :" + std::string(data)
 
 class Server;
 
 enum ERR_ID
 {
+	ERR_USERNOTINCHANNEL = 441,
+	ERR_NEEDMOREPARAMS = 461,
 	ERR_PASSWDMISMATCH = 464
 };
 

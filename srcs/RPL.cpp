@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 05:42:33 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 06:48:16 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,14 @@ static std::string	codeToErr(short code)
 {
 	if (code == ERR_PASSWDMISMATCH)
 		return (ERR_PASSWDMISMATCH_STR);
+	if (code == ERR_NEEDMOREPARAMS)
+		return (ERR_NEEDMOREPARAMS_STR(package.cmd));
+	if (code == ERR_USERNOTINCHANNEL)
+		return (ERR_USERNOTINCHANNEL_STR(package.rpl_data, package.channel->getName()));
 	return ("");
 }
 
-static std::string	getError(short code, std::string const &nick) { return (HEADER_STR(codeStr(code), nick, "", "") + codeToErr(code)); };
+static std::string	getError(short code, std::string const &nick) { return (HEADER_ERROR(codeStr(code), nick) + codeToErr(code)); };
 static std::string	getRPL(void) { return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rpl_data)); };
 
 void RPL::Welcome(const int &fd, std::string const &nick)
@@ -69,6 +73,8 @@ void	RPL::Error(Server &server)
 	std::string	msg;
 
 	msg = getError(package.error, package.oldClient.getNick()) + "\r\n";
+	std::cout << msg;
+	std::cout << *package.client;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
@@ -144,7 +150,7 @@ void	RPL::reply(Server &server)
 	std::map<std::string, void (*)(Server &server)>::iterator it;
 
 	if (package.error)
-		RPL::Error(server);
+		return (RPL::Error(server));
 
 	it = rpls.find(package.cmd);
 	if (it == rpls.end())

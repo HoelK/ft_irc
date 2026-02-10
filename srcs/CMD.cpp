@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 03:06:25 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/10 06:31:21 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,11 @@ void	CMD::Kick(Server &server)
 
 	Channel *channel =	package.client->getChannel();
 	Client	*client =	channel->getClient(package.cmd_data[KICK_USER]);
+	package.channel = channel;
 	
-	if (!channel || !client)
+	if (!client || !package.cmd_data[KICK_USER].empty())
+		return (package.error = ERR_USERNOTINCHANNEL, package.rpl_data = package.cmd_data[KICK_USER], (void) server);
+	if (!channel)
 		return ;
 	package.rpl_data = package.cmd_data[KICK_CHANNEL];
 	if (channel->getName() == package.cmd_data[KICK_CHANNEL]
