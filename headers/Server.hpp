@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 04:14:42 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 19:33:08 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include "CMD.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"
+# define FD_MAX 1024 - 3
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif

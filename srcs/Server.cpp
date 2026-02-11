@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 04:24:17 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 19:32:52 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,9 @@ void	Server::acceptClient(void)
 {
 	struct pollfd	p;
 
+	std::cout << this->clients.size() << std::endl;
+	if (this->clients.size() >= FD_MAX)
+		return ;
 	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
 	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
 
@@ -117,7 +120,8 @@ void	Server::authenticate(Client &client)
 		MSG::sendData(&client, line);
 		if (client.getPass().empty() && package.cmd != "PASS")
 			continue ;
-		if (!client.getPass().empty() && (package.cmd != "NICK" && package.cmd != "USER"))
+		if (!client.getPass().empty()
+		&& (package.cmd != "NICK" && package.cmd != "USER"))
 			continue ;
 		CMD::apply(*this);
 		if (package.error)
