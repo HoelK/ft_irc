@@ -44,7 +44,7 @@ std::string	Ft::getFdContent(const int fd)
 
 	file.resize(BUFFER_SIZE);
 	bytes = recv(fd, &file[0], BUFFER_SIZE, 0);
-	if (bytes < 0)
+	if (bytes <= 0)
 		return ("");
 	file.resize(bytes);
 	return (file);

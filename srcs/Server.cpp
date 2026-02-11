@@ -72,7 +72,7 @@ void	Server::acceptMessage(Client &client)
 		buffer = Ft::getFdContent(client.getFd());
 		std::cout << buffer;
 		if (buffer.empty())
-			break ;
+			return (this->disconnectClient(client.getFd()));
 		while (!buffer.empty())
 		{
 			line = client.getBuffer() + Ft::extractLine(buffer);
@@ -83,7 +83,7 @@ void	Server::acceptMessage(Client &client)
 			CMD::apply(*this);
 			RPL::reply(*this);
 			if (package.quit)
-				return ((void)this->disconnectClient(client.getFd()));
+				return (this->disconnectClient(client.getFd()));
 		}
 	}
 }
@@ -100,7 +100,6 @@ void	Server::acceptClient(void)
 	p.revents = 0;
 	this->fds.push_back(p);
 	this->clients[p.fd] = new Client(client);
-	this->authenticate(*(this->clients[p.fd]));
 }
 
 void	Server::authenticate(Client &client)
@@ -109,6 +108,8 @@ void	Server::authenticate(Client &client)
 	std::string	buffer;
 
 	buffer = Ft::getFdContent(client.getFd());
+	if (buffer.empty())
+		return (this->disconnectClient(client.getFd()));
 	while (!buffer.empty())
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
