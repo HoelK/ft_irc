@@ -67,24 +67,21 @@ void	Server::acceptMessage(Client &client)
 	std::string	line;
 	std::string	buffer;
 
-	while (true)
+	buffer = Ft::getFdContent(client.getFd());
+	std::cout << buffer;
+	if (buffer.empty())
+		return (this->disconnectClient(client.getFd()));
+	while (!buffer.empty())
 	{
-		buffer = Ft::getFdContent(client.getFd());
-		std::cout << buffer;
-		if (buffer.empty())
+		line = client.getBuffer() + Ft::extractLine(buffer);
+		client.setBuffer("");
+		if (!Ft::endsWithCRLF(line))
+			return (client.setBuffer(line));
+		MSG::sendData(&client, line);
+		CMD::apply(*this);
+		RPL::reply(*this);
+		if (package.quit)
 			return (this->disconnectClient(client.getFd()));
-		while (!buffer.empty())
-		{
-			line = client.getBuffer() + Ft::extractLine(buffer);
-			client.setBuffer("");
-			if (!Ft::endsWithCRLF(line))
-				return (client.setBuffer(line));
-			MSG::sendData(&client, line);
-			CMD::apply(*this);
-			RPL::reply(*this);
-			if (package.quit)
-				return (this->disconnectClient(client.getFd()));
-		}
 	}
 }
 
@@ -148,11 +145,11 @@ void	Server::disconnectClient(const int &fd)
 	delete (client);
 }
 
-Client	*Server::getClient(int const &id) { return (this->clients.find(id)->second); };
-void	Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
-bool	Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
-bool	Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };
-Channel	*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
+Client	*Server::getClient(int const &id)				{ return (this->clients.find(id)->second); };
+void	Server::createChannel(Channel &channel)			{ this->channels[channel.getName()] = channel; };
+bool	Server::deleteChannel(std::string const &name)	{ return (this->channels.erase(name)); };
+bool	Server::isChannel(std::string const &name)		{ return (this->channels.find(name) != this->channels.end()); };
+Channel	*Server::getChannel(std::string const &name)	{ return (&(this->channels.find(name)->second)); };
 Client	*Server::getClient(std::string const &nick)
 {
 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
