@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 23:43:57 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 03:44:10 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,27 @@ static std::string	codeToErr(short code)
 		return (ERR_NEEDMOREPARAMS_STR(package.cmd));
 	if (code == ERR_USERNOTINCHANNEL)
 		return (ERR_USERNOTINCHANNEL_STR(package.rpl_data, package.channel->getName()));
+	if (code == ERR_NOSUCHCHANNEL)
+		return (ERR_NOSUCHCHANNEL_STR(package.channel->getName()));
+	if (code == ERR_NONICKNAMEGIVEN)
+		return (ERR_NONICKNAMEGIVEN_STR);
+	if (code == ERR_ONEUSNICKNAME)
+		return (ERR_ONEUSNICKNAME_STR(package.client->getNick()));
+	if (code == ERR_NICKNAMEINUSE)
+		return (ERR_NICKNAMEINUSE_STR(package.client->getNick()));
+	if (code == ERR_NOTONCHANNEL)
+		return (ERR_NOTONCHANNEL_STR(package.channel->getName()));
+	if (code == ERR_ALREADYREGISTRED)
+		return (ERR_ALREADYREGISTRED_STR);
+	if (code == ERR_CHANNELISFULL)
+		return (ERR_CHANNELISFULL_STR(package.channel->getName()));
+	if (code == ERR_INVITEONLYCHAN)
+		return (ERR_INVITEONLYCHAN_STR(package.channel->getName()));
+	if (code == ERR_BADCHANNELKEY)
+		return (ERR_BADCHANNELKEY_STR(package.channel->getName()));
+	if (code == ERR_CHANOPRIVSNEEDED)
+		return (ERR_CHANOPRIVSNEEDED_STR(package.channel->getName()));
+	
 	return ("");
 }
 
@@ -101,7 +122,6 @@ void	RPL::Priv(Server &server)
 		send(receiver->getFd(), msg.c_str(), msg.size(), 0);
 }
 
-
 void	RPL::Kick(Server &server)
 {
 	if (!package.channel)
@@ -134,7 +154,8 @@ void	RPL::Topic(Server &server)
 	(void) server;
 	std::string	msg;
 
-	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[TOPIC_CHANNEL]) + RPL_TOP(package.cmd_data[TOPIC_NEW]) + "\r\n";
+	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[TOPIC_CHANNEL])
+		+ RPL_TOP(package.cmd_data[TOPIC_NEW]) + "\r\n";
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.channel)
 		package.channel->broadcastMessage(package.client, msg);

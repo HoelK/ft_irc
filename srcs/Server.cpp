@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 00:03:28 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 03:40:52 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,18 +113,15 @@ void	Server::authenticate(Client &client)
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
 		client.setBuffer("");
+		std::cout << "auth : " << line;
 		if (!Ft::endsWithCRLF(line))
 			return (client.setBuffer(line));
-		std::cout << "LINE : " << line << std::endl;
 		MSG::sendData(&client, line);
+		if (client.getPass().empty() && package.cmd != "PASS")
+			continue ;
+		if (!client.getPass().empty() && (package.cmd != "NICK" && package.cmd != "USER"))
+			continue ;
 		CMD::apply(*this);
-		if (package.cmd == CMD_PASS
-		&& this->password != client.getPass())
-		{
-			package.error = ERR_PASSWDMISMATCH;
-			RPL::reply(*this);
-			return (this->disconnectClient(client.getFd()));
-		}
 	}
 	if (!client.isAuth(this->password))
 		return ;
@@ -151,7 +148,6 @@ void	Server::disconnectClient(const int &fd)
 Client	*Server::getClient(int const &id) { return (this->clients.find(id)->second); };
 void	Server::createChannel(Channel &channel) { this->channels[channel.getName()] = channel; };
 bool	Server::deleteChannel(std::string const &name) { return (this->channels.erase(name)); };
-
 bool	Server::isChannel(std::string const &name) { return (this->channels.find(name) != this->channels.end()); };
 Channel	*Server::getChannel(std::string const &name) { return (&(this->channels.find(name)->second)); };
 Client	*Server::getClient(std::string const &nick)

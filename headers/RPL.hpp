@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 23:27:37 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 03:43:04 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # define SERVER_NAME "ft.irc"
 # define NETWORK_NAME "CACA"
 
-# define HEADER_ERROR(code, nick)				":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " "
 # define HEADER_STR(code, nick, op, channel)	":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + std::string(op) + std::string(channel) + " :"
 
 //Welcome
@@ -40,13 +39,21 @@
 # define RPL_ENDOFNAMES		"End of /NAMES list"
 
 //Errors
+# define HEADER_ERROR(code, nick)					":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " "
+
 # define ERR_PASSWDMISMATCH_STR						"Password incorrect"
+# define ERR_NONICKNAMEGIVEN_STR					" :No nickname given"
+# define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) + " :Erroneous nickname"
+# define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) + " :Nickname is already in use"
 # define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) + " :Not enough parameters"
 # define ERR_USERNOTINCHANNEL_STR(nick, channel)	std::string(nick) + " " + std::string(channel) + " :They aren't on that channel"
 # define ERR_INVITEONLYCHAN_STR(channel)			std::string(channel) + " :Cannot join channel (+i)" 
 # define ERR_CHANNELISFULL_STR(channel)				std::string(channel) + " :Cannot join channel (+l)"
 # define ERR_BADCHANNELKEY_STR(channel)				std::string(channel) + " :Cannot join channel (+k)"
 # define ERR_NOSUCHCHANNEL_STR(channel)				std::string(channel) + " :No such channel"
+# define ERR_CHANOPRIVSNEEDED_STR(channel)			std::string(channel) + " :You're not channel operator"
+# define ERR_NOTONCHANNEL_STR(channel)				std::string(channel) + " :You're not on that channel"
+# define ERR_ALREADYREGISTRED_STR					":Unauthorized command (already registered)"
 
 # define RPL_STR(nick, user, cmd, data)			":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
@@ -59,11 +66,18 @@ class Server;
 enum ERR_ID
 {
 	ERR_NOSUCHCHANNEL =		403,
+	ERR_NONICKNAMEGIVEN =	431,
+	ERR_ONEUSNICKNAME =		432,
+	ERR_NICKNAMEINUSE =		433,
 	ERR_USERNOTINCHANNEL =	441,
+	ERR_NOTONCHANNEL =		442,
 	ERR_NEEDMOREPARAMS =	461,
+	ERR_ALREADYREGISTRED =	462,
 	ERR_PASSWDMISMATCH =	464,
 	ERR_CHANNELISFULL =		471,
-	ERR_BADCHANNELKEY =		475
+	ERR_INVITEONLYCHAN =	473,
+	ERR_BADCHANNELKEY =		475,
+	ERR_CHANOPRIVSNEEDED =	482
 };
 
 class RPL
