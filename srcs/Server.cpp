@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 03:40:52 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 04:24:17 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,8 @@ void	Server::authenticate(Client &client)
 		if (!client.getPass().empty() && (package.cmd != "NICK" && package.cmd != "USER"))
 			continue ;
 		CMD::apply(*this);
+		if (package.error)
+			RPL::reply(*this);
 	}
 	if (!client.isAuth(this->password))
 		return ;
@@ -158,4 +160,14 @@ Client	*Server::getClient(std::string const &nick)
 			return (it->second);
 	}
 	return (NULL);
+}
+
+bool	Server::isClient(std::string const &nick)
+{
+	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	{
+		if (it->second->getNick() == nick)
+			return (true);
+	}
+	return (false);
 }

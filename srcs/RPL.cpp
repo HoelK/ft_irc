@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 03:44:10 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 04:29:07 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ static std::string	codeToErr(short code)
 	if (code == ERR_USERNOTINCHANNEL)
 		return (ERR_USERNOTINCHANNEL_STR(package.rpl_data, package.channel->getName()));
 	if (code == ERR_NOSUCHCHANNEL)
-		return (ERR_NOSUCHCHANNEL_STR(package.channel->getName()));
+		return (ERR_NOSUCHCHANNEL_STR(package.rpl_data));
 	if (code == ERR_NONICKNAMEGIVEN)
 		return (ERR_NONICKNAMEGIVEN_STR);
 	if (code == ERR_ONEUSNICKNAME)
-		return (ERR_ONEUSNICKNAME_STR(package.client->getNick()));
+		return (ERR_ONEUSNICKNAME_STR(package.rpl_data));
 	if (code == ERR_NICKNAMEINUSE)
-		return (ERR_NICKNAMEINUSE_STR(package.client->getNick()));
+		return (ERR_NICKNAMEINUSE_STR(package.rpl_data));
 	if (code == ERR_NOTONCHANNEL)
 		return (ERR_NOTONCHANNEL_STR(package.channel->getName()));
 	if (code == ERR_ALREADYREGISTRED)
@@ -109,7 +109,6 @@ void	RPL::Default(Server &server)
 
 void	RPL::Priv(Server &server)
 {
-	(void) server;
 	std::string	msg;
 	Client		*receiver;
 

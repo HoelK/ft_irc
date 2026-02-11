@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/07 20:04:57 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 04:11:52 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,27 @@ std::string	Ft::getFdContent(const int fd)
 		return ("");
 	file.resize(bytes);
 	return (file);
+}
+
+static bool isLetter(char c)	{ return std::isalpha(static_cast<unsigned char>(c)) != 0; };
+static bool isDigit(char c)		{ return std::isdigit(static_cast<unsigned char>(c)) != 0; };
+static bool isSpecial(char c)	{ return (c >= 0x5B && c <= 0x60) || (c >= 0x7B && c <= 0x7D); };
+
+bool Ft::isValidNickname(const std::string &nick)
+{
+    if (nick.empty() || nick.length() > 9)
+        return (false);
+
+    char first = nick[0];
+    if (!(isLetter(first) || isSpecial(first)))
+        return (false);
+
+    for (std::string::size_type i = 1; i < nick.length(); ++i)
+    {
+        char c = nick[i];
+        if (!(isLetter(c) || isDigit(c) || isSpecial(c) || c == '-'))
+            return (false);
+    }
+
+    return (true);
 }

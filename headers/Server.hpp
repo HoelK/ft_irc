@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 00:02:15 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 04:14:42 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ class Server
 
 		void	acceptMessage(Client &client);
 		bool	isChannel(std::string const &name);
+		bool	isClient(std::string const &nick);
 
 		~Server(void);
 };
