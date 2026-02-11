@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 03:43:04 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 20:08:14 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,14 @@
 //Errors
 # define HEADER_ERROR(code, nick)					":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " "
 
+# define ERR_NOSUCHNICK_STR(nick)					std::string(nick) + " :No such nick"
 # define ERR_PASSWDMISMATCH_STR						"Password incorrect"
 # define ERR_NONICKNAMEGIVEN_STR					" :No nickname given"
 # define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) + " :Erroneous nickname"
 # define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) + " :Nickname is already in use"
 # define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) + " :Not enough parameters"
 # define ERR_USERNOTINCHANNEL_STR(nick, channel)	std::string(nick) + " " + std::string(channel) + " :They aren't on that channel"
+# define ERR_USERONCHANNEL_STR(user, channel)		std::string(user) + " " + std::string(channel) + " :is already on channel"
 # define ERR_INVITEONLYCHAN_STR(channel)			std::string(channel) + " :Cannot join channel (+i)" 
 # define ERR_CHANNELISFULL_STR(channel)				std::string(channel) + " :Cannot join channel (+l)"
 # define ERR_BADCHANNELKEY_STR(channel)				std::string(channel) + " :Cannot join channel (+k)"
@@ -60,17 +62,20 @@
 # define RPL_TOP(topic)							RPL_PRIV(topic)
 # define RPL_PRIV(msg)							" :" + std::string(msg)
 # define RPL_KICK(user, data)					" " + std::string(user) + " :" + std::string(data)
+# define RPL_INVITE(channel)					" :" + std::string(channel)
 
 class Server;
 
 enum ERR_ID
 {
+	ERR_NOSUCHNICK =		401,
 	ERR_NOSUCHCHANNEL =		403,
 	ERR_NONICKNAMEGIVEN =	431,
 	ERR_ONEUSNICKNAME =		432,
 	ERR_NICKNAMEINUSE =		433,
 	ERR_USERNOTINCHANNEL =	441,
 	ERR_NOTONCHANNEL =		442,
+	ERR_USERONCHANNEL =		443,
 	ERR_NEEDMOREPARAMS =	461,
 	ERR_ALREADYREGISTRED =	462,
 	ERR_PASSWDMISMATCH =	464,
@@ -91,4 +96,5 @@ class RPL
 		static void	Priv(Server &server);
 		static void	Default(Server &server);
 		static void	Error(Server &server);
+		static void	Invite(Server &server);
 };

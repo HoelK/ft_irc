@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 04:29:07 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 20:31:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static std::map<std::string, void (*)(Server &server)> rpls = {
 	{CMD_JOIN, &RPL::Join},
 	{CMD_PRIV, &RPL::Priv},
 	{CMD_KICK, &RPL::Kick},
-	{CMD_TOPIC, &RPL::Topic}
+	{CMD_TOPIC, &RPL::Topic},
+	{CMD_INVITE, &RPL::Invite}
 };
 
 static std::string	codeStr(short code)
@@ -158,6 +159,20 @@ void	RPL::Topic(Server &server)
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.channel)
 		package.channel->broadcastMessage(package.client, msg);
+}
+
+void	RPL::Invite(Server &server)
+{
+	(void) server;
+	std::string msg;
+
+	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[INVITE_NICK])
+		+ RPL_INVITE(package.channel->getName()) + "\r\n";
+	std::cout << "RPLY INVITED : " << msg << std::endl;
+	send(server.getClient(package.cmd_data[INVITE_NICK])->getFd(), msg.c_str(), msg.size(), 0);
+	msg = HEADER_ERROR("341", package.client->getNick()) + package.cmd_data[INVITE_NICK] + " " + package.cmd_data[INVITE_CHANNEL] + "\r\n";
+	std::cout << "RPLY INVITER : " << msg << std::endl;
+	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
 void	RPL::reply(Server &server)

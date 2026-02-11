@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/10 22:30:07 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 20:48:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,28 @@ void				Channel::setTopic(std::string const &topic)	{ this->topic = topic; };
 
 bool				Channel::isFull(void) { return (this->op_limit && (int)this->clients.size() >= this->op_limit); }
 bool				Channel::Auth(std::string const &password) { return (this->password == password); };
+
+void				Channel::addInvited(Client *client) { this->invited.push_back(client); };
+void				Channel::removeInvited(std::string const &nick)
+{ 
+	for (std::vector<Client *>::iterator it = this->invited.begin(); it != this->invited.end(); it++)
+	{
+		Client *client = *it;
+		if (client->getNick() == nick)
+			this->invited.erase(it);
+	}
+}
+
+bool				Channel::isInvited(std::string const &nick)
+{
+	for (std::vector<Client *>::iterator it = this->invited.begin(); it != this->invited.end(); it++)
+	{
+		Client *client = *it;
+		if (client->getNick() == nick)
+			return (true);
+	}
+	return (false);
+}
 
 void				Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
 bool				Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 04:47:16 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/11 20:49:24 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ static std::map<std::string, void (*)(Server &server)> cmds = {
 	{CMD_JOIN, &CMD::Join},
 	{CMD_PRIV, &CMD::Priv},
 	{CMD_KICK, &CMD::Kick},
-	{CMD_TOPIC, &CMD::Topic}
+	{CMD_TOPIC, &CMD::Topic},
+	{CMD_INVITE, &CMD::Invite}
+
 };
 
 void	CMD::apply(Server &server)
@@ -157,4 +159,24 @@ void	CMD::Topic(Server &server)
 	channel->setTopic(newTopic);
 	package.channel		= channel;
 	package.rpl_data	= newTopic;
+}
+
+void	CMD::Invite(Server &server)
+{
+	if (package.cmd_data.size() < 3)
+		return (package.setError(ERR_NEEDMOREPARAMS));
+	std::string	invited = package.cmd_data[INVITE_NICK];
+	std::string	chan_name = package.cmd_data[INVITE_CHANNEL];
+	if (!server.isClient(invited))
+		return (package.setError(ERR_NOSUCHNICK));
+	if (!server.isChannel(chan_name))
+		return (package.setError(ERR_NOSUCHCHANNEL));
+	Channel		*channel	= server.getChannel(chan_name);
+	package.channel			= channel;
+	if (!channel->isClient(package.client->getNick()))
+		return (package.setError(ERR_NOTONCHANNEL));
+	if (channel->isClient(invited))
+		return (package.setError(ERR_USERONCHANNEL));
+	Client *invitedCli = server.getClient(invited);
+	channel->addInvited(invitedCli);
 }
