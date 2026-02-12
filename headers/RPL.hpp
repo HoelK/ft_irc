@@ -59,10 +59,11 @@
 
 # define RPL_STR(nick, user, cmd, data)			":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
-# define RPL_TOP(topic)							RPL_PRIV(topic)
+# define RPL_TOP(topic)							" :" + std::string(topic)
 # define RPL_PRIV(msg)							" :" + std::string(msg)
 # define RPL_KICK(user, data)					" " + std::string(user) + " :" + std::string(data)
 # define RPL_INVITE(channel)					" :" + std::string(channel)
+# define RPL_MODE(modes)						modes
 
 class Server;
 
@@ -98,4 +99,5 @@ class RPL
 		static void	Default(Server &server);
 		static void	Error(Server &server);
 		static void	Invite(Server &server);
+		static void Mode(Server &server);
 };

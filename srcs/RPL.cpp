@@ -19,7 +19,8 @@ static std::map<std::string, void (*)(Server &server)> rpls = {
 	{CMD_PRIV, &RPL::Priv},
 	{CMD_KICK, &RPL::Kick},
 	{CMD_TOPIC, &RPL::Topic},
-	{CMD_INVITE, &RPL::Invite}
+	{CMD_INVITE, &RPL::Invite},
+	{CMD_MODE, &RPL::Mode}
 };
 
 static std::string	codeStr(short code)
@@ -173,6 +174,19 @@ void	RPL::Invite(Server &server)
 	msg = HEADER_ERROR("341", package.client->getNick()) + package.cmd_data[INVITE_NICK] + " " + package.cmd_data[INVITE_CHANNEL] + "\r\n";
 	std::cout << "RPLY INVITER : " << msg << std::endl;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+}
+
+void	RPL::Mode(Server &server)
+{
+	(void) server;
+	std::string	msg;
+
+	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
+		+ RPL_MODE(package.cmd_data[MODE_MODES]) + "\r\n";
+	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+	if (package.channel)
+		package.channel->broadcastMessage(package.client, msg);
+
 }
 
 void	RPL::reply(Server &server)

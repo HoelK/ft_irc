@@ -24,7 +24,7 @@ static int checkModes(std::string const &modes)
 		if (modes[i] == 'o' || modes[i] == 'l' || modes[i] == 'k')
 			args++;
 	}
-	if ((int)package.cmd_data.size() < (args + 3))
+	if ((int)package.cmd_data.size() < (args + 1))
 		return (ERR_NEEDMOREPARAMS);
 	return (0);
 }
@@ -42,7 +42,7 @@ int	Mode::Check(Server &server, std::string const &modes)
 	if (!server.isChannel(package.cmd_data[MODE_CHANNEL]))
 		return (ERR_NOSUCHNICK);
 	package.channel = server.getChannel(package.cmd_data[MODE_CHANNEL]);
-	if (package.channel->isClient(package.client->getNick()))
+	if (!package.channel->isClient(package.client->getNick()))
 		return (ERR_NOTONCHANNEL);
 	error = checkModes(modes);
 	if (error)

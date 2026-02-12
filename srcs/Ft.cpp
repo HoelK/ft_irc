@@ -80,7 +80,7 @@ bool Ft::isInt(const std::string &sNum)
     if (sNum.empty())
         return false;
     
-    if ((sNum[0] == '+' || sNum[0] == '-') && sNum.length() == 1)
+    if ((sNum[0] == '+' || sNum[0] == '-'))
 	{
 		if (sNum.length() == 1)
 			return (false);
