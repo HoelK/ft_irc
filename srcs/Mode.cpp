@@ -35,13 +35,15 @@ int	Mode::Check(Server &server, std::string const &modes)
 	int			error	= 0;
 	std::string	set		= CMODES;
 
-	if (!package.client->getOp())
-		return (ERR_CHANOPRIVSNEEDED);
-	if (package.cmd_data.size() < 3)
-		return (ERR_NEEDMOREPARAMS);
 	if (!server.isChannel(package.cmd_data[MODE_CHANNEL]))
 		return (ERR_NOSUCHNICK);
 	package.channel = server.getChannel(package.cmd_data[MODE_CHANNEL]);
+	if (package.cmd_data.size() == 2)
+		
+	if (package.cmd_data[MODE_CHANNEL][0] != '#')
+		return (-1);
+	if (!package.client->getOp())
+		return (ERR_CHANOPRIVSNEEDED);
 	if (!package.channel->isClient(package.client->getNick()))
 		return (ERR_NOTONCHANNEL);
 	error = checkModes(modes);

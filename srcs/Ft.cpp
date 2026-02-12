@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/12 06:11:05 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 20:37:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,15 @@ bool Ft::isInt(const std::string &sNum)
     }
     
     return (true);
+}
+
+std::string	Ft::intToStr(const int &num)
+{
+	std::stringstream	s;
+	std::string			sNum;
+
+	s << num;
+	s >> sNum;
+
+	return (sNum);
 }

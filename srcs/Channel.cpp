@@ -6,44 +6,65 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/12 04:55:54 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 20:43:53 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
-Channel::Channel(void): op_key(false), op_topic(false), op_limit(0), op_invite(false) {};
+Channel::Channel(void): opKey(false), opTopic(false), opLimit(0), opInvite(false) {};
 Channel::~Channel(void) {};
-Channel::Channel(Channel const &copy): op_key(false), op_topic(false), op_limit(0), op_invite(false) { (*this) = copy; };
+Channel::Channel(Channel const &copy): opKey(false), opTopic(false), opLimit(0), opInvite(false) { (*this) = copy; };
 Channel::Channel(const std::string& name): name(name) {};
 Channel	&Channel::operator=(Channel const &copy)
 {
-	this->op_key = copy.op_key;
-	this->op_topic = copy.op_topic;
-	this->op_limit = copy.op_limit;
-	this->op_invite = copy.op_invite;
+	this->opKey = copy.opKey;
+	this->opTopic = copy.opTopic;
+	this->opLimit = copy.opLimit;
+	this->opInvite = copy.opInvite;
 	this->name = copy.name;
 	this->clients = copy.clients;
 	return (*this);
 }
 
-const bool			&Channel::getOpKey(void)	const			{ return (this->op_key); };
-const bool			&Channel::getOpTopic(void)	const			{ return (this->op_topic); };
-const bool			&Channel::getOpInvite(void)	const			{ return (this->op_invite); };
-const int			&Channel::getOpLimit(void)	const			{ return (this->op_limit); };
+const bool			&Channel::getOpKey(void)	const			{ return (this->opKey); };
+const bool			&Channel::getOpTopic(void)	const			{ return (this->opTopic); };
+const bool			&Channel::getOpInvite(void)	const			{ return (this->opInvite); };
+const int			&Channel::getOpLimit(void)	const			{ return (this->opLimit); };
 const std::string	&Channel::getPassword(void)	const			{ return (this->password); };
 const std::string	&Channel::getName(void)		const			{ return (this->name); };
 const std::string	&Channel::getTopic(void)	const			{ return (this->topic); };
-void				Channel::setOpKey(bool const &key, std::string const &password) { this->op_key = key; this->password = password; };
-void				Channel::setOpTopic(bool const &topic)		{ this->op_topic = topic; };
-void				Channel::setOpInvite(bool const &invite)	{ this->op_invite = invite; };
-void				Channel::setOpLimit(int const &limit)		{ this->op_limit = limit; };
+void				Channel::setOpKey(bool const &key, std::string const &password) { this->opKey = key; this->password = password; };
+void				Channel::setOpTopic(bool const &topic)		{ this->opTopic = topic; };
+void				Channel::setOpInvite(bool const &invite)	{ this->opInvite = invite; };
+void				Channel::setOpLimit(int const &limit)		{ this->opLimit = limit; };
 void				Channel::setName(std::string const &name)	{ this->name = name; };
 void				Channel::setTopic(std::string const &topic)	{ this->topic = topic; };
-void				Channel::setPassword(std::string const &password) { this->password  = password; };
 
-bool				Channel::isFull(void) { return (this->op_limit && (int)this->clients.size() >= this->op_limit); }
+bool				Channel::isFull(void) { return (this->opLimit && (int)this->clients.size() >= this->opLimit); }
 bool				Channel::Auth(std::string const &password) { return (this->password == password); };
+
+std::string			Channel::getModes(void)
+{
+	std::string		result;
+	std::string		params;
+
+	if (this->opKey)
+	{
+		result = result + MODE_KEY;
+		params = params + this->password;
+	}
+	if (this->opTopic)
+		result = result + MODE_TOPIC;
+	if (this->opInvite)
+		result = result + MODE_INVITE;
+	if (this->opLimit)
+	{
+		result = result + MODE_LIMIT;
+		params = params + Ft::intToStr(this->opLimit);
+	}
+	return (result + " " + params);
+}
 
 void				Channel::addInvited(Client *client) { this->invited.push_back(client); };
 void				Channel::removeInvited(std::string const &nick)

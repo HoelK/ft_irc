@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/12 04:57:32 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 20:47:40 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,25 @@
 # include <vector>
 # include <sys/types.h>
 # include <sys/socket.h>
+# include "Ft.hpp"
 # include "Client.hpp"
+
+# define MODE_OP		'o'
+# define MODE_KEY		'k'
+# define MODE_TOPIC		't'
+# define MODE_LIMIT		'l'
+# define MODE_INVITE	'i'
+
 
 class Client;
 
 class Channel
 {
     private:
-		bool							op_key;
-		bool							op_topic;
-		int								op_limit;
-		bool							op_invite;
+		bool							opKey;
+		bool							opTopic;
+		int								opLimit;
+		bool							opInvite;
         std::string						name;
 		std::string						topic;
 		std::string						password;
@@ -54,7 +62,6 @@ class Channel
 		void				setOpInvite(bool const &invite);
 		void				setOpLimit(int const &limit);
 		void				setName(std::string const &name);
-		void				setPassword(std::string const &password);
 
 		bool				Auth(std::string const &password);
 		bool				isFull(void);
@@ -65,6 +72,7 @@ class Channel
 		void				addInvited(Client *client);
 		void				removeInvited(std::string const &nick);
 		bool				isInvited(std::string const &nick);
+		std::string			getModes(void);
 
 		void				broadcastMessage(Client *sender, std::string const &msg);
 };

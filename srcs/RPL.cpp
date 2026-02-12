@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 20:31:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 19:45:07 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,8 @@ void	RPL::Mode(Server &server)
 	(void) server;
 	std::string	msg;
 
+	if (package.error < 0)
+		return ;
 	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
 		+ RPL_MODE(package.cmd_data[MODE_MODES]) + "\r\n";
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
@@ -193,7 +195,7 @@ void	RPL::reply(Server &server)
 {
 	std::map<std::string, void (*)(Server &server)>::iterator it;
 
-	if (package.error)
+	if (package.error > 0)
 		return (RPL::Error(server));
 
 	it = rpls.find(package.cmd);
