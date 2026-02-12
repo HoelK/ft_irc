@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 20:49:24 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 06:11:37 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static std::map<std::string, void (*)(Server &server)> cmds = {
 	{CMD_PRIV, &CMD::Priv},
 	{CMD_KICK, &CMD::Kick},
 	{CMD_TOPIC, &CMD::Topic},
-	{CMD_INVITE, &CMD::Invite}
-
+	{CMD_INVITE, &CMD::Invite},
+	{CMD_MODE, &CMD::Mode}
 };
 
 void	CMD::apply(Server &server)
@@ -80,6 +80,7 @@ void	CMD::User(Server &server)
 
 void	CMD::Join(Server &server)
 {
+	//va te faire enculer
 	Channel		channel;
 	std::string	joinChannel;
 
@@ -163,6 +164,7 @@ void	CMD::Topic(Server &server)
 
 void	CMD::Invite(Server &server)
 {
+	//poneglyph prime
 	if (package.cmd_data.size() < 3)
 		return (package.setError(ERR_NEEDMOREPARAMS));
 	std::string	invited = package.cmd_data[INVITE_NICK];
@@ -179,4 +181,26 @@ void	CMD::Invite(Server &server)
 		return (package.setError(ERR_USERONCHANNEL));
 	Client *invitedCli = server.getClient(invited);
 	channel->addInvited(invitedCli);
+}
+
+void	CMD::Mode(Server &server)
+{
+	bool		add			= false;
+	int			argCount	= 0;
+	std::string	&modes		= package.cmd_data[MODE_MODES];
+
+	package.error = Mode::Check(server, modes);
+	if (package.error)
+		return ;
+	for (int i = 0; i < (int)modes.length(); i++)
+	{
+		if (modes[i] == '+')
+			add = true;
+		else if (modes[i] == '-')
+			add = false;
+		else
+			package.error = Mode::mode[modes[i]](server, add, argCount);
+		if (package.error)
+			return ;
+	}
 }

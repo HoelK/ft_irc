@@ -8,7 +8,8 @@ SRCS=srcs/main.cpp \
 	 srcs/MSG.cpp \
 	 srcs/CMD.cpp \
 	 srcs/Package.cpp \
-	 srcs/Ft.cpp
+	 srcs/Ft.cpp \
+	 srcs/Mode.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 

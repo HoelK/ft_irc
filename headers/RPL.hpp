@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 20:08:14 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 04:40:42 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ enum ERR_ID
 	ERR_ALREADYREGISTRED =	462,
 	ERR_PASSWDMISMATCH =	464,
 	ERR_CHANNELISFULL =		471,
+	ERR_UNKNOWNMODE =		472,
 	ERR_INVITEONLYCHAN =	473,
 	ERR_BADCHANNELKEY =		475,
 	ERR_CHANOPRIVSNEEDED =	482

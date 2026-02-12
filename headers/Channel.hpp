@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/11 20:47:19 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 04:57:32 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ class Channel
 		void				setOpInvite(bool const &invite);
 		void				setOpLimit(int const &limit);
 		void				setName(std::string const &name);
+		void				setPassword(std::string const &password);
+
 		bool				Auth(std::string const &password);
 		bool				isFull(void);
 		bool				isClient(std::string const &nick);

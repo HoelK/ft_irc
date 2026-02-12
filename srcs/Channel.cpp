@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/11 20:48:50 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 04:55:54 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void				Channel::setOpInvite(bool const &invite)	{ this->op_invite = invite; };
 void				Channel::setOpLimit(int const &limit)		{ this->op_limit = limit; };
 void				Channel::setName(std::string const &name)	{ this->name = name; };
 void				Channel::setTopic(std::string const &topic)	{ this->topic = topic; };
+void				Channel::setPassword(std::string const &password) { this->password  = password; };
 
 bool				Channel::isFull(void) { return (this->op_limit && (int)this->clients.size() >= this->op_limit); }
 bool				Channel::Auth(std::string const &password) { return (this->password == password); };

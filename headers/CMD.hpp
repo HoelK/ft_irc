@@ -6,11 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 19:45:34 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 06:07:43 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
+# include "Mode.hpp"
 # include "Server.hpp"
 # include "Package.hpp"
 # include "Client.hpp"
@@ -25,6 +26,7 @@
 # define CMD_KICK	"KICK"
 # define CMD_TOPIC	"TOPIC"
 # define CMD_INVITE "INVITE"
+# define CMD_MODE	"MODE"
 
 enum	cmdDataIds
 {
@@ -43,7 +45,9 @@ enum	cmdDataIds
 	TOPIC_CHANNEL	= 0,
 	TOPIC_NEW		= 1,
 	INVITE_NICK		= 0,
-	INVITE_CHANNEL	= 1
+	INVITE_CHANNEL	= 1,
+	MODE_CHANNEL	= 0,
+	MODE_MODES		= 1
 };
 
 class Server;
@@ -61,4 +65,5 @@ class CMD
 		static void	Kick(Server &server);
 		static void Topic(Server &server);
 		static void	Invite(Server &server);
+		static void	Mode(Server &server);
 };

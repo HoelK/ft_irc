@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 04:11:52 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/12 06:11:05 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,28 @@ bool Ft::isValidNickname(const std::string &nick)
             return (false);
     }
 
+    return (true);
+}
+
+bool Ft::isInt(const std::string &sNum)
+{
+    size_t start = 0;
+
+    if (sNum.empty())
+        return false;
+    
+    if ((sNum[0] == '+' || sNum[0] == '-') && sNum.length() == 1)
+	{
+		if (sNum.length() == 1)
+			return (false);
+		start = 1;
+	}
+    
+    for (size_t i = start; i < sNum.length(); ++i)
+	{
+		if (!std::isdigit(static_cast<unsigned char>(sNum[i])))
+            return (false);
+    }
+    
     return (true);
 }
