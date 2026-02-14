@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 19:37:04 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 19:52:27 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void	CMD::Priv(Server &server)
 	Channel	*channel = server.getChannel(package.rpl_data);
 	if (package.rpl_data[0] == '#' && channel)
 		package.channel = channel;
-
 }
 
 void	CMD::Kick(Server &server)
@@ -115,15 +114,9 @@ void	CMD::Kick(Server &server)
 
 void	CMD::Topic(Server &server)
 {
-	if (package.cmd_data.size() < 3)
-		return (package.setError(ERR_NEEDMOREPARAMS));
-	std::string	name		= package.cmd_data[TOPIC_CHANNEL];
-	std::string newTopic	= package.cmd_data[TOPIC_NEW];
-	Channel		*channel	= server.getChannel(name);
-
-	channel->setTopic(newTopic);
-	package.channel		= channel;
-	package.rpl_data	= newTopic;
+	if (!Topic::Check(server))
+		return ;
+	Topic::Set(server);
 }
 
 void	CMD::Invite(Server &server)

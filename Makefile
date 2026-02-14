@@ -12,7 +12,8 @@ SRCS=srcs/main.cpp \
 	 srcs/cmds/Mode.cpp \
 	 srcs/cmds/Join.cpp \
 	 srcs/cmds/Invite.cpp \
-	 srcs/cmds/Kick.cpp
+	 srcs/cmds/Kick.cpp \
+	 srcs/cmds/Topic.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 

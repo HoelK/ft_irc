@@ -2,7 +2,6 @@
 
 bool Kick::Check(Server &server)
 {
-
 	if (package.cmd_data.size() < 3)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 	

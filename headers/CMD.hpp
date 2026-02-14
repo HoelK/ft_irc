@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 19:37:22 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 19:47:05 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # include "Join.hpp"
 # include "Mode.hpp"
 # include "Kick.hpp"
+# include "Topic.hpp"
 # include "Invite.hpp"
 # include "Server.hpp"
 # include "Package.hpp"
