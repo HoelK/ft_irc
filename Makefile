@@ -6,9 +6,9 @@ SRCS=srcs/main.cpp \
 	 srcs/Channel.cpp \
 	 srcs/RPL.cpp \
 	 srcs/MSG.cpp \
-	 srcs/CMD.cpp \
 	 srcs/Package.cpp \
 	 srcs/Ft.cpp \
+	 srcs/cmds/CMD.cpp \
 	 srcs/cmds/Mode.cpp \
 	 srcs/cmds/Join.cpp \
 	 srcs/cmds/Invite.cpp \
