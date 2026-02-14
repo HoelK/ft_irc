@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/12 20:23:20 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 00:59:51 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	CMD::Pass(Server &server)
 void	CMD::Nick(Server &server)
 {
 	std::string	nick = package.cmd_data[NICK_NICK];
+	std::string oldNick = package.client->getNick();
 
 	package.rpl_data = nick;
 	if (package.cmd_data.size() < 2)
@@ -57,6 +58,7 @@ void	CMD::Nick(Server &server)
 	if (server.isClient(nick))
 		return (package.setError(ERR_NICKNAMEINUSE));
 	package.client->setNick(nick);
+	package.client->updateInChannel(oldNick);
 	package.rpl_data = package.client->getNick();
 }
 
@@ -93,12 +95,13 @@ void	CMD::Join(Server &server)
 	{
 		Channel *ch = server.getChannel(joinChannel);
 
-		if (ch->getOpInvite())
+		if (ch->getOpInvite() && ch->isInvited(package.client->getNick()))
 			return (package.setError(ERR_NEEDMOREPARAMS));
 		else if (ch->isFull())
 			return (package.setError(ERR_CHANNELISFULL));
 		else if (ch->getOpKey() && !ch->Auth(package.cmd_data[JOIN_KEY]))
 			return (package.setError(ERR_BADCHANNELKEY));
+
 
 		ch->addClient(package.client);
 		package.client->addChannel(ch);
@@ -185,12 +188,12 @@ void	CMD::Invite(Server &server)
 
 void	CMD::Mode(Server &server)
 {
+	int			argCount	= 2;
 	bool		add			= false;
-	int			argCount	= 0;
 	std::string	&modes		= package.cmd_data[MODE_MODES];
 
 	package.error = Mode::Check(server, modes);
-	if (package.error < 0)
+	if (package.cmd_data.size() == 2 || package.error)
 		return ;
 	for (int i = 0; i < (int)modes.length(); i++)
 	{

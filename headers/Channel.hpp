@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/12 20:47:40 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 00:46:52 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ class Channel
         void				addClient(Client *client);
         bool				removeClient(std::string const &name);
 		void				addInvited(Client *client);
+		void				updateClient(std::string const &oldNick);
 		void				removeInvited(std::string const &nick);
 		bool				isInvited(std::string const &nick);
 		std::string			getModes(void);

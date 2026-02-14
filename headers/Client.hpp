@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/10 21:23:55 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 00:53:54 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class Client
 		void				delChannel(std::string const &topic);
 		bool				inChannel(void) const;
 		void				updateChannel(std::string const &oldTopic);
+		void				updateInChannel(std::string const &oldNick);
 };
 
 std::ostream &operator<<(std::ostream &stream, Client const &client);

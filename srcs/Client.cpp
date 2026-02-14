@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 02:18:35 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 00:54:23 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,16 @@ bool				Client::isChannel(std::string const &topic) { return (this->channels.fin
 bool				Client::inChannel(void) const				{ return (!this->channels.size()); };
 const std::map<std::string, Channel *> &Client::getChannels(void) const { return (this->channels); }
 
+void				Client::updateInChannel(std::string const &oldNick)
+{
+	Channel *channel;
+	for (std::map<std::string, Channel *>::const_iterator it = this->channels.begin(); it != this->channels.end(); it++)
+	{
+		channel = it->second;
+		channel->updateClient(oldNick);
+	}
+}
+
 bool				Client::isAuth(std::string const &password)
 {
 	return (!this->nick.empty()
@@ -64,7 +74,7 @@ bool				Client::isAuth(std::string const &password)
 
 std::ostream &operator<<(std::ostream &stream, std::map<std::string, Channel *> const &channels)
 {
-	stream << "===== CHANNELS ======";
+	stream << "===== CHANNELS ======" << std::endl;
 	for (std::map<std::string, Channel *>::const_iterator it = channels.begin(); it != channels.end(); it++)
 		stream << *(it->second);
 	return (stream);

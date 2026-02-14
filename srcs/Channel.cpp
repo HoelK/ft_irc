@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/12 20:43:53 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 00:50:02 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,15 @@ std::string			Channel::getNameList(void) const
 	return (res);
 }
 
-
 bool	Channel::isClient(std::string const &nick) { return (this->clients.find(nick) != this->clients.end()); };
 Client	*Channel::getClient(std::string const &nick) { return (this->clients.find(nick)->second); };
+void	Channel::updateClient(std::string const &oldNick)
+{
+	Client *client = this->clients[oldNick];
+
+	this->clients.erase(oldNick);
+	this->clients[client->getNick()] = client;
+}
 
 std::ostream &operator<<(std::ostream &stream, Channel const &channel)
 {

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/12 19:45:07 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 00:41:12 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,8 +183,12 @@ void	RPL::Mode(Server &server)
 
 	if (package.error < 0)
 		return ;
-	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
-		+ RPL_MODE(package.cmd_data[MODE_MODES]) + "\r\n";
+	if (package.cmd_data.size() == 2)
+		msg = package.channel->getModes() + "\r\n";
+	else
+		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
+			+ RPL_MODE(package.cmd_data[MODE_MODES]) + "\r\n";
+	std::cout << "REPLY MODE : " << msg;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.channel)
 		package.channel->broadcastMessage(package.client, msg);

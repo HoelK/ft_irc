@@ -1,11 +1,11 @@
 # include "Mode.hpp"
 
 std::map<char, int (*)(Server &, bool, int)>	Mode::mode = {
-	{'o', &Mode::o},
-	{'i', &Mode::i},
-	{'l', &Mode::l},
-	{'k', &Mode::k},
-	{'t', &Mode::t}
+	{MODE_OP, &Mode::o},
+	{MODE_INVITE, &Mode::i},
+	{MODE_LIMIT, &Mode::l},
+	{MODE_KEY, &Mode::k},
+	{MODE_TOPIC, &Mode::t}
 };
 
 static int checkModes(std::string const &modes)
@@ -35,17 +35,19 @@ int	Mode::Check(Server &server, std::string const &modes)
 	int			error	= 0;
 	std::string	set		= CMODES;
 
+	if (package.cmd_data.size() < 2)
+		return (0);
+	if (package.cmd_data[MODE_CHANNEL][0] != '#')
+		return (-1);
 	if (!server.isChannel(package.cmd_data[MODE_CHANNEL]))
 		return (ERR_NOSUCHNICK);
 	package.channel = server.getChannel(package.cmd_data[MODE_CHANNEL]);
-	if (package.cmd_data.size() == 2)
-		
-	if (package.cmd_data[MODE_CHANNEL][0] != '#')
-		return (-1);
 	if (!package.client->getOp())
 		return (ERR_CHANOPRIVSNEEDED);
 	if (!package.channel->isClient(package.client->getNick()))
 		return (ERR_NOTONCHANNEL);
+	if (package.cmd_data.size() < 3)
+		return (0);
 	error = checkModes(modes);
 	if (error)
 		return (error);
@@ -80,7 +82,7 @@ int		Mode::l(Server &server, bool add, int argCount)
 	sNum << package.cmd_data[argCount];
 	sNum >> limit;
 
-	if (!sNum.eof() || !sNum.fail())
+	if (!sNum.eof() || sNum.fail())
 		return (ERR_NEEDMOREPARAMS);
 
 	package.channel->setOpLimit(limit);
@@ -92,7 +94,9 @@ int		Mode::i(Server &server, bool add, int argCount)
 {
 	(void) server;
 	(void) argCount;
+
 	(add) ? package.channel->setOpInvite(true) : package.channel->setOpInvite(false);
+
 	return (0);
 }
 
