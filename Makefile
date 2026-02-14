@@ -9,9 +9,10 @@ SRCS=srcs/main.cpp \
 	 srcs/CMD.cpp \
 	 srcs/Package.cpp \
 	 srcs/Ft.cpp \
-	 srcs/Mode.cpp \
-	 srcs/Join.cpp \
-	 srcs/Invite.cpp
+	 srcs/cmds/Mode.cpp \
+	 srcs/cmds/Join.cpp \
+	 srcs/cmds/Invite.cpp \
+	 srcs/cmds/Kick.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 
