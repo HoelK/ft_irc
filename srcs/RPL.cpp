@@ -6,22 +6,29 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 00:41:12 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 05:08:36 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "RPL.hpp"
 
-static std::map<std::string, void (*)(Server &server)> rpls = {
-	{CMD_NICK, &RPL::Default},
-	{CMD_QUIT, &RPL::Default},
-	{CMD_JOIN, &RPL::Join},
-	{CMD_PRIV, &RPL::Priv},
-	{CMD_KICK, &RPL::Kick},
-	{CMD_TOPIC, &RPL::Topic},
-	{CMD_INVITE, &RPL::Invite},
-	{CMD_MODE, &RPL::Mode}
-};
+static std::map<std::string, void (*)(Server &)> initRpls()
+{
+    std::map<std::string, void (*)(Server &)> m;
+
+	m[CMD_NICK] = &RPL::Default;
+	m[CMD_QUIT] = &RPL::Default;
+	m[CMD_JOIN] = &RPL::Join;
+	m[CMD_PRIV] = &RPL::Priv;
+	m[CMD_KICK] = &RPL::Kick;
+	m[CMD_TOPIC] = &RPL::Topic;
+	m[CMD_INVITE] = &RPL::Invite;
+	m[CMD_MODE] = &RPL::Mode;
+
+    return m;
+}
+
+std::map<std::string, void (*)(Server &)> rpls = initRpls();
 
 static std::string	codeStr(short code)
 {
@@ -139,15 +146,23 @@ void	RPL::Join(Server &server)
 {
 	(void) server;
 	std::string msg;
+	int			clientFd = package.client->getFd();
+	std::string clientNick = package.client->getNick();
+	std::string channelJoin = package.cmd_data[JOIN_CHANNEL];
 
-	msg = HEADER_STR("332", package.client->getNick(), " ", package.rpl_data) + RPL_NOTOPIC + "\r\n";
-	if (!package.rpl_data.empty())
-		msg = HEADER_STR("332", package.client->getNick(), " ", package.rpl_data) + RPL_TOPIC(package.rpl_data) + "\r\n";
-	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("353", package.client->getNick(), " = ", package.rpl_data) + package.channel->getNameList() + "\r\n";
-	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("366", package.client->getNick(), " ", package.rpl_data) + RPL_ENDOFNAMES + "\r\n";
-	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+	msg = RPL_STR(clientNick, package.client->getUser(), package.cmd, "") + RPL_JOIN(channelJoin) + "\r\n";
+	send(clientFd, msg.c_str(), msg.size(), 0);
+	package.channel->broadcastMessage(package.client, msg);
+	msg = (channelJoin.empty())
+		? HEADER_STR("332", clientNick, " ", channelJoin) + RPL_NOTOPIC
+		: HEADER_STR("332", clientNick, " ", channelJoin) + RPL_TOPIC(package.rpl_data);
+	msg = msg + "\r\n";
+	std::cout << "REPLY : " << msg << std::endl;
+	send(clientFd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("353", clientNick, " = ", channelJoin) + package.channel->getNameList() + "\r\n";
+	send(clientFd, msg.c_str(), msg.size(), 0);
+	msg = HEADER_STR("366", clientNick, " ", channelJoin) + RPL_ENDOFNAMES + "\r\n";
+	send(clientFd, msg.c_str(), msg.size(), 0);
 }
 
 void	RPL::Topic(Server &server)

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/13 22:56:33 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 05:01:59 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@
 # define RPL_TOP(topic)							" :" + std::string(topic)
 # define RPL_PRIV(msg)							" :" + std::string(msg)
 # define RPL_KICK(user, data)					" " + std::string(user) + " :" + std::string(data)
+# define RPL_JOIN(channel)						" :" + std::string(channel)
 # define RPL_INVITE(channel)					" :" + std::string(channel)
 # define RPL_MODE(modes)						modes
 
