@@ -6,24 +6,31 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 00:59:51 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 05:44:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "CMD.hpp"
 
-static std::map<std::string, void (*)(Server &server)> cmds = {
-	{CMD_NICK, &CMD::Nick},
-	{CMD_USER, &CMD::User},
-	{CMD_PASS, &CMD::Pass},
-	{CMD_QUIT, &CMD::Quit},
-	{CMD_JOIN, &CMD::Join},
-	{CMD_PRIV, &CMD::Priv},
-	{CMD_KICK, &CMD::Kick},
-	{CMD_TOPIC, &CMD::Topic},
-	{CMD_INVITE, &CMD::Invite},
-	{CMD_MODE, &CMD::Mode}
-};
+static std::map<std::string, void (*)(Server &)> initCmds()
+{
+    std::map<std::string, void (*)(Server &)> m;
+
+	m[CMD_NICK] = &CMD::Nick;
+	m[CMD_USER] = &CMD::User;
+	m[CMD_PASS] = &CMD::Pass;
+	m[CMD_QUIT] = &CMD::Quit;
+	m[CMD_JOIN] = &CMD::Join;
+	m[CMD_PRIV] = &CMD::Priv;
+	m[CMD_KICK] = &CMD::Kick;
+	m[CMD_TOPIC] = &CMD::Topic;
+	m[CMD_INVITE] = &CMD::Invite;
+	m[CMD_MODE] = &CMD::Mode;
+
+    return m;
+}
+
+static std::map<std::string, void (*)(Server &server)> cmds = initCmds();
 
 void	CMD::apply(Server &server)
 {
@@ -47,8 +54,8 @@ void	CMD::Pass(Server &server)
 
 void	CMD::Nick(Server &server)
 {
-	std::string	nick = package.cmd_data[NICK_NICK];
-	std::string oldNick = package.client->getNick();
+	std::string oldNick =	package.client->getNick();
+	std::string	nick =		package.cmd_data[NICK_NICK];
 
 	package.rpl_data = nick;
 	if (package.cmd_data.size() < 2)
@@ -57,6 +64,7 @@ void	CMD::Nick(Server &server)
 		return (package.setError(ERR_ONEUSNICKNAME));
 	if (server.isClient(nick))
 		return (package.setError(ERR_NICKNAMEINUSE));
+
 	package.client->setNick(nick);
 	package.client->updateInChannel(oldNick);
 	package.rpl_data = package.client->getNick();
@@ -82,44 +90,15 @@ void	CMD::User(Server &server)
 
 void	CMD::Join(Server &server)
 {
-	//va te faire enculer
-	Channel		channel;
-	std::string	joinChannel;
-
-	if (package.cmd_data.size() < JOIN_CHANNEL)
-		return (package.error = ERR_NEEDMOREPARAMS, (void)channel);
-	package.rpl_data	= package.cmd_data[JOIN_CHANNEL];
-	joinChannel			= package.rpl_data;
-
-	if (server.isChannel(joinChannel))
-	{
-		Channel *ch = server.getChannel(joinChannel);
-
-		if (ch->getOpInvite() && ch->isInvited(package.client->getNick()))
-			return (package.setError(ERR_NEEDMOREPARAMS));
-		else if (ch->isFull())
-			return (package.setError(ERR_CHANNELISFULL));
-		else if (ch->getOpKey() && !ch->Auth(package.cmd_data[JOIN_KEY]))
-			return (package.setError(ERR_BADCHANNELKEY));
-
-
-		ch->addClient(package.client);
-		package.client->addChannel(ch);
-		package.channel = ch;
-
+	if (!Join::Check())
 		return ;
-	}
-	package.client->setOp(true);
-	channel.setName(joinChannel);
-	channel.addClient(package.client);
-	server.createChannel(channel);
-	package.client->addChannel(server.getChannel(joinChannel));
-	package.channel = package.client->getChannel(joinChannel);
+	(server.isChannel(package.cmd_data[JOIN_CHANNEL]))
+		? Join::Joining(server)
+		: Join::Create(server);
 }
 
 void	CMD::Priv(Server &server)
 {
-	(void) server;
 	package.rpl_data = package.cmd_data[PRIV_TARGET];
 	Channel	*channel = server.getChannel(package.rpl_data);
 	if (package.rpl_data[0] == '#' && channel)
@@ -167,23 +146,9 @@ void	CMD::Topic(Server &server)
 
 void	CMD::Invite(Server &server)
 {
-	//poneglyph prime
-	if (package.cmd_data.size() < 3)
-		return (package.setError(ERR_NEEDMOREPARAMS));
-	std::string	invited = package.cmd_data[INVITE_NICK];
-	std::string	chan_name = package.cmd_data[INVITE_CHANNEL];
-	if (!server.isClient(invited))
-		return (package.setError(ERR_NOSUCHNICK));
-	if (!server.isChannel(chan_name))
-		return (package.setError(ERR_NOSUCHCHANNEL));
-	Channel		*channel	= server.getChannel(chan_name);
-	package.channel			= channel;
-	if (!channel->isClient(package.client->getNick()))
-		return (package.setError(ERR_NOTONCHANNEL));
-	if (channel->isClient(invited))
-		return (package.setError(ERR_USERONCHANNEL));
-	Client *invitedCli = server.getClient(invited);
-	channel->addInvited(invitedCli);
+	if (!Invite::Check(server))
+		return ;
+	Invite::Send(server);
 }
 
 void	CMD::Mode(Server &server)
