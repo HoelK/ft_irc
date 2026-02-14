@@ -1,5 +1,5 @@
 CC=c++
-FLAGS=-Werror -Wall -Wextra -g3
+FLAGS=-Werror -Wall -Wextra -std=c++98 -g3
 SRCS=srcs/main.cpp \
 	 srcs/Server.cpp \
 	 srcs/Client.cpp \
@@ -9,7 +9,9 @@ SRCS=srcs/main.cpp \
 	 srcs/CMD.cpp \
 	 srcs/Package.cpp \
 	 srcs/Ft.cpp \
-	 srcs/Mode.cpp
+	 srcs/Mode.cpp \
+	 srcs/Join.cpp \
+	 srcs/Invite.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 
