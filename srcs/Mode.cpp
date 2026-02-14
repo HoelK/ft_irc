@@ -1,12 +1,19 @@
 # include "Mode.hpp"
 
-std::map<char, int (*)(Server &, bool, int)>	Mode::mode = {
-	{MODE_OP, &Mode::o},
-	{MODE_INVITE, &Mode::i},
-	{MODE_LIMIT, &Mode::l},
-	{MODE_KEY, &Mode::k},
-	{MODE_TOPIC, &Mode::t}
-};
+static std::map<char, int (*)(Server &, bool, int)> initMode()
+{
+    std::map<char, int (*)(Server &, bool, int)> m;
+
+	m[MODE_OP] =		&Mode::o;
+	m[MODE_INVITE] =	&Mode::i;
+	m[MODE_LIMIT] =		&Mode::l;
+	m[MODE_KEY] =		&Mode::k;
+	m[MODE_TOPIC] =		&Mode::t;
+
+    return m;
+}
+
+std::map<char, int (*)(Server &, bool, int)> Mode::mode = initMode();
 
 static int checkModes(std::string const &modes)
 {
