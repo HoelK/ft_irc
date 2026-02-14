@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 06:41:14 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 19:37:04 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,27 +108,9 @@ void	CMD::Priv(Server &server)
 
 void	CMD::Kick(Server &server)
 {
-	(void) server;
-
-	if (package.cmd_data.size() < 3)
-		return (package.setError(ERR_NEEDMOREPARAMS));
-
-	std::string	kick_user		= package.cmd_data[KICK_USER];
-	std::string	kick_channel	= package.cmd_data[KICK_CHANNEL];
-	if (!package.client->isChannel(kick_channel))
-		return (package.setError(ERR_NOSUCHCHANNEL));
-	Channel *channel	= package.client->getChannel(kick_channel);
-	package.channel		= channel;
-
-	if (!channel->isClient(kick_user))
-	{
-		package.rpl_data = kick_user;
-		return (package.setError(ERR_USERNOTINCHANNEL));
-	}
-	Client	*client		= channel->getClient(kick_user);
-	package.channel		= channel;
-	package.rpl_data	= kick_channel;
-	channel->removeClient(client->getNick());
+	if (!Kick::Check(server))
+		return ;
+	Kick::Kicking();
 }
 
 void	CMD::Topic(Server &server)

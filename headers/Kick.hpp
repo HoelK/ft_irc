@@ -1,8 +1,9 @@
-# pramga once
+# pragma once
 # include "Server.hpp"
 
 class Kick
 {
-	static bool Check(void);
-	static void	tuTej(void);
+	public:
+		static bool Check(Server &server);
+		static void	Kicking(void);
 };

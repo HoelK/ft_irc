@@ -6,13 +6,14 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 05:47:01 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/14 19:37:22 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 # include "Join.hpp"
 # include "Mode.hpp"
+# include "Kick.hpp"
 # include "Invite.hpp"
 # include "Server.hpp"
 # include "Package.hpp"
