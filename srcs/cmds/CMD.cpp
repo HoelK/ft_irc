@@ -99,10 +99,9 @@ void	CMD::Join(Server &server)
 
 void	CMD::Priv(Server &server)
 {
-	package.rpl_data = package.cmd_data[PRIV_TARGET];
-	Channel	*channel = server.getChannel(package.rpl_data);
-	if (package.rpl_data[0] == '#' && channel)
-		package.channel = channel;
+	if (!Priv::Check(server))
+		return ;
+	Priv::Send(server);
 }
 
 void	CMD::Kick(Server &server)
