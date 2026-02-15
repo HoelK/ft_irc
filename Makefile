@@ -28,20 +28,20 @@ start:
 	@echo "\e[1;33m===============FT_IRC===============\033[0m"
 
 $(NAME): $(OBJS)
-	@echo "\e[1;32m [FT_IRC] Building ...\033[0m"
+	@printf "\e[1;32m [FT_IRC] Building ...\n\033[0m"
 	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
-	@echo "\e[1;32m [FT_IRC] Build Complete !\033[0m"
+	@printf "\e[1;32m [FT_IRC] Build Complete !\n\033[0m"
 
 %.o: %.cpp
-	@echo "\e[1;32m [FT_IRC] Compiling $^\033[0m"
-	@$(CC) $(FLAGS) $^ -c -o $@ -I./headers/
+	@printf "\e[1;32m [FT_IRC] Compiling $^\n\033[0m"
+	@$(CC) $(FLAGS) $^ -c -o $@ -I./headers/ -I./headers/cmds/
 
 fclean: clean
-	@echo "\e[1;31m [DELETING EXECUTABLE]\033[0m"
+	@printf "\e[1;31m [DELETING EXECUTABLE]\n\033[0m"
 	@rm -f $(NAME)
 
 clean:
-	@echo "\e[1;31m [DELETING RESIDUAL FILES]\033[0m"
+	@printf "\e[1;31m [DELETING RESIDUAL FILES]\n\033[0m"
 	@rm -f $(OBJS)
 
 re: clean all
