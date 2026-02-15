@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 16:23:25 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 18:54:21 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 sig_atomic_t	sigShutdown = 0;
 
-Server::~Server(void) {};
+Server::~Server(void)
+{
+	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+		this->disconnectClient(it->second->getFd());
+}
+
 Server::Server(std::string password, int port): fd(0), port(port), password(password) {};
 
 bool	Server::init(void)
@@ -41,7 +46,7 @@ bool	Server::init(void)
 
 void	Server::launch(void)
 {
-	int	fds_ready = 0;
+	int		fds_ready = 0;
 
 	while (!sigShutdown)
 	{
@@ -89,7 +94,6 @@ void	Server::acceptClient(void)
 {
 	struct pollfd	p;
 
-	std::cout << this->clients.size() << std::endl;
 	if (this->clients.size() >= FD_MAX)
 		return ;
 	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
@@ -99,6 +103,7 @@ void	Server::acceptClient(void)
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
+	std::cout << "fd : " << p.fd << std::endl;
 	this->clients[p.fd] = new Client(client);
 }
 

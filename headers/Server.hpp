@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 03:35:43 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:56:18 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include "CMD.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"
+# define PORT_ID 1
+# define PASS_ID 2
 # define FD_MAX 1024 - 3
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096

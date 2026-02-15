@@ -6,13 +6,11 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:26:31 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:54:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:56:08 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
-# define PORT_ID 1
-# define PASS_ID 2
 
 void handleSignal(int) { sigShutdown = 1; };
 
