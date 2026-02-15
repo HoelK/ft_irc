@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/12 20:37:50 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:45:09 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,23 @@ bool Ft::isValidNickname(const std::string &nick)
             return (false);
     }
 
+    return (true);
+}
+
+
+bool Ft::isValidChannelName(std::string const &name)
+{
+    if (name.empty() || name.length() > 200 || name[0] != '#')
+        return (false);
+    
+    for (size_t i = 1; i < name.length(); ++i)
+	{
+        unsigned char c = static_cast<unsigned char>(name[i]);
+        
+        if (c == ' ' || c == ','
+		|| c == '\007' || c == '\0' || c <= 0x1F)
+			return (false);
+    }
     return (true);
 }
 
