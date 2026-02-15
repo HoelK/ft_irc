@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 # pragma once
+# include "Nick.hpp"
 # include "Priv.hpp"
 # include "Join.hpp"
 # include "Mode.hpp"

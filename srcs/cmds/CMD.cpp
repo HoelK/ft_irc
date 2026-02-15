@@ -54,20 +54,9 @@ void	CMD::Pass(Server &server)
 
 void	CMD::Nick(Server &server)
 {
-	std::string oldNick =	package.client->getNick();
-	std::string	nick =		package.cmd_data[NICK_NICK];
-
-	package.rpl_data = nick;
-	if (package.cmd_data.size() < 2)
-		return (package.setError(ERR_NONICKNAMEGIVEN));
-	if (!Ft::isValidNickname(nick))
-		return (package.setError(ERR_ONEUSNICKNAME));
-	if (server.isClient(nick))
-		return (package.setError(ERR_NICKNAMEINUSE));
-
-	package.client->setNick(nick);
-	package.client->updateInChannel(oldNick);
-	package.rpl_data = package.client->getNick();
+	if (!Nick::Check(server))
+		return ;
+	Nick::Change();
 }
 
 void	CMD::Quit(Server &server)

@@ -3,9 +3,9 @@
 
 class Server;
 
-class Priv
+class Nick
 {
 	public:
 		static bool Check(Server &server);
-		static void Send(Server &server);
+		static void Change(void);
 };
