@@ -27,7 +27,7 @@ static std::map<std::string, void (*)(Server &)> initCmds()
 	m[CMD_INVITE] = &CMD::Invite;
 	m[CMD_MODE] = &CMD::Mode;
 
-    return m;
+    return (m);
 }
 
 static std::map<std::string, void (*)(Server &server)> cmds = initCmds();
@@ -68,13 +68,9 @@ void	CMD::Quit(Server &server)
 
 void	CMD::User(Server &server)
 {
-	(void) server;
-	if (package.client->getAuth())
-		return (package.setError(ERR_ALREADYREGISTRED));
-	if (package.cmd_data.size() < 5)
-		return (package.setError(ERR_NEEDMOREPARAMS));
-	package.client->setUser(package.cmd_data[USER_USERNAME]);
-	package.client->setName(package.cmd_data[USER_REALNAME]);
+	if (!User::Check(server))
+		return ;
+	User::Set();
 }
 
 void	CMD::Join(Server &server)

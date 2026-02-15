@@ -15,7 +15,8 @@ SRCS=srcs/main.cpp \
 	 srcs/cmds/Kick.cpp \
 	 srcs/cmds/Topic.cpp \
 	 srcs/cmds/Priv.cpp \
-	 srcs/cmds/Nick.cpp
+	 srcs/cmds/Nick.cpp \
+	 srcs/cmds/User.cpp
 OBJS=$(SRCS:.cpp=.o)
 NAME=ft_irc
 
