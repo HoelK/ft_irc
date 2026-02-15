@@ -6,11 +6,13 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:26:31 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/11 03:19:44 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:54:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
+# define PORT_ID 1
+# define PASS_ID 2
 
 void handleSignal(int) { sigShutdown = 1; };
 
@@ -21,19 +23,19 @@ bool	argCheck(int ac, char **av)
 
 	if (ac < 3)
 	{
-		std::cout << "Not enough arguments" << std::endl;
+		std::cerr << "Not enough arguments" << std::endl;
 		return (false);
 	}
 	else if (ac > 3)
 	{
-		std::cout << "Too much arguments" << std::endl;
+		std::cerr << "Too much arguments" << std::endl;
 		return (false);
 	}
-	stream << std::string(av[2]);
+	stream << std::string(av[PORT_ID]);
 	stream >> port;
 	if (stream.fail() || port < 1 || port > 65535)
 	{
-		std::cout << "Invalid Port" << std::endl;
+		std::cerr << "Invalid Port" << std::endl;
 		return (false);
 	}
 	return (true);
@@ -45,7 +47,7 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 
 	std::signal(SIGINT, handleSignal);
-	Server server(std::string(av[1]), std::atoi(av[2]));
+	Server server(std::string(av[PASS_ID]), Ft::strToInt(std::string(av[PORT_ID])));
 	server.init();
 	server.launch();
 }

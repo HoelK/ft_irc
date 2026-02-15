@@ -6,12 +6,11 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:45:09 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:53:35 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Ft.hpp"
-# include <iostream>
 
 
 bool Ft::endsWithCRLF(const std::string& s)
@@ -111,6 +110,19 @@ bool Ft::isInt(const std::string &sNum)
     }
     
     return (true);
+}
+
+int			Ft::strToInt(std::string const &sNum)
+{
+	int					result;
+	std::stringstream	stream;
+
+	stream << sNum;
+	stream >> result;
+
+	if (!stream.eof() || stream.fail())
+		return (INT_MIN);
+	return (result);
 }
 
 std::string	Ft::intToStr(const int &num)
