@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 06:40:58 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 17:23:35 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,10 @@ void	RPL::Default(Server &server)
 void	RPL::Priv(Server &server)
 {
 	std::string	msg;
+	std::string	sentData;
 	Client		*receiver;
 
+	sentData = package.cmd_data[PRIV_MSG];
 	msg = getRPL() + RPL_PRIV(package.cmd_data[PRIV_MSG]) + "\r\n";
 
 	receiver = server.getClient(package.rpl_data);
@@ -128,6 +130,16 @@ void	RPL::Priv(Server &server)
 		package.channel->broadcastMessage(package.client, msg);
 	else
 		send(receiver->getFd(), msg.c_str(), msg.size(), 0);
+	if (package.channel && sentData.size() >= 4
+	&& sentData.substr(sentData.length() - 4, sentData.length()) == "quoi")
+	{
+		std::cout << "ok bot" << std::endl;
+		msg = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rpl_data) + RPL_PRIV("feur") + "\r\n";
+		std::cout << "bot msg : " << msg << std::endl;
+		package.channel->broadcastMessage(package.client, msg);
+		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+		//send(receiver->getFd(), msg.c_str(), msg.size(), 0);
+	}
 }
 
 void	RPL::Kick(Server &server)
