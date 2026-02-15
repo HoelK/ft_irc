@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 18:54:21 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 20:41:15 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,8 @@ void	Server::authenticate(Client &client)
 		if (package.error)
 			RPL::reply(*this);
 	}
+	if (!client.getPass().empty() && client.getPass() != this->password)
+		return (this->disconnectClient(client.getFd()));
 	if (!client.isAuth(this->password))
 		return ;
 	RPL::Welcome(client.getFd(), client.getNick());
