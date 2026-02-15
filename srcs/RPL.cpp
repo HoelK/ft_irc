@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:36:12 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:51:10 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static std::map<std::string, void (*)(Server &)> initRpls()
 {
     std::map<std::string, void (*)(Server &)> m;
 
-	m[CMD_NICK] = &RPL::Default;
 	m[CMD_QUIT] = &RPL::Default;
+	m[CMD_NICK] = &RPL::Nick;
 	m[CMD_JOIN] = &RPL::Join;
 	m[CMD_PRIV] = &RPL::Priv;
 	m[CMD_KICK] = &RPL::Kick;
@@ -77,8 +77,8 @@ static std::string	codeToErr(short code)
 	return ("");
 }
 
-static std::string	getError(short code, std::string const &nick) { return (HEADER_ERROR(codeStr(code), nick) + codeToErr(code)); };
-static std::string	getRPL(void) { return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rpl_data)); };
+static std::string	getError(short code, std::string const &nick)	{ return (HEADER_ERROR(codeStr(code), nick) + codeToErr(code)); };
+static std::string	getRPL(void)									{ return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rpl_data)); };
 
 void RPL::Welcome(const int &fd, std::string const &nick)
 {
@@ -97,6 +97,14 @@ void RPL::Welcome(const int &fd, std::string const &nick)
 	send(fd, msg.c_str(), msg.size(), 0);
 }
 
+void	RPL::Default(Server &server)
+{
+	(void) server;
+	std::string	msg = getRPL() + "\r\n";
+
+	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
+}
+
 void	RPL::Error(Server &server)
 {
 	(void) server;
@@ -108,10 +116,10 @@ void	RPL::Error(Server &server)
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
-void	RPL::Default(Server &server)
+void	RPL::Nick(Server &server)
 {
 	(void) server;
-	std::string	msg = getRPL() + "\r\n";
+	std::string msg = getRPL() + RPL_NICK(package.client->getNick()) + "\r\n";
 
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }

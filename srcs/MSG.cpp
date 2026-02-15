@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:29 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 03:13:21 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:12:22 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ std::string MSG::getCmd(std::string const &line)
 { 
 	char	sep = ' ';
 	
-	if (!line.find(sep))
-		sep = 0;
+	if (line.find(sep) == std::string::npos)
+		return (line.substr(0, line.length() - 2));
 	return (line.substr(0, line.find(sep)));
 }
 

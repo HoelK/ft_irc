@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 20:41:15 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:55:44 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,14 @@ void	Server::authenticate(Client &client)
 		if (!Ft::endsWithCRLF(line))
 			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
-		if (client.getPass().empty() && package.cmd != "PASS")
+
+		if ((client.getPass().empty()
+		&& package.cmd != "PASS")
+		|| (!client.getPass().empty()
+		&& (package.cmd != "NICK"
+		&& package.cmd != "USER")))
 			continue ;
-		if (!client.getPass().empty()
-		&& (package.cmd != "NICK" && package.cmd != "USER"))
-			continue ;
+
 		CMD::apply(*this);
 		if (package.error)
 			RPL::reply(*this);
@@ -136,6 +139,7 @@ void	Server::authenticate(Client &client)
 		return (this->disconnectClient(client.getFd()));
 	if (!client.isAuth(this->password))
 		return ;
+
 	RPL::Welcome(client.getFd(), client.getNick());
 	client.setAuth(true);
 }

@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 06:38:15 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:50:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@
 
 # define ERR_NOSUCHNICK_STR(nick)					std::string(nick) + " :No such nick"
 # define ERR_PASSWDMISMATCH_STR						"Password incorrect"
-# define ERR_NONICKNAMEGIVEN_STR					" :No nickname given"
-# define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) +	" :Erroneous nickname"
-# define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) +	" :Nickname is already in use"
-# define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) +	" :Not enough parameters"
+# define ERR_NONICKNAMEGIVEN_STR					":No nickname given"
+# define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) +	":Erroneous nickname"
+# define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) +	":Nickname is already in use"
+# define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) +	":Not enough parameters"
 # define ERR_USERNOTINCHANNEL_STR(nick, channel)	std::string(nick) + " " + std::string(channel) + " :They aren't on that channel"
 # define ERR_USERONCHANNEL_STR(user, channel)		std::string(user) + " " + std::string(channel) + " :is already on channel"
 # define ERR_INVITEONLYCHAN_STR(channel)			std::string(channel) + " :Cannot join channel (+i)" 
@@ -61,11 +61,12 @@
 # define RPL_STR(nick, user, cmd, data)				":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
 
 # define RPL_TOP(topic)								" :" + std::string(topic)
+# define RPL_NICK(nick)								nick
 # define RPL_PRIV(msg)								" :" + std::string(msg)
 # define RPL_KICK(user, data)						" " + std::string(user) + " :" + std::string(data)
 # define RPL_JOIN(channel)							" :" + std::string(channel)
 # define RPL_INVITE(channel)						" :" + std::string(channel)
-# define RPL_MODE(modes)						modes
+# define RPL_MODE(modes)							modes
 
 class Server;
 
@@ -94,6 +95,7 @@ class RPL
 	public:
 		static void	reply(Server &server);
 		static void Welcome(const int &fd, std::string const &nick);
+		static void	Nick(Server &server);
 		static void	Topic(Server &server);
 		static void	Join(Server &server);
 		static void	Kick(Server &server);
