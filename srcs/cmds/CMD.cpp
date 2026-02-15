@@ -63,7 +63,9 @@ void	CMD::Quit(Server &server)
 {
 	(void) server;
 	package.quit = true;
-	package.rpl_data = package.cmd_data[QUIT_REASON];
+	package.rpl_data = (package.cmd_data.size() < 2)
+		? DEFAULT_QUIT_MSG
+		: package.cmd_data[QUIT_REASON];
 }
 
 void	CMD::User(Server &server)

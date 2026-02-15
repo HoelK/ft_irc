@@ -35,6 +35,8 @@
 # define CMD_INVITE "INVITE"
 # define CMD_MODE	"MODE"
 
+# define DEFAULT_QUIT_MSG "Got to sleep"
+
 enum	cmdDataIds
 {
 	NICK_NICK		= 0,
