@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:29 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 11:15:44 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/16 20:48:24 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static std::vector<std::string>	getCmdData(std::string const &line)
 	while (!stream.eof())
 	{
 		stream >> token;
+		if (stream.fail())
+			break ;
 		if (token[0] == ':')
 		{
 			token.erase(0, 1);

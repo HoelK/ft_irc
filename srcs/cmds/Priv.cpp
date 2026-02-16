@@ -2,7 +2,7 @@
 
 bool Priv::Check(Server &server)
 {
-	if (package.cmdData.size() < 3)
+	if (package.cmdData.size() < 2)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 
 	std::string target = package.cmdData[PRIV_TARGET];

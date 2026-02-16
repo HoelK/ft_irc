@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 18:58:11 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:25:52 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	CMD::Pass(Server &server)
 {
 	(void) server;
 
-	if (package.cmdData.size() < 2)
+	if (package.cmdData.size() < 1)
 		return (package.setError(ERR_NEEDMOREPARAMS));
 	if (package.client->getAuth())
 		return (package.setError(ERR_ALREADYREGISTRED));
@@ -65,7 +65,7 @@ void	CMD::Quit(Server &server)
 	(void) server;
 
 	package.quit = true;
-	package.rplData = (package.cmdData.size() < 2)
+	package.rplData = (package.cmdData.size() < 1)
 		? DEFAULT_QUIT_MSG
 		: package.cmdData[QUIT_REASON];
 }

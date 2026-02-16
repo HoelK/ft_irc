@@ -4,7 +4,7 @@ bool User::Check(Server &server)
 {
 	(void) server;
 
-	if (package.cmdData.size() < 5)
+	if (package.cmdData.size() < 4)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 	if (package.client->getAuth())
 		return (package.setError(ERR_ALREADYREGISTRED), false);

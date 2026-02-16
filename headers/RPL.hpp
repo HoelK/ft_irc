@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 05:09:41 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:31:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@
 # define RPL_KICK(user, data)						" " + std::string(user) + " :" + std::string(data)
 # define RPL_JOIN(channel)							" :" + std::string(channel)
 # define RPL_INVITE(channel)						" :" + std::string(channel)
-# define RPL_MODE(modes)							modes
+# define RPL_MODE(modes)							" " + std::string(modes)
 
 class Server;
 

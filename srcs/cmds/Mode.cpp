@@ -42,7 +42,7 @@ int	Mode::Check(Server &server, std::string const &modes)
 	int			error	= 0;
 	std::string	set		= CMODES;
 
-	if (package.cmdData.size() < 2)
+	if (package.cmdData.size() < 1)
 		return (ERR_NEEDMOREPARAMS);
 	if (package.cmdData[MODE_CHANNEL][0] != '#')
 		return (-1);

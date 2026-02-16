@@ -2,7 +2,7 @@
 
 bool Nick::Check(Server &server)
 {
-	if (package.cmdData.size() < 2 || package.cmdData.size() == std::string::npos)
+	if (package.cmdData.size() < 1 || package.cmdData.size() == std::string::npos)
 		return (package.setError(ERR_NONICKNAMEGIVEN), false);
 
 	std::string	nick = package.cmdData[NICK_NICK];

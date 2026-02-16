@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:53:35 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:23:31 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ bool Ft::endsWithCRLF(const std::string& s)
 std::string Ft::extractLine(std::string &buffer)
 {
 	std::size_t	pos;
-	std::string	sep("\r\n");
 	std::string line;
+	std::string	sep("\r\n");
 
 	if (buffer.empty())
 		return ("");

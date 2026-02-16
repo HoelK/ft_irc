@@ -13,7 +13,7 @@ static bool	checkKey(Channel *channel)
 {
 	if (!channel->getOpKey())
 		return (true);
-	if (package.cmdData.size() < 3)
+	if (package.cmdData.size() < 2)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 	if (!channel->Auth(package.cmdData[JOIN_KEY]))
 		return (package.setError(ERR_BADCHANNELKEY), false);
@@ -22,7 +22,7 @@ static bool	checkKey(Channel *channel)
 
 bool	Join::Check()
 {
-	if (package.cmdData.size() < 2)
+	if (package.cmdData.size() < 1)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 	return (true);
 }
