@@ -6,12 +6,13 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:06 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:53:48 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:41:24 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 # include <string>
+#include <ctime>
 # include <sstream>
 # include <climits>
 # include <iostream>
@@ -30,4 +31,5 @@ namespace Ft
 	bool		isInt(const std::string &sNum);
 	int			strToInt(std::string const &sNum);
 	std::string	intToStr(int const &num);
+	std::string getTime(void);
 }

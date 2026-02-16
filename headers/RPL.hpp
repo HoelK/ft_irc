@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 23:31:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:43:28 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@
 # define VERSION									"1.0"
 # define CMODES										"itkol"
 # define SERVER_NAME								"ft.irc"
-# define NETWORK_NAME								"CACA"
+# define NETWORK_NAME								"42irc"
 
 # define HEADER_STR(code, nick, op, channel)		":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + std::string(op) + std::string(channel) + " :"
 
 //Welcome
 # define RPL_WELCOME_STR(nick)						"Welcome to " NETWORK_NAME ", " + std::string(nick)
 # define RPL_YOURHOST_STR							"Your host is " SERVER_NAME ", running version " VERSION
-# define RPL_CREATED_STR							"This server was created <timestamp>"
-# define RPL_MYINFO_STR(nick)						std::string(nick) + " " + SERVER_NAME + " " + VERSION " 0 " CMODES
+# define RPL_CREATED_STR(time)						"This server was created " + std::string(time)
+# define RPL_MYINFO_STR(nick)						std::string(nick) + " " + SERVER_NAME + " " + VERSION " 0 +" CMODES
 # define RPL_ISUPPORT_STR							""
 
 //Join

@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 18:52:19 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:40:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void RPL::Welcome(const int &fd, std::string const &nick)
 	send(fd, msg.c_str(), msg.size(), 0);
 	msg = HEADER_STR("002", nick, "", "") + RPL_YOURHOST_STR + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
-	msg = HEADER_STR("003", nick, "", "") + RPL_CREATED_STR + "\r\n";
+	msg = HEADER_STR("003", nick, "", "") + RPL_CREATED_STR(Ft::getTime()) + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
 	msg = HEADER_STR("004", nick, "", "") + RPL_MYINFO_STR(nick) + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);

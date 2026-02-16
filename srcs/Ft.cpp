@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:27 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 23:23:31 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 23:40:40 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,4 +134,17 @@ std::string	Ft::intToStr(const int &num)
 	s >> sNum;
 
 	return (sNum);
+}
+
+
+std::string Ft::getTime(void)
+{
+	std::time_t now = std::time(NULL);
+	std::tm* t = std::localtime(&now);
+
+	char buffer[100];
+	std::strftime(buffer, sizeof(buffer),
+			"%a %b %d %Y at %H:%M:%S %Z", t);
+
+	return std::string(buffer);
 }
