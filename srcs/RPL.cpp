@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 15:14:24 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/16 16:12:54 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,24 @@ void	RPL::Nick(Server &server)
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
+bool shouldTriggerFeurBot(const std::string &message)
+{
+    if (!package.channel || message.size() < 4)
+        return false;
+    
+    std::string lastFourChars = message.substr(message.length() - 4);
+    return (lastFourChars == "quoi");
+}
+
+void sendFeurBotResponse()
+{
+    std::string botMessage = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rplData) 
+                           + RPL_PRIV("feur") + "\r\n";
+    
+    package.channel->broadcastMessage(package.client, botMessage);
+    send(package.client->getFd(), botMessage.c_str(), botMessage.size(), 0);
+}
+
 void RPL::Priv(Server &server)
 {
     std::string messageContent = package.cmdData[PRIV_MSG];
@@ -151,24 +169,6 @@ void RPL::Priv(Server &server)
     {
         sendFeurBotResponse();
     }
-}
-
-bool shouldTriggerFeurBot(const std::string &message)
-{
-    if (!package.channel || message.size() < 4)
-        return false;
-    
-    std::string lastFourChars = message.substr(message.length() - 4);
-    return (lastFourChars == "quoi");
-}
-
-void sendFeurBotResponse()
-{
-    std::string botMessage = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rplData) 
-                           + RPL_PRIV("feur") + "\r\n";
-    
-    package.channel->broadcastMessage(package.client, botMessage);
-    send(package.client->getFd(), botMessage.c_str(), botMessage.size(), 0);
 }
 
 void	RPL::Kick(Server &server)
