@@ -11,6 +11,8 @@ bool	Invite::Check(Server &server)
 		return (package.setError(ERR_NOSUCHNICK), false);
 	if (!server.isChannel(chanName))
 		return (package.setError(ERR_NOSUCHCHANNEL), false);
+	//if (!package.channel->getOp())
+	//	return (package.);
 
 	Channel *channel = server.getChannel(chanName);
 	if (!channel->isClient(package.client->getNick()))

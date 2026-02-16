@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 19:07:53 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 19:14:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,11 @@ void	Server::authenticate(Client &client)
 			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
 
-		if ((client.getPass().empty()
-		&& package.cmd != "PASS")
-		|| (!client.getPass().empty()
+		if (client.getPass().empty() && package.cmd != "PASS")
+			continue ;
+		if (!client.getPass().empty()
 		&& (package.cmd != "NICK"
-		&& package.cmd != "USER")))
+		&& package.cmd != "USER"))
 			continue ;
 
 		CMD::apply(*this);
