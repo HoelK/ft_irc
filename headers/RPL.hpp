@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 21:50:50 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 05:09:41 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@
 # define ERR_NOSUCHNICK_STR(nick)					std::string(nick) + " :No such nick"
 # define ERR_PASSWDMISMATCH_STR						"Password incorrect"
 # define ERR_NONICKNAMEGIVEN_STR					":No nickname given"
-# define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) +	":Erroneous nickname"
-# define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) +	":Nickname is already in use"
-# define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) +	":Not enough parameters"
+# define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) +	" :Erroneous nickname"
+# define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) +	" :Nickname is already in use"
+# define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) +	" :Not enough parameters"
 # define ERR_USERNOTINCHANNEL_STR(nick, channel)	std::string(nick) + " " + std::string(channel) + " :They aren't on that channel"
 # define ERR_USERONCHANNEL_STR(user, channel)		std::string(user) + " " + std::string(channel) + " :is already on channel"
 # define ERR_INVITEONLYCHAN_STR(channel)			std::string(channel) + " :Cannot join channel (+i)" 

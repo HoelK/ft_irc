@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 21:08:30 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 05:42:40 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	CMD::apply(Server &server)
 {
 	std::map<std::string, void (*)(Server &server)>::iterator it;
 
-	std::cout << "CMD : " << package.cmd;
 	it = cmds.find(package.cmd);
 	if (it == cmds.end())
 		return ;

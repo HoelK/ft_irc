@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 21:51:10 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 06:01:30 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,13 @@ static std::string	codeToErr(short code)
 	if (code == ERR_NEEDMOREPARAMS)
 		return (ERR_NEEDMOREPARAMS_STR(package.cmd));
 	if (code == ERR_USERNOTINCHANNEL)
-		return (ERR_USERNOTINCHANNEL_STR(package.rpl_data, package.channel->getName()));
+		return (ERR_USERNOTINCHANNEL_STR(package.errNick, package.errChanName));
 	if (code == ERR_NOSUCHCHANNEL)
-		return (ERR_NOSUCHCHANNEL_STR(package.rpl_data));
+		return (ERR_NOSUCHCHANNEL_STR(package.errChanName));
+	if (code == ERR_NOSUCHNICK)
+		return (ERR_NOSUCHNICK_STR(package.errNick));
+	if (code == ERR_USERONCHANNEL)
+		return (ERR_USERONCHANNEL_STR(package.errNick, package.errChanName));
 	if (code == ERR_NONICKNAMEGIVEN)
 		return (ERR_NONICKNAMEGIVEN_STR);
 	if (code == ERR_ONEUSNICKNAME)
@@ -62,7 +66,7 @@ static std::string	codeToErr(short code)
 	if (code == ERR_NICKNAMEINUSE)
 		return (ERR_NICKNAMEINUSE_STR(package.rpl_data));
 	if (code == ERR_NOTONCHANNEL)
-		return (ERR_NOTONCHANNEL_STR(package.channel->getName()));
+		return (ERR_NOTONCHANNEL_STR(package.errChanName));
 	if (code == ERR_ALREADYREGISTRED)
 		return (ERR_ALREADYREGISTRED_STR);
 	if (code == ERR_CHANNELISFULL)
@@ -72,7 +76,7 @@ static std::string	codeToErr(short code)
 	if (code == ERR_BADCHANNELKEY)
 		return (ERR_BADCHANNELKEY_STR(package.channel->getName()));
 	if (code == ERR_CHANOPRIVSNEEDED)
-		return (ERR_CHANOPRIVSNEEDED_STR(package.channel->getName()));
+		return (ERR_CHANOPRIVSNEEDED_STR(package.errChanName));
 	
 	return ("");
 }
@@ -84,7 +88,6 @@ void RPL::Welcome(const int &fd, std::string const &nick)
 {
 	std::string msg;
 
-	std::cout << "Connected" << std::endl;
 	msg = HEADER_STR("001", nick, "", "") + RPL_WELCOME_STR(nick) + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
 	msg = HEADER_STR("002", nick, "", "") + RPL_YOURHOST_STR + "\r\n";
@@ -111,8 +114,7 @@ void	RPL::Error(Server &server)
 	std::string	msg;
 
 	msg = getError(package.error, package.client->getNick()) + "\r\n";
-	std::cout << msg;
-	std::cout << *package.client;
+	std::cout << "[RPL][ERROR] " << msg;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
@@ -155,7 +157,7 @@ void	RPL::Kick(Server &server)
 	if (!package.channel)
 		return ;
 	Client		*client =	server.getClient(package.cmd_data[KICK_USER]);
-	std::string	msg = getRPL() + RPL_KICK(package.cmd_data[KICK_USER], package.cmd_data[KICK_MSG]) + "\r\n";
+	std::string	msg =		getRPL() + RPL_KICK(package.cmd_data[KICK_USER], package.cmd_data[KICK_MSG]) + "\r\n";
 
 	send(client->getFd(), msg.c_str(), msg.size(), 0);
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
@@ -177,7 +179,7 @@ void	RPL::Join(Server &server)
 		? HEADER_STR("332", clientNick, " ", channelJoin) + RPL_NOTOPIC
 		: HEADER_STR("332", clientNick, " ", channelJoin) + RPL_TOPIC(package.rpl_data);
 	msg = msg + "\r\n";
-	std::cout << "REPLY : " << msg << std::endl;
+	std::cout << "[RPL] " << msg;
 	send(clientFd, msg.c_str(), msg.size(), 0);
 	msg = HEADER_STR("353", clientNick, " = ", channelJoin) + package.channel->getNameList() + "\r\n";
 	send(clientFd, msg.c_str(), msg.size(), 0);
@@ -204,10 +206,10 @@ void	RPL::Invite(Server &server)
 
 	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[INVITE_NICK])
 		+ RPL_INVITE(package.channel->getName()) + "\r\n";
-	std::cout << "RPLY INVITED : " << msg << std::endl;
+	std::cout << "[RPL] " << msg;
 	send(server.getClient(package.cmd_data[INVITE_NICK])->getFd(), msg.c_str(), msg.size(), 0);
 	msg = HEADER_ERROR("341", package.client->getNick()) + package.cmd_data[INVITE_NICK] + " " + package.cmd_data[INVITE_CHANNEL] + "\r\n";
-	std::cout << "RPLY INVITER : " << msg << std::endl;
+	std::cout << "[RPL] " << msg << std::endl;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
@@ -223,7 +225,7 @@ void	RPL::Mode(Server &server)
 	else
 		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
 			+ RPL_MODE(package.cmd_data[MODE_MODES]) + "\r\n";
-	std::cout << "REPLY MODE : " << msg;
+	std::cout << "[RPL] " << msg;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.channel)
 		package.channel->broadcastMessage(package.client, msg);

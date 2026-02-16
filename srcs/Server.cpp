@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 21:55:44 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 05:15:50 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ void	Server::acceptMessage(Client &client)
 	std::string	buffer;
 
 	buffer = Ft::getFdContent(client.getFd());
-	std::cout << buffer;
 	if (buffer.empty())
 		return (this->disconnectClient(client.getFd()));
 	while (!buffer.empty())
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
 		client.setBuffer("");
+		std::cout << "[CMD] " << line;
 		if (!Ft::endsWithCRLF(line))
 			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
@@ -103,7 +103,6 @@ void	Server::acceptClient(void)
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
-	std::cout << "fd : " << p.fd << std::endl;
 	this->clients[p.fd] = new Client(client);
 }
 
@@ -119,7 +118,7 @@ void	Server::authenticate(Client &client)
 	{
 		line = client.getBuffer() + Ft::extractLine(buffer);
 		client.setBuffer("");
-		std::cout << "auth : " << line;
+		std::cout << "[AUTH][CMD] " << line;
 		if (!Ft::endsWithCRLF(line))
 			return (client.setBuffer(line));
 		MSG::sendData(&client, line);
@@ -142,6 +141,7 @@ void	Server::authenticate(Client &client)
 
 	RPL::Welcome(client.getFd(), client.getNick());
 	client.setAuth(true);
+	std::cout << "[AUTH][INFO] " << client.getNick() << " Connected" << std::endl;
 }
 
 void	Server::disconnectClient(const int &fd)

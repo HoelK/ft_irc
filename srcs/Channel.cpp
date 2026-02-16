@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/15 17:18:22 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 05:07:53 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ void				Channel::broadcastMessage(Client *sender, std::string const &msg)
 	for (std::map<std::string, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
 		client = it->second;
-		std::cout << *client;
 		if (client == sender)
 			continue ;
 		send(client->getFd(), msg.c_str(), msg.size(), 0);

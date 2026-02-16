@@ -15,7 +15,3 @@ Lorsqu'on ajoute une commande, il faut créer sa fonction, créer la macro qui r
 
 Lorsqu'un cas d'erreur est rencontré dans une commande (CMD), la variable packet.error est définie avec la valeur appropriée (définie par le protocole RFC 1459).
 Reply s'occupera ensuite d'envoyer le message d'erreur au client concerné.
-
-TODO:
-- Fix les 134 bugs
-- Faire les bonus

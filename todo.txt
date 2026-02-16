@@ -1,0 +1,11 @@
+ADD CDD file transfer
+CLEAN Bot code (RPL::Priv)
+Look for bugs
+Reduce RPL dependecies on package.rpl_data to add clarity to the code
+Rename package.cmd_data to package.cmdData (to norm a bit)
+
+Check :
+- PASS OK
+- NICK OK
+- USER OK
+- KICK OK ?

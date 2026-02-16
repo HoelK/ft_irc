@@ -7,16 +7,24 @@ bool Kick::Check(Server &server)
 	
 	std::string	kickNick =	package.cmd_data[KICK_USER];
 	std::string kickChan =	package.cmd_data[KICK_CHANNEL];
+	package.errNick =		package.client->getNick();
+	package.errChanName =	kickChan;
 
 	if (!server.isChannel(kickChan))
 		return (package.setError(ERR_NOSUCHCHANNEL), false);
 
 	Channel		*channel =	server.getChannel(kickChan);
 
-	if (!server.isClient(kickNick))
-		return (package.setError(ERR_NOSUCHCHANNEL), false);
-	if (!channel->isClient(kickNick))
+	if (!channel->isClient(package.client->getNick()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
+	if (!package.client->getOp())
+		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
+	package.errNick = kickNick;
+	if (!server.isClient(kickNick))
+		return (package.setError(ERR_NOSUCHNICK), false);
+	package.channel = channel;
+	if (!channel->isClient(kickNick))
+		return (package.setError(ERR_USERNOTINCHANNEL), false);
 	return (true);
 }
 
@@ -25,8 +33,8 @@ void Kick::Kicking(void)
 	std::string	kickNick =		package.cmd_data[KICK_USER];
 	std::string	kickChannel	=	package.cmd_data[KICK_CHANNEL];
 	package.channel =			package.client->getChannel(kickChannel);
-	Client	*client	=			package.channel->getClient(kickNick);
+	Client	*target	=			package.channel->getClient(kickNick);
 
 	package.rpl_data = kickChannel;
-	package.channel->removeClient(client->getNick());
+	package.channel->removeClient(target->getNick());
 }
