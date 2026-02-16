@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 11:16:56 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/16 18:58:11 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	CMD::apply(Server &server)
 void	CMD::Pass(Server &server)
 {
 	(void) server;
+
 	if (package.cmdData.size() < 2)
 		return (package.setError(ERR_NEEDMOREPARAMS));
 	if (package.client->getAuth())
@@ -62,6 +63,7 @@ void	CMD::Nick(Server &server)
 void	CMD::Quit(Server &server)
 {
 	(void) server;
+
 	package.quit = true;
 	package.rplData = (package.cmdData.size() < 2)
 		? DEFAULT_QUIT_MSG
