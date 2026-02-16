@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Package.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:40 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/10 17:04:20 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:15:46 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ t_package package;
 void	t_package::clear(void)
 {
 	cmd.clear();
-	cmd_data.clear();
-	rpl_data.clear();
+	cmdData.clear();
+	rplData.clear();
 	client = NULL;
 	channel = NULL;
 	quit = 0;

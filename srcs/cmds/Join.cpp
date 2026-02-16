@@ -13,16 +13,16 @@ static bool	checkKey(Channel *channel)
 {
 	if (!channel->getOpKey())
 		return (true);
-	if (package.cmd_data.size() < 3)
+	if (package.cmdData.size() < 3)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
-	if (!channel->Auth(package.cmd_data[JOIN_KEY]))
+	if (!channel->Auth(package.cmdData[JOIN_KEY]))
 		return (package.setError(ERR_BADCHANNELKEY), false);
 	return (true);
 }
 
 bool	Join::Check()
 {
-	if (package.cmd_data.size() < 2)
+	if (package.cmdData.size() < 2)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 	return (true);
 }
@@ -32,7 +32,7 @@ void	Join::Joining(Server &server)
 	Channel		*channel;
 	std::string	joinChannel;
 
-	joinChannel	= package.cmd_data[JOIN_CHANNEL];
+	joinChannel	= package.cmdData[JOIN_CHANNEL];
 	channel		= server.getChannel(joinChannel);
 
 	if (channel->isFull())
@@ -48,7 +48,7 @@ void	Join::Joining(Server &server)
 void	Join::Create(Server &server)
 {
 	Channel		channel;
-	std::string	joinChannel = package.cmd_data[JOIN_CHANNEL];
+	std::string	joinChannel = package.cmdData[JOIN_CHANNEL];
 
 	package.client->setOp(true);
 	channel.setName(joinChannel);

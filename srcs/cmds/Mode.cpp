@@ -31,7 +31,7 @@ static int checkModes(std::string const &modes)
 		if (modes[i] == 'o' || modes[i] == 'l' || modes[i] == 'k')
 			args++;
 	}
-	if ((int)package.cmd_data.size() < (args + 1))
+	if ((int)package.cmdData.size() < (args + 1))
 		return (ERR_NEEDMOREPARAMS);
 	return (0);
 }
@@ -42,18 +42,18 @@ int	Mode::Check(Server &server, std::string const &modes)
 	int			error	= 0;
 	std::string	set		= CMODES;
 
-	if (package.cmd_data.size() < 2)
+	if (package.cmdData.size() < 2)
 		return (0);
-	if (package.cmd_data[MODE_CHANNEL][0] != '#')
+	if (package.cmdData[MODE_CHANNEL][0] != '#')
 		return (-1);
-	if (!server.isChannel(package.cmd_data[MODE_CHANNEL]))
+	if (!server.isChannel(package.cmdData[MODE_CHANNEL]))
 		return (ERR_NOSUCHNICK);
-	package.channel = server.getChannel(package.cmd_data[MODE_CHANNEL]);
+	package.channel = server.getChannel(package.cmdData[MODE_CHANNEL]);
 	if (!package.client->getOp())
 		return (ERR_CHANOPRIVSNEEDED);
 	if (!package.channel->isClient(package.client->getNick()))
 		return (ERR_NOTONCHANNEL);
-	if (package.cmd_data.size() < 3)
+	if (package.cmdData.size() < 3)
 		return (0);
 	error = checkModes(modes);
 	if (error)
@@ -63,7 +63,7 @@ int	Mode::Check(Server &server, std::string const &modes)
 
 int		Mode::o(Server &server, bool add, int argCount)
 {
-	std::string nick = package.cmd_data[argCount];
+	std::string nick = package.cmdData[argCount];
 
 	if (!server.isClient(nick))
 		return (ERR_NOSUCHNICK);
@@ -84,9 +84,9 @@ int		Mode::l(Server &server, bool add, int argCount)
 
 	if (!add)
 		package.channel->setOpLimit(0);
-	if (!Ft::isInt(package.cmd_data[argCount]))
+	if (!Ft::isInt(package.cmdData[argCount]))
 		return (ERR_NEEDMOREPARAMS);
-	sNum << package.cmd_data[argCount];
+	sNum << package.cmdData[argCount];
 	sNum >> limit;
 
 	if (!sNum.eof() || sNum.fail())
@@ -121,7 +121,7 @@ int		Mode::k(Server &server, bool add, int argCount)
 	(void) server;
 	(void) argCount;
 
-	(add) ? package.channel->setOpKey(true, package.cmd_data[argCount]) : package.channel->setOpKey(false, "");
+	(add) ? package.channel->setOpKey(true, package.cmdData[argCount]) : package.channel->setOpKey(false, "");
 
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPL.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 06:01:30 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:16:51 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ static std::string	codeToErr(short code)
 	if (code == ERR_NONICKNAMEGIVEN)
 		return (ERR_NONICKNAMEGIVEN_STR);
 	if (code == ERR_ONEUSNICKNAME)
-		return (ERR_ONEUSNICKNAME_STR(package.rpl_data));
+		return (ERR_ONEUSNICKNAME_STR(package.rplData));
 	if (code == ERR_NICKNAMEINUSE)
-		return (ERR_NICKNAMEINUSE_STR(package.rpl_data));
+		return (ERR_NICKNAMEINUSE_STR(package.rplData));
 	if (code == ERR_NOTONCHANNEL)
 		return (ERR_NOTONCHANNEL_STR(package.errChanName));
 	if (code == ERR_ALREADYREGISTRED)
@@ -82,7 +82,7 @@ static std::string	codeToErr(short code)
 }
 
 static std::string	getError(short code, std::string const &nick)	{ return (HEADER_ERROR(codeStr(code), nick) + codeToErr(code)); };
-static std::string	getRPL(void)									{ return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rpl_data)); };
+static std::string	getRPL(void)									{ return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd, package.rplData)); };
 
 void RPL::Welcome(const int &fd, std::string const &nick)
 {
@@ -132,11 +132,11 @@ void	RPL::Priv(Server &server)
 	std::string	sentData;
 	Client		*receiver;
 
-	sentData = package.cmd_data[PRIV_MSG];
-	msg = getRPL() + RPL_PRIV(package.cmd_data[PRIV_MSG]) + "\r\n";
+	sentData = package.cmdData[PRIV_MSG];
+	msg = getRPL() + RPL_PRIV(package.cmdData[PRIV_MSG]) + "\r\n";
 
-	receiver = server.getClient(package.rpl_data);
-	if (package.rpl_data[0] == '#')
+	receiver = server.getClient(package.rplData);
+	if (package.rplData[0] == '#')
 		package.channel->broadcastMessage(package.client, msg);
 	else
 		send(receiver->getFd(), msg.c_str(), msg.size(), 0);
@@ -144,7 +144,7 @@ void	RPL::Priv(Server &server)
 	&& sentData.substr(sentData.length() - 4, sentData.length()) == "quoi")
 	{
 		std::cout << "ok bot" << std::endl;
-		msg = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rpl_data) + RPL_PRIV("feur") + "\r\n";
+		msg = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rplData) + RPL_PRIV("feur") + "\r\n";
 		std::cout << "bot msg : " << msg << std::endl;
 		package.channel->broadcastMessage(package.client, msg);
 		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
@@ -156,8 +156,8 @@ void	RPL::Kick(Server &server)
 {
 	if (!package.channel)
 		return ;
-	Client		*client =	server.getClient(package.cmd_data[KICK_USER]);
-	std::string	msg =		getRPL() + RPL_KICK(package.cmd_data[KICK_USER], package.cmd_data[KICK_MSG]) + "\r\n";
+	Client		*client =	server.getClient(package.cmdData[KICK_USER]);
+	std::string	msg =		getRPL() + RPL_KICK(package.cmdData[KICK_USER], package.cmdData[KICK_MSG]) + "\r\n";
 
 	send(client->getFd(), msg.c_str(), msg.size(), 0);
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
@@ -170,14 +170,14 @@ void	RPL::Join(Server &server)
 	std::string msg;
 	int			clientFd = package.client->getFd();
 	std::string clientNick = package.client->getNick();
-	std::string channelJoin = package.cmd_data[JOIN_CHANNEL];
+	std::string channelJoin = package.cmdData[JOIN_CHANNEL];
 
 	msg = RPL_STR(clientNick, package.client->getUser(), package.cmd, "") + RPL_JOIN(channelJoin) + "\r\n";
 	send(clientFd, msg.c_str(), msg.size(), 0);
 	package.channel->broadcastMessage(package.client, msg);
 	msg = (channelJoin.empty())
 		? HEADER_STR("332", clientNick, " ", channelJoin) + RPL_NOTOPIC
-		: HEADER_STR("332", clientNick, " ", channelJoin) + RPL_TOPIC(package.rpl_data);
+		: HEADER_STR("332", clientNick, " ", channelJoin) + RPL_TOPIC(package.rplData);
 	msg = msg + "\r\n";
 	std::cout << "[RPL] " << msg;
 	send(clientFd, msg.c_str(), msg.size(), 0);
@@ -192,8 +192,8 @@ void	RPL::Topic(Server &server)
 	(void) server;
 	std::string	msg;
 
-	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[TOPIC_CHANNEL])
-		+ RPL_TOP(package.cmd_data[TOPIC_NEW]) + "\r\n";
+	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmdData[TOPIC_CHANNEL])
+		+ RPL_TOP(package.cmdData[TOPIC_NEW]) + "\r\n";
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.channel)
 		package.channel->broadcastMessage(package.client, msg);
@@ -204,11 +204,11 @@ void	RPL::Invite(Server &server)
 	(void) server;
 	std::string msg;
 
-	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmd_data[INVITE_NICK])
+	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.cmdData[INVITE_NICK])
 		+ RPL_INVITE(package.channel->getName()) + "\r\n";
 	std::cout << "[RPL] " << msg;
-	send(server.getClient(package.cmd_data[INVITE_NICK])->getFd(), msg.c_str(), msg.size(), 0);
-	msg = HEADER_ERROR("341", package.client->getNick()) + package.cmd_data[INVITE_NICK] + " " + package.cmd_data[INVITE_CHANNEL] + "\r\n";
+	send(server.getClient(package.cmdData[INVITE_NICK])->getFd(), msg.c_str(), msg.size(), 0);
+	msg = HEADER_ERROR("341", package.client->getNick()) + package.cmdData[INVITE_NICK] + " " + package.cmdData[INVITE_CHANNEL] + "\r\n";
 	std::cout << "[RPL] " << msg << std::endl;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
@@ -220,11 +220,11 @@ void	RPL::Mode(Server &server)
 
 	if (package.error < 0)
 		return ;
-	if (package.cmd_data.size() == 2)
+	if (package.cmdData.size() == 2)
 		msg = package.channel->getModes() + "\r\n";
 	else
 		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
-			+ RPL_MODE(package.cmd_data[MODE_MODES]) + "\r\n";
+			+ RPL_MODE(package.cmdData[MODE_MODES]) + "\r\n";
 	std::cout << "[RPL] " << msg;
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 	if (package.channel)

@@ -2,10 +2,10 @@
 
 bool Nick::Check(Server &server)
 {
-	if (package.cmd_data.size() < 2 || package.cmd_data.size() == std::string::npos)
+	if (package.cmdData.size() < 2 || package.cmdData.size() == std::string::npos)
 		return (package.setError(ERR_NONICKNAMEGIVEN), false);
 
-	std::string	nick = package.cmd_data[NICK_NICK];
+	std::string	nick = package.cmdData[NICK_NICK];
 	if (!Ft::isValidNickname(nick))
 		return (package.setError(ERR_ONEUSNICKNAME), false);
 	if (server.isClient(nick))
@@ -17,7 +17,7 @@ bool Nick::Check(Server &server)
 void Nick::Change(void)
 {
 	std::string oldNick =	package.client->getNick();
-	std::string	nick =		package.cmd_data[NICK_NICK];
+	std::string	nick =		package.cmdData[NICK_NICK];
 
 	package.client->setNick(nick);
 	package.client->updateInChannel(oldNick);

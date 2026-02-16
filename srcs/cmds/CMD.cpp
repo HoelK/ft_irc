@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CMD.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 05:42:40 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:16:56 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ void	CMD::apply(Server &server)
 void	CMD::Pass(Server &server)
 {
 	(void) server;
-	if (package.cmd_data.size() < 2)
+	if (package.cmdData.size() < 2)
 		return (package.setError(ERR_NEEDMOREPARAMS));
 	if (package.client->getAuth())
 		return (package.setError(ERR_ALREADYREGISTRED));
-	package.client->setPass(package.cmd_data[PASS_PASS]);
+	package.client->setPass(package.cmdData[PASS_PASS]);
 }
 
 void	CMD::Nick(Server &server)
@@ -63,9 +63,9 @@ void	CMD::Quit(Server &server)
 {
 	(void) server;
 	package.quit = true;
-	package.rpl_data = (package.cmd_data.size() < 2)
+	package.rplData = (package.cmdData.size() < 2)
 		? DEFAULT_QUIT_MSG
-		: package.cmd_data[QUIT_REASON];
+		: package.cmdData[QUIT_REASON];
 }
 
 void	CMD::User(Server &server)
@@ -79,7 +79,7 @@ void	CMD::Join(Server &server)
 {
 	if (!Join::Check())
 		return ;
-	(server.isChannel(package.cmd_data[JOIN_CHANNEL]))
+	(server.isChannel(package.cmdData[JOIN_CHANNEL]))
 		? Join::Joining(server)
 		: Join::Create(server);
 }
@@ -116,10 +116,10 @@ void	CMD::Mode(Server &server)
 {
 	int			argCount	= 2;
 	bool		add			= false;
-	std::string	&modes		= package.cmd_data[MODE_MODES];
+	std::string	&modes		= package.cmdData[MODE_MODES];
 
 	package.error = Mode::Check(server, modes);
-	if (package.cmd_data.size() == 2 || package.error)
+	if (package.cmdData.size() == 2 || package.error)
 		return ;
 	for (int i = 0; i < (int)modes.length(); i++)
 	{

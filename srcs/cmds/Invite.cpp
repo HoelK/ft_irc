@@ -2,11 +2,11 @@
 
 bool	Invite::Check(Server &server)
 {
-	if (package.cmd_data.size() < 3)
+	if (package.cmdData.size() < 3)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 
-	std::string	invited =	package.cmd_data[INVITE_NICK];
-	std::string	chanName =	package.cmd_data[INVITE_CHANNEL];
+	std::string	invited =	package.cmdData[INVITE_NICK];
+	std::string	chanName =	package.cmdData[INVITE_CHANNEL];
 	if (!server.isClient(invited))
 		return (package.setError(ERR_NOSUCHNICK), false);
 	if (!server.isChannel(chanName))
@@ -22,8 +22,8 @@ bool	Invite::Check(Server &server)
 
 void	Invite::Send(Server &server)
 {
-	std::string	invited =	package.cmd_data[INVITE_NICK];
-	package.channel	=		server.getChannel(package.cmd_data[INVITE_CHANNEL]);
+	std::string	invited =	package.cmdData[INVITE_NICK];
+	package.channel	=		server.getChannel(package.cmdData[INVITE_CHANNEL]);
 
 	package.channel->addInvited(server.getClient(invited));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Package.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:50 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 04:53:38 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:15:43 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 typedef struct	s_package
 {
 	std::string					cmd;
-	std::vector<std::string>	cmd_data;
+	std::vector<std::string>	cmdData;
 	std::string					errNick;
 	std::string					errChanName;
-	std::string					rpl_data;
+	std::string					rplData;
 	Client						oldClient;
 	Client						*client;
 	Channel						*channel;

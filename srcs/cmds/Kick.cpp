@@ -2,11 +2,11 @@
 
 bool Kick::Check(Server &server)
 {
-	if (package.cmd_data.size() < 3)
+	if (package.cmdData.size() < 3)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 	
-	std::string	kickNick =	package.cmd_data[KICK_USER];
-	std::string kickChan =	package.cmd_data[KICK_CHANNEL];
+	std::string	kickNick =	package.cmdData[KICK_USER];
+	std::string kickChan =	package.cmdData[KICK_CHANNEL];
 	package.errNick =		package.client->getNick();
 	package.errChanName =	kickChan;
 
@@ -30,11 +30,11 @@ bool Kick::Check(Server &server)
 
 void Kick::Kicking(void)
 {
-	std::string	kickNick =		package.cmd_data[KICK_USER];
-	std::string	kickChannel	=	package.cmd_data[KICK_CHANNEL];
+	std::string	kickNick =		package.cmdData[KICK_USER];
+	std::string	kickChannel	=	package.cmdData[KICK_CHANNEL];
 	package.channel =			package.client->getChannel(kickChannel);
 	Client	*target	=			package.channel->getClient(kickNick);
 
-	package.rpl_data = kickChannel;
+	package.rplData = kickChannel;
 	package.channel->removeClient(target->getNick());
 }

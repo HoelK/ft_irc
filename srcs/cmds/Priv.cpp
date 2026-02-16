@@ -2,10 +2,10 @@
 
 bool Priv::Check(Server &server)
 {
-	if (package.cmd_data.size() < 3)
+	if (package.cmdData.size() < 3)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 
-	std::string target = package.cmd_data[PRIV_TARGET];
+	std::string target = package.cmdData[PRIV_TARGET];
 	if (target[0] == '#' && !server.isChannel(target))
 		return (package.setError(ERR_NOSUCHCHANNEL), false);
 	if (target[0] != '#' && !server.isClient(target))
@@ -15,9 +15,9 @@ bool Priv::Check(Server &server)
 
 void Priv::Send(Server &server)
 {
-	package.rpl_data = package.cmd_data[PRIV_TARGET];
-	Channel	*channel = server.getChannel(package.rpl_data);
+	package.rplData = package.cmdData[PRIV_TARGET];
+	Channel	*channel = server.getChannel(package.rplData);
 
-	if (package.rpl_data[0] == '#' && channel)
+	if (package.rplData[0] == '#' && channel)
 		package.channel = channel;
 }

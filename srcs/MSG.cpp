@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MSG.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:29 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 21:12:22 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:15:44 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	MSG::sendData(Client *client, std::string const &line)
 	package.clear();
 	package.oldClient = *client;
 	package.cmd = getCmd(line);
-	package.cmd_data = getCmdData(line);
+	package.cmdData = getCmdData(line);
 	package.client = client;
 	package.error = 0;
 	package.quit = false;
