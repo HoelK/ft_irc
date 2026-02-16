@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 15:07:26 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/16 19:07:53 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,9 @@ void	Server::authenticate(Client &client)
 			RPL::reply(*this);
 	}
 	if (!client.getPass().empty() && client.getPass() != this->password)
-		return (this->disconnectClient(client.getFd()));
+		return (package.setError(ERR_PASSWDMISMATCH),
+				RPL::reply(*this),
+				this->disconnectClient(client.getFd()));
 	if (!client.isAuth(this->password))
 		return ;
 
