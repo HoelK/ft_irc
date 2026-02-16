@@ -71,9 +71,7 @@ int		Mode::o(Server &server, bool add, int argCount)
 		return (ERR_NOTONCHANNEL);
 	Client		*client = server.getClient(nick);
 
-	if (add)
-		package.channel->addOperator(client);
-
+	(add) ? package.channel->addOperator(client) : package.channel->deleteOperator(client->getNick());
 	return (0);
 }
 
