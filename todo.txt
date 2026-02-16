@@ -1,11 +1,13 @@
 ADD CDD file transfer
 CLEAN Bot code (RPL::Priv)
 Look for bugs
+Requesting modes shouldn't be only for OPs
+Fix segfault when client disconnect then CTRL+C on server (probably destructor issue)
 Reduce RPL dependecies on package.rpl_data to add clarity to the code
 Rename package.cmd_data to package.cmdData (to norm a bit)
 
-Check :
+Check that may be good:
 - PASS OK
 - NICK OK
 - USER OK
-- KICK OK ?
+- KICK OK
