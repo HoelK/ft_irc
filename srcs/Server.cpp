@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 05:15:50 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:31:17 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,8 @@ void	Server::authenticate(Client &client)
 void	Server::disconnectClient(const int &fd)
 {
 	Client *client = this->clients[fd];
-
+	this->clients.erase(fd);
+	
 	close(client->getFd());
 	for (std::vector<struct pollfd>::iterator it = this->fds.begin(); it != this->fds.end(); it++)
 	{
