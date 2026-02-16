@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/14 00:53:54 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 20:23:00 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ class Client
     private:
         int								fd;
 		bool							auth;
-		bool							op;
         std::string						nick;
 		std::string						username;
         std::string						realname;
@@ -38,7 +37,6 @@ class Client
 		Client &operator=(Client const &copy);
         ~Client(void);
 
-		const bool			&getOp(void)		const;
         const int			&getFd(void)		const;
 		const bool			&getAuth(void)		const;
         const std::string	&getNick(void)		const;
@@ -47,7 +45,6 @@ class Client
 		const std::string	&getPass(void)		const;
 		const std::string	&getBuffer(void)	const;
 		Channel				*getChannel(std::string const &topic) const;
-		void				setOp(bool op);
 		void				setAuth(bool auth);
 		void				setNick(std::string const &nick);
 		void				setName(std::string const &name);

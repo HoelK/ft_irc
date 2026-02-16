@@ -6,21 +6,20 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 00:54:23 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 20:23:26 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
-Client::Client(void): fd(0), auth(false), op(false) {};
+Client::Client(void): fd(0), auth(false) {};
 Client::~Client(void) {};
-Client::Client(int fd): fd(fd), auth(false), op(false) {};
+Client::Client(int fd): fd(fd), auth(false) {};
 Client::Client(Client const &copy) { (*this) = copy; };
 
 Client &Client::operator=(Client const &copy)
 {
 	this->fd = copy.fd;
-	this->op = copy.op;
 	this->nick = copy.nick;
 	this->auth = copy.auth;
 	this->username = copy.username;
@@ -32,7 +31,6 @@ Client &Client::operator=(Client const &copy)
 	return (*this);
 }
 
-const bool			&Client::getOp(void)		const			{ return (this->op); };
 const int			&Client::getFd(void)		const			{ return (this->fd); };
 const bool			&Client::getAuth(void)		const			{ return (this->auth); };
 const std::string	&Client::getNick(void)		const			{ return (this->nick); };
@@ -47,7 +45,6 @@ void				Client::setName(std::string const &name)	{ this->realname = name; };
 void				Client::setUser(std::string const &user)	{ this->username = user; };
 void				Client::setPass(std::string const &pass)	{ this->password = pass; };
 void				Client::setBuffer(std::string const &buff)	{ this->buffer = buff; };
-void				Client::setOp(bool op)						{ this->op = op; };
 void				Client::addChannel(Channel *channel)		{ this->channels[channel->getName()] = channel; };
 void				Client::delChannel(std::string const &topic){ this->channels.erase(topic); };
 bool				Client::isChannel(std::string const &topic) { return (this->channels.find(topic) != this->channels.end()); };
@@ -87,7 +84,6 @@ std::ostream &operator<<(std::ostream &stream, Client const &client)
 	stream << "Name : "	<<	client.getName() << std::endl;
 	stream << "Nick : "	<<	client.getNick() << std::endl;
 	stream << "User : "	<<	client.getUser() << std::endl;
-	stream << "OP : "	<<	client.getOp() << std::endl;
 	stream << client.getChannels();
 
 	return (stream);

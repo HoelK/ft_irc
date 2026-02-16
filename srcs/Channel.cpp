@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/16 05:07:53 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 20:28:45 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ Channel	&Channel::operator=(Channel const &copy)
 	this->opLimit = copy.opLimit;
 	this->opInvite = copy.opInvite;
 	this->name = copy.name;
+	this->invited = copy.invited;
+	this->operators = copy.operators;
 	this->clients = copy.clients;
 	return (*this);
 }
@@ -88,6 +90,29 @@ bool				Channel::isInvited(std::string const &nick)
 	return (false);
 }
 
+
+void				Channel::addOperator(Client *client) { this->operators.push_back(client); };
+void				Channel::removeOperator(std::string const &nick)
+{
+	for (std::vector<Client *>::iterator it = this->operators.begin(); it != this->operators.end(); it++)
+	{
+		Client *client = *it;
+		if (client->getNick() == nick)
+			this->invited.erase(it);
+	}
+}
+
+bool				Channel::isOperator(std::string const &nick) const
+{
+	for (std::vector<Client *>::const_iterator it = this->operators.begin(); it != this->operators.end(); it++)
+	{
+		Client *client = *it;
+		if (client->getNick() == nick)
+			return (true);
+	}
+	return (false);
+}
+
 void				Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
 bool				Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
 void				Channel::broadcastMessage(Client *sender, std::string const &msg)
@@ -115,7 +140,7 @@ std::string			Channel::getNameList(void) const
 	for (std::map<std::string, Client *>::const_iterator it = clients.begin(); it != clients.end(); it++)
 	{
 		client = it->second;
-		if (client->getOp())
+		if (this->isOperator(client->getNick()))
 			user = "@";
 		user = user + client->getNick();
 		res = res + " " + user;

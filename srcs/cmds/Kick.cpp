@@ -17,7 +17,7 @@ bool Kick::Check(Server &server)
 
 	if (!channel->isClient(package.client->getNick()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
-	if (!package.client->getOp())
+	if (!channel->isOperator(package.client->getNick()))
 		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
 	package.errNick = kickNick;
 	if (!server.isClient(kickNick))

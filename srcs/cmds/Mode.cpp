@@ -49,7 +49,7 @@ int	Mode::Check(Server &server, std::string const &modes)
 	if (!server.isChannel(package.cmdData[MODE_CHANNEL]))
 		return (ERR_NOSUCHNICK);
 	package.channel = server.getChannel(package.cmdData[MODE_CHANNEL]);
-	if (!package.client->getOp() && package.cmdData.size() > 2)
+	if (!package.channel->isOperator(package.client->getNick()) && package.cmdData.size() > 2)
 		return (ERR_CHANOPRIVSNEEDED);
 	if (!package.channel->isClient(package.client->getNick()))
 		return (ERR_NOTONCHANNEL);
@@ -71,7 +71,8 @@ int		Mode::o(Server &server, bool add, int argCount)
 		return (ERR_NOTONCHANNEL);
 	Client		*client = server.getClient(nick);
 
-	(add) ? client->setOp(true) : client->setOp(false);
+	if (add)
+		package.channel->addOperator(client);
 
 	return (0);
 }

@@ -50,7 +50,7 @@ void	Join::Create(Server &server)
 	Channel		channel;
 	std::string	joinChannel = package.cmdData[JOIN_CHANNEL];
 
-	package.client->setOp(true);
+	channel.addOperator(package.client);
 	channel.setName(joinChannel);
 	channel.addClient(package.client);
 	server.createChannel(channel);

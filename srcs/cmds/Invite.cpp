@@ -15,7 +15,7 @@ bool	Invite::Check(Server &server)
 	package.errNick = package.client->getNick();
 	if (!channel->isClient(package.client->getNick()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
-	if (!package.client->getOp())
+	if (!channel->isOperator(package.client->getNick()))
 		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
 	package.errNick = invited;
 	if (!server.isClient(invited))
