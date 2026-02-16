@@ -7,16 +7,19 @@ bool	Invite::Check(Server &server)
 
 	std::string	invited =	package.cmdData[INVITE_NICK];
 	std::string	chanName =	package.cmdData[INVITE_CHANNEL];
-	if (!server.isClient(invited))
-		return (package.setError(ERR_NOSUCHNICK), false);
+	package.errChanName = chanName;
 	if (!server.isChannel(chanName))
 		return (package.setError(ERR_NOSUCHCHANNEL), false);
-	//if (!package.channel->getOp())
-	//	return (package.);
 
 	Channel *channel = server.getChannel(chanName);
+	package.errNick = package.client->getNick();
 	if (!channel->isClient(package.client->getNick()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
+	if (!package.client->getOp())
+		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
+	package.errNick = invited;
+	if (!server.isClient(invited))
+		return (package.setError(ERR_NOSUCHNICK), false);
 	if (channel->isClient(invited))
 		return (package.setError(ERR_USERONCHANNEL), false);
 	return (true);

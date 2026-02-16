@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/14 19:47:05 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 20:12:16 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ enum	cmdDataIds
 	KICK_MSG		= 2,
 	TOPIC_CHANNEL	= 0,
 	TOPIC_NEW		= 1,
-	INVITE_NICK		= 0,
 	INVITE_CHANNEL	= 1,
+	INVITE_NICK		= 0,
 	MODE_CHANNEL	= 0,
 	MODE_MODES		= 1
 };

@@ -6,12 +6,13 @@ Use ERR_PASSWDMISMATCH when disconnecting user with wrong pass | done
 Fix segfault when client disconnect then CTRL+C on server (probably destructor issue) | done
 
 Look for bugs
-ADD CDD file transfer
 Reduce RPL dependecies on package.rpl_data to add clarity to the code
 Delete the trailling '\r' in cmdData from parsing (Ft::extractline) and adapt all error checks
+Huge bug : because we use a bool OP on each client, when a client join a new created channel, hes set has op, if he then joins a channel already created, hes still considered OP. Need to replace the bool Op by a vect of <clients *> OpClients to keep track of ops for each channels.
 
 Check that may be good:
 - PASS OK
 - NICK OK
 - USER OK
 - KICK OK
+- INVITE OK

@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/14 00:46:52 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/16 20:06:21 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # define MODE_LIMIT		'l'
 # define MODE_INVITE	'i'
 
-
 class Client;
 
 class Channel
@@ -39,6 +38,7 @@ class Channel
 		std::string						topic;
 		std::string						password;
 		std::vector<Client *>			invited;
+		std::vector<Client *>			operators;
 		std::map<std::string, Client *>	clients;
 
     public:
@@ -65,14 +65,17 @@ class Channel
 
 		bool				Auth(std::string const &password);
 		bool				isFull(void);
+
 		bool				isClient(std::string const &nick);
 		Client				*getClient(std::string const &nick);
         void				addClient(Client *client);
         bool				removeClient(std::string const &name);
-		void				addInvited(Client *client);
 		void				updateClient(std::string const &oldNick);
+
+		void				addInvited(Client *client);
 		void				removeInvited(std::string const &nick);
 		bool				isInvited(std::string const &nick);
+
 		std::string			getModes(void);
 
 		void				broadcastMessage(Client *sender, std::string const &msg);
