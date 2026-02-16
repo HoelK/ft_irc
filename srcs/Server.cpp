@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 11:31:17 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/16 14:38:08 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ sig_atomic_t	sigShutdown = 0;
 
 Server::~Server(void)
 {
-	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
-		this->disconnectClient(it->second->getFd());
+    while (!this->clients.empty())
+        this->disconnectClient(this->clients.begin()->second->getFd());
 }
 
 Server::Server(std::string password, int port): fd(0), port(port), password(password) {};
