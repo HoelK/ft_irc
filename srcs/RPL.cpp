@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 11:16:51 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/16 15:14:24 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,30 +126,49 @@ void	RPL::Nick(Server &server)
 	send(package.client->getFd(), msg.c_str(), msg.size(), 0);
 }
 
-void	RPL::Priv(Server &server)
+void RPL::Priv(Server &server)
 {
-	std::string	msg;
-	std::string	sentData;
-	Client		*receiver;
+    std::string messageContent = package.cmdData[PRIV_MSG];
+    std::string recipient = package.rplData;
+    
+    std::string formattedMessage = getRPL() + RPL_PRIV(messageContent) + "\r\n";
+    
+    bool isChannelMessage = (recipient[0] == '#');
+    
+    if (isChannelMessage)
+    {
+        package.channel->broadcastMessage(package.client, formattedMessage);
+    }
+    else
+    {
+        Client *receiver = server.getClient(recipient);
+        {
+            send(receiver->getFd(), formattedMessage.c_str(), formattedMessage.size(), 0);
+        }
+    }
+    
+    if (shouldTriggerFeurBot(messageContent))
+    {
+        sendFeurBotResponse();
+    }
+}
 
-	sentData = package.cmdData[PRIV_MSG];
-	msg = getRPL() + RPL_PRIV(package.cmdData[PRIV_MSG]) + "\r\n";
+bool shouldTriggerFeurBot(const std::string &message)
+{
+    if (!package.channel || message.size() < 4)
+        return false;
+    
+    std::string lastFourChars = message.substr(message.length() - 4);
+    return (lastFourChars == "quoi");
+}
 
-	receiver = server.getClient(package.rplData);
-	if (package.rplData[0] == '#')
-		package.channel->broadcastMessage(package.client, msg);
-	else
-		send(receiver->getFd(), msg.c_str(), msg.size(), 0);
-	if (package.channel && sentData.size() >= 4
-	&& sentData.substr(sentData.length() - 4, sentData.length()) == "quoi")
-	{
-		std::cout << "ok bot" << std::endl;
-		msg = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rplData) + RPL_PRIV("feur") + "\r\n";
-		std::cout << "bot msg : " << msg << std::endl;
-		package.channel->broadcastMessage(package.client, msg);
-		send(package.client->getFd(), msg.c_str(), msg.size(), 0);
-		//send(receiver->getFd(), msg.c_str(), msg.size(), 0);
-	}
+void sendFeurBotResponse()
+{
+    std::string botMessage = RPL_STR("Feur-bot", "Feur-bot", package.cmd, package.rplData) 
+                           + RPL_PRIV("feur") + "\r\n";
+    
+    package.channel->broadcastMessage(package.client, botMessage);
+    send(package.client->getFd(), botMessage.c_str(), botMessage.size(), 0);
 }
 
 void	RPL::Kick(Server &server)

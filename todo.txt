@@ -1,5 +1,5 @@
 ADD CDD file transfer
-CLEAN Bot code (RPL::Priv)
+CLEAN Bot code (RPL::Priv) | done
 Look for bugs
 Requesting modes shouldn't be only for OPs | done
 Fix segfault when client disconnect then CTRL+C on server (probably destructor issue) | done
