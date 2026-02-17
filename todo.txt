@@ -18,6 +18,6 @@ Check that may be good:
 - KICK		OK
 - INVITE	OK
 - TOPIC		OK
-- PRIV
+- PRIV		OK
 - MODE
 - JOIN

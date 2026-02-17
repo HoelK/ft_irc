@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 01:47:19 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 19:44:25 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ sig_atomic_t	sigShutdown = 0;
 
 Server::~Server(void)
 {
+	close(this->fd);
     while (!this->clients.empty())
         this->disconnectClient(this->clients.begin()->second->getFd());
 }

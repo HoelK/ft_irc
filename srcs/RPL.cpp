@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 01:38:06 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 19:34:30 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,21 +154,15 @@ void RPL::Priv(Server &server)
     bool isChannelMessage = (recipient[0] == '#');
     
     if (isChannelMessage)
-    {
         package.channel->broadcastMessage(package.client, formattedMessage);
-    }
     else
     {
         Client *receiver = server.getClient(recipient);
-        {
-            send(receiver->getFd(), formattedMessage.c_str(), formattedMessage.size(), 0);
-        }
+		send(receiver->getFd(), formattedMessage.c_str(), formattedMessage.size(), 0);
     }
     
     if (shouldTriggerFeurBot(messageContent))
-    {
         sendFeurBotResponse();
-    }
 }
 
 void	RPL::Kick(Server &server)
