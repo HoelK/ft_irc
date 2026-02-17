@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 23:25:52 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 01:17:51 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	CMD::Mode(Server &server)
 	std::string	&modes		= package.cmdData[MODE_MODES];
 
 	package.error = Mode::Check(server, modes);
-	if (package.cmdData.size() == 2 || package.error)
+	if (package.cmdData.size() == 1 || package.error)
 		return ;
 	for (int i = 0; i < (int)modes.length(); i++)
 	{
