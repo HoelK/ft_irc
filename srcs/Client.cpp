@@ -6,11 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 20:23:26 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:13:25 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
+# include "Server.hpp"
 
 Client::Client(void): fd(0), auth(false) {};
 Client::~Client(void) {};
@@ -67,6 +68,20 @@ bool				Client::isAuth(std::string const &password)
 			&& !this->username.empty()
 			&& !this->realname.empty()
 			&& this->password == password);
+}
+
+void	Client::disconnection(Server &server)
+{
+	while (!this->channels.empty())
+	{
+		Channel *channel = this->channels.begin()->second;
+		channel->removeOperator(this->nick);
+		channel->removeInvited(this->nick);
+		channel->removeClient(this->nick);
+		this->channels.erase(channel->getName());
+		if (channel->getClientAmount() == 0)
+			server.deleteChannel(channel->getName());
+	}
 }
 
 std::ostream &operator<<(std::ostream &stream, std::map<std::string, Channel *> const &channels)

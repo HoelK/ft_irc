@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:45:20 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/16 20:25:14 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:09:26 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <sys/types.h>
 # include <sys/socket.h>
 # include "Ft.hpp"
-# include "Client.hpp"
 
 # define MODE_OP		'o'
 # define MODE_KEY		'k'
@@ -71,13 +70,14 @@ class Channel
         void				addClient(Client *client);
         bool				removeClient(std::string const &name);
 		void				updateClient(std::string const &oldNick);
+		int					getClientAmount(void) const;
 
 		void				addInvited(Client *client);
-		void				removeInvited(std::string const &nick);
+		bool				removeInvited(std::string const &nick);
 		bool				isInvited(std::string const &nick);
 
 		void				addOperator(Client *client);
-		void				removeOperator(std::string const &nick);
+		bool				removeOperator(std::string const &nick);
 		bool				isOperator(std::string const &nick) const;
 
 		std::string			getModes(void);

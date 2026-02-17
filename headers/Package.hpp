@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:50 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 11:15:43 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/17 21:02:16 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # include <string>
 # include <vector>
 # include "Client.hpp"
+
+class Channel;
 
 typedef struct	s_package
 {

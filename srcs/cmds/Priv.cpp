@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Priv.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/17 20:43:20 by hkeromne          #+#    #+#             */
+/*   Updated: 2026/02/17 21:11:27 by hkeromne         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "Priv.hpp"
+# include "RPL.hpp"
 
 static bool checkChannelSend(Server &server, std::string const &target)
 {

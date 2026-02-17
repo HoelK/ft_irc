@@ -6,11 +6,12 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/16 20:28:45 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:10:13 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+# include "Channel.hpp"
+# include "Client.hpp"
 
 Channel::Channel(void): opKey(false), opTopic(false), opLimit(0), opInvite(false) {};
 Channel::~Channel(void) {};
@@ -36,6 +37,7 @@ const int			&Channel::getOpLimit(void)	const			{ return (this->opLimit); };
 const std::string	&Channel::getPassword(void)	const			{ return (this->password); };
 const std::string	&Channel::getName(void)		const			{ return (this->name); };
 const std::string	&Channel::getTopic(void)	const			{ return (this->topic); };
+int					Channel::getClientAmount(void) const		{ return (this->clients.size()); };
 void				Channel::setOpKey(bool const &key, std::string const &password) { this->opKey = key; this->password = password; };
 void				Channel::setOpTopic(bool const &topic)		{ this->opTopic = topic; };
 void				Channel::setOpInvite(bool const &invite)	{ this->opInvite = invite; };
@@ -69,14 +71,15 @@ std::string			Channel::getModes(void)
 }
 
 void				Channel::addInvited(Client *client) { this->invited.push_back(client); };
-void				Channel::removeInvited(std::string const &nick)
+bool				Channel::removeInvited(std::string const &nick)
 { 
 	for (std::vector<Client *>::iterator it = this->invited.begin(); it != this->invited.end(); it++)
 	{
 		Client *client = *it;
 		if (client->getNick() == nick)
-			this->invited.erase(it);
+			return (this->invited.erase(it), true);
 	}
+	return (false);
 }
 
 bool				Channel::isInvited(std::string const &nick)
@@ -90,16 +93,16 @@ bool				Channel::isInvited(std::string const &nick)
 	return (false);
 }
 
-
 void				Channel::addOperator(Client *client) { this->operators.push_back(client); };
-void				Channel::removeOperator(std::string const &nick)
+bool				Channel::removeOperator(std::string const &nick)
 {
 	for (std::vector<Client *>::iterator it = this->operators.begin(); it != this->operators.end(); it++)
 	{
 		Client *client = *it;
 		if (client->getNick() == nick)
-			this->invited.erase(it);
+			return (this->operators.erase(it), true);
 	}
+	return (false);
 }
 
 bool				Channel::isOperator(std::string const &nick) const
@@ -115,6 +118,7 @@ bool				Channel::isOperator(std::string const &nick) const
 
 void				Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
 bool				Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
+
 void				Channel::broadcastMessage(Client *sender, std::string const &msg)
 {
 	Client *client;

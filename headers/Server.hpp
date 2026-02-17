@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 17:35:28 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:56:18 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:00:58 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include "Ft.hpp"
-# include "MSG.hpp"
-# include "RPL.hpp"
-# include "CMD.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"
 # define PORT_ID 1

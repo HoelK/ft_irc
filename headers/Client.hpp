@@ -6,16 +6,17 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/16 20:23:00 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:03:23 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+# include <map>
 # include <iostream>
-# include "Channel.hpp"
 # define MAX_BUFFER_SIZE 8192
 
+class Server;
 class Channel;
 
 class Client
@@ -60,6 +61,7 @@ class Client
 		bool				inChannel(void) const;
 		void				updateChannel(std::string const &oldTopic);
 		void				updateInChannel(std::string const &oldNick);
+		void				disconnection(Server &server);
 };
 
 std::ostream &operator<<(std::ostream &stream, Client const &client);

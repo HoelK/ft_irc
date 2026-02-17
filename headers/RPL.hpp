@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 23:43:28 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:01:36 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 # include <sstream>
 # include <sys/socket.h>
 # include "CMD.hpp"
-# include "Server.hpp"
 # include "Package.hpp"
+# include "Server.hpp"
 
 // SERVER
 # define VERSION									"1.0"

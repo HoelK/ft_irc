@@ -6,11 +6,14 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 19:44:25 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:02:52 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
+# include "MSG.hpp"
+# include "RPL.hpp"
+# include "CMD.hpp"
 
 sig_atomic_t	sigShutdown = 0;
 
@@ -151,6 +154,7 @@ void	Server::disconnectClient(const int &fd)
 {
 	Client *client = this->clients[fd];
 	
+	client->disconnection(*this);
 	close(client->getFd());
 	for (std::vector<struct pollfd>::iterator it = this->fds.begin(); it != this->fds.end(); it++)
 	{

@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Mode.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/17 20:43:39 by hkeromne          #+#    #+#             */
+/*   Updated: 2026/02/17 21:10:33 by hkeromne         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "Mode.hpp"
+# include "RPL.hpp"
 
 static std::map<char, int (*)(Server &, bool, int)> initMode()
 {
@@ -71,7 +84,7 @@ int		Mode::o(Server &server, bool add, int argCount)
 		return (ERR_NOTONCHANNEL);
 	Client		*client = server.getClient(nick);
 
-	(add) ? package.channel->addOperator(client) : package.channel->removeOperator(client->getNick());
+	(add) ? package.channel->addOperator(client) : (void)package.channel->removeOperator(client->getNick());
 	return (0);
 }
 
