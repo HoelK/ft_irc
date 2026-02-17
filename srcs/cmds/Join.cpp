@@ -24,6 +24,7 @@ bool	Join::Check()
 {
 	if (package.cmdData.size() < 1)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
+	package.errChanName = package.cmdData[JOIN_CHANNEL];
 	return (true);
 }
 

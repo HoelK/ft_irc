@@ -5,7 +5,8 @@ bool Nick::Check(Server &server)
 	if (package.cmdData.size() < 1 || package.cmdData.size() == std::string::npos)
 		return (package.setError(ERR_NONICKNAMEGIVEN), false);
 
-	std::string	nick = package.cmdData[NICK_NICK];
+	std::string	nick =	package.cmdData[NICK_NICK];
+	package.errNick	=	nick;
 	if (!Ft::isValidNickname(nick))
 		return (package.setError(ERR_ONEUSNICKNAME), false);
 	if (server.isClient(nick))

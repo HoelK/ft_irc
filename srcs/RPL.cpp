@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 23:40:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 01:38:06 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ static std::string	codeToErr(short code)
 	if (code == ERR_NONICKNAMEGIVEN)
 		return (ERR_NONICKNAMEGIVEN_STR);
 	if (code == ERR_ONEUSNICKNAME)
-		return (ERR_ONEUSNICKNAME_STR(package.rplData));
+		return (ERR_ONEUSNICKNAME_STR(package.errNick));
 	if (code == ERR_NICKNAMEINUSE)
-		return (ERR_NICKNAMEINUSE_STR(package.rplData));
+		return (ERR_NICKNAMEINUSE_STR(package.errNick));
 	if (code == ERR_NOTONCHANNEL)
 		return (ERR_NOTONCHANNEL_STR(package.errChanName));
 	if (code == ERR_ALREADYREGISTRED)

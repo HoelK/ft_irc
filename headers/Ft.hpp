@@ -6,13 +6,13 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:06 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 23:41:24 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 01:38:59 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
+# include <ctime>
 # include <string>
-#include <ctime>
 # include <sstream>
 # include <climits>
 # include <iostream>
