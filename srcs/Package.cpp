@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:40 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/16 19:01:41 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 23:09:23 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	t_package::clear(void)
 	rplData.clear();
 	errNick.clear();
 	errChanName.clear();
+	errMode.clear();
 	client = NULL;
 	channel = NULL;
 	quit = 0;
@@ -29,5 +30,11 @@ void	t_package::clear(void)
 
 }
 
+void	t_package::errClear(void)
+{
+	errNick.clear();
+	errChanName.clear();
+	errMode.clear();
+}
 
 void	t_package::setError(int error) { this->error = error; };

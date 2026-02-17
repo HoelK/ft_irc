@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:50 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:02:16 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 22:57:35 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct	s_package
 	std::string					errNick;
 	std::string					errChanName;
 	std::string					rplData;
+	std::string					errMode;
 	Client						oldClient;
 	Client						*client;
 	Channel						*channel;
@@ -31,6 +32,7 @@ typedef struct	s_package
 	int							error;
 
 	void						clear(void);
+	void						errClear(void);
 	void						setError(int error);
 }	t_package;
 

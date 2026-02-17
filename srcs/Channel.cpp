@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/17 21:10:13 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 21:28:56 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool				Channel::Auth(std::string const &password) { return (this->password == p
 
 std::string			Channel::getModes(void)
 {
-	std::string		result;
+	std::string		result("+");
 	std::string		params;
 
 	if (this->opKey)

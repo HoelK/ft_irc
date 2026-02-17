@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:44:56 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 20:44:57 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 00:17:26 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@ class Server;
 class Mode
 {
 	public :
-		static std::map<char, int (*)(Server &, bool, int)> mode;
-		static int	Check(Server &server, std::string const &modes);
-		static int	i(Server &server, bool add, int argCount);
-		static int	t(Server &server, bool add, int argCount);
-		static int	l(Server &server, bool add, int argCount);
-		static int	k(Server &server, bool add, int argCount);
-		static int	o(Server &server, bool add, int argCount);
+		static std::map<char, void (*)(Server &, bool, int &)> mode;
+		static bool	Check(Server &server, std::string const &modes);
+		static bool singleCheck(std::string &modes, char m, int &argCount);
+		static void	i(Server &server, bool add, int &argCount);
+		static void	t(Server &server, bool add, int &argCount);
+		static void	l(Server &server, bool add, int &argCount);
+		static void	k(Server &server, bool add, int &argCount);
+		static void	o(Server &server, bool add, int &argCount);
+		static void	join(void);
 };

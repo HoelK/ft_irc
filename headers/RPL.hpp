@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:01:36 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 23:46:46 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@
 # define ERR_NOSUCHCHANNEL_STR(channel)				std::string(channel) + " :No such channel"
 # define ERR_CHANOPRIVSNEEDED_STR(channel)			std::string(channel) + " :You're not channel operator"
 # define ERR_NOTONCHANNEL_STR(channel)				std::string(channel) + " :You're not on that channel"
+# define ERR_UNKNOWNMODE_STR(mode)					std::string(mode) + " :is unknown mode char to me"
 # define ERR_ALREADYREGISTRED_STR					":Unauthorized command (already registered)"
 
 //Numeric replies

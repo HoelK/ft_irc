@@ -6,11 +6,12 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 01:46:38 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 00:11:59 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "CMD.hpp"
+# include "RPL.hpp"
 
 static std::map<std::string, void (*)(Server &)> initCmds()
 {
@@ -118,20 +119,29 @@ void	CMD::Mode(Server &server)
 {
 	int			argCount	= 2;
 	bool		add			= false;
-	std::string	&modes		= package.cmdData[MODE_MODES];
-
-	package.error = Mode::Check(server, modes);
-	if (package.cmdData.size() == 1 || package.error)
+	std::string	&modes		= package.cmdData[MODE_MODES]; //if wrong mode :
+														   //- Erase it from modes
+														   //- Put it in package.errMode (w/ arguement if needed)
+														   //- Set package.error
+														   //- Call reply
+														   //- Reset error params
+	if (!Mode::Check(server, modes))
 		return ;
 	for (int i = 0; i < (int)modes.length(); i++)
 	{
+		char m = modes[i];
+		if (!Mode::singleCheck(modes, m, argCount))
+		{
+			RPL::reply(server);
+			package.errClear();
+			continue ;
+		}
 		if (modes[i] == '+')
 			add = true;
 		else if (modes[i] == '-')
 			add = false;
 		else
-			package.error = Mode::mode[modes[i]](server, add, argCount);
-		if (package.error)
-			return ;
+			Mode::mode[modes[i]](server, add, argCount);
 	}
+	Mode::join();
 }

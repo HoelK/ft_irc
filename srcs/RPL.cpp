@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 19:34:30 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/17 23:53:26 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ static std::string	codeToErr(short code)
 		return (ERR_BADCHANNELKEY_STR(package.channel->getName()));
 	if (code == ERR_CHANOPRIVSNEEDED)
 		return (ERR_CHANOPRIVSNEEDED_STR(package.errChanName));
+	if (code == ERR_UNKNOWNMODE)
+		return (ERR_UNKNOWNMODE_STR(package.errMode));
 	
 	return ("");
 }
@@ -231,10 +233,12 @@ void	RPL::Mode(Server &server)
 	(void) server;
 	std::string	msg;
 
+	//if change, rpl str
+	//if ask numeri 324
 	if (package.error < 0)
 		return ;
-	if (package.cmdData.size() == 2)
-		msg = package.channel->getModes() + "\r\n";
+	else if (package.cmdData.size() == 1)
+		msg =  HEADER_STR("324", package.client->getNick(), " ", package.channel->getName()) + package.channel->getModes() + "\r\n";
 	else
 		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd, package.channel->getName())
 			+ RPL_MODE(package.cmdData[MODE_MODES]) + "\r\n";

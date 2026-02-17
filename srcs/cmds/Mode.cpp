@@ -6,16 +6,16 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:39 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:10:33 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 00:44:39 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Mode.hpp"
 # include "RPL.hpp"
 
-static std::map<char, int (*)(Server &, bool, int)> initMode()
+static std::map<char, void (*)(Server &, bool, int &)> initMode()
 {
-    std::map<char, int (*)(Server &, bool, int)> m;
+    std::map<char, void (*)(Server &, bool, int &)> m;
 
 	m[MODE_OP] =		&Mode::o;
 	m[MODE_INVITE] =	&Mode::i;
@@ -26,69 +26,94 @@ static std::map<char, int (*)(Server &, bool, int)> initMode()
     return m;
 }
 
-std::map<char, int (*)(Server &, bool, int)> Mode::mode = initMode();
+std::map<char, void (*)(Server &, bool, int &)> Mode::mode = initMode();
 
-static int checkModes(std::string const &modes)
+static bool checkModes(std::string const &modes)
 {
 	int			args	= 0;
 	std::string	set		= CMODES;
 
+	package.errMode = modes;
 	if (modes[0] != '+' && modes[0] != '-')
-		return (ERR_UNKNOWNMODE);
+		return (package.setError(ERR_UNKNOWNMODE), false);
 	for (int i = 0;	i < (int)modes.length(); i++)
 	{
-		if (modes[i] == '+' || modes[i] == '-')
+		char m = modes[i];
+		if (m == '+' || m == '-'
+		|| set.find(m) == std::string::npos)
 			continue ;
-		if (set.find(modes[i]) == std::string::npos)
-			return (ERR_UNKNOWNMODE);
-		if (modes[i] == 'o' || modes[i] == 'l' || modes[i] == 'k')
+		if (m == 'o' || m == 'l' || m == 'k')
 			args++;
 	}
-	if ((int)package.cmdData.size() < (args + 1))
-		return (ERR_NEEDMOREPARAMS);
-	return (0);
+	if (((int)package.cmdData.size() - 2) < args)
+		return (package.setError(ERR_NEEDMOREPARAMS), false);
+	return (true);
 }
 
-int	Mode::Check(Server &server, std::string const &modes)
+bool	Mode::Check(Server &server, std::string const &modes)
 {
-	(void)		server;
-	int			error	= 0;
-	std::string	set		= CMODES;
+	std::string	set	= CMODES;
+	std::string nick = package.client->getNick();
 
 	if (package.cmdData.size() < 1)
-		return (ERR_NEEDMOREPARAMS);
-	if (package.cmdData[MODE_CHANNEL][0] != '#')
-		return (-1);
-	if (!server.isChannel(package.cmdData[MODE_CHANNEL]))
-		return (ERR_NOSUCHNICK);
-	package.channel = server.getChannel(package.cmdData[MODE_CHANNEL]);
-	if (!package.channel->isOperator(package.client->getNick()) && package.cmdData.size() > 2)
-		return (ERR_CHANOPRIVSNEEDED);
-	if (!package.channel->isClient(package.client->getNick()))
-		return (ERR_NOTONCHANNEL);
-	if (package.cmdData.size() < 3)
-		return (0);
-	error = checkModes(modes);
-	if (error)
-		return (error);
-	return (0);
+		return (package.setError(ERR_NEEDMOREPARAMS), false);
+	std::string chanName = package.cmdData[MODE_CHANNEL];
+	package.errChanName = chanName;
+	package.errNick = nick;
+	if (chanName[0] != '#')
+		return (package.setError(-1), false);
+	if (!server.isChannel(chanName))
+		return (package.setError(ERR_NOSUCHCHANNEL), false);
+
+	package.channel = server.getChannel(chanName);
+	if (package.cmdData.size() == 1)
+		return (false);
+	if (!package.channel->isClient(nick))
+		return (package.setError(ERR_NOTONCHANNEL), false);
+	if (!package.channel->isOperator(nick) && package.cmdData.size() >= 2)
+		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
+	return (checkModes(modes));
 }
 
-int		Mode::o(Server &server, bool add, int argCount)
+bool	Mode::singleCheck(std::string &modes, char m, int &argCount)
+{
+	std::string	set = CMODES;
+
+	if (m == '+' || m == '-' || set.find(m) != std::string::npos)
+		return (true);
+	package.errMode = m;
+	if (set.find(m) == std::string::npos)
+	{
+		modes.erase(modes.find(m));
+		if (m == 'l' || m == 'o' || m == 'k')
+		{
+			package.cmdData.erase(package.cmdData.begin() + argCount);
+			argCount++;
+		}
+		return (package.setError(ERR_UNKNOWNMODE), false);
+	}
+	return (true);
+}
+
+void	Mode::o(Server &server, bool add, int &argCount)
 {
 	std::string nick = package.cmdData[argCount];
+	package.errNick = nick;
 
 	if (!server.isClient(nick))
-		return (ERR_NOSUCHNICK);
+		return (package.setError(ERR_NOSUCHNICK));
 	if (!package.channel->isClient(nick))
-		return (ERR_NOTONCHANNEL);
+		return (package.setError(ERR_NOTONCHANNEL));
 	Client		*client = server.getClient(nick);
 
+	if (add && package.channel->isOperator(client->getNick()))
+		return ;
+
 	(add) ? package.channel->addOperator(client) : (void)package.channel->removeOperator(client->getNick());
-	return (0);
+	argCount++;
 }
 
-int		Mode::l(Server &server, bool add, int argCount)
+void	Mode::l(Server &server, bool add, int &argCount)
 {
 	(void)				server;
 	int					limit;
@@ -97,43 +122,46 @@ int		Mode::l(Server &server, bool add, int argCount)
 	if (!add)
 		package.channel->setOpLimit(0);
 	if (!Ft::isInt(package.cmdData[argCount]))
-		return (ERR_NEEDMOREPARAMS);
+		return (package.setError(ERR_NEEDMOREPARAMS));
 	sNum << package.cmdData[argCount];
 	sNum >> limit;
 
 	if (!sNum.eof() || sNum.fail())
-		return (ERR_NEEDMOREPARAMS);
+		return (package.setError(ERR_NEEDMOREPARAMS));
 
 	package.channel->setOpLimit(limit);
-
-	return (0);
+	argCount++;
 }
 
-int		Mode::i(Server &server, bool add, int argCount)
+void	Mode::i(Server &server, bool add, int &argCount)
 {
 	(void) server;
 	(void) argCount;
 
 	(add) ? package.channel->setOpInvite(true) : package.channel->setOpInvite(false);
-
-	return (0);
 }
 
-int		Mode::t(Server &server, bool add, int argCount)
+void	Mode::t(Server &server, bool add, int &argCount)
 {
 	(void) server;
 	(void) argCount;
 
 	(add) ? package.channel->setOpTopic(true) : package.channel->setOpTopic(false);
-	return (0);
 }
 
-int		Mode::k(Server &server, bool add, int argCount)
+void	Mode::k(Server &server, bool add, int &argCount)
 {
 	(void) server;
 	(void) argCount;
 
 	(add) ? package.channel->setOpKey(true, package.cmdData[argCount]) : package.channel->setOpKey(false, "");
+	argCount++;
+}
 
-	return (0);
+void	Mode::join(void)
+{
+	std::string &modes = package.cmdData[1];
+
+	for (std::vector<std::string>::iterator it = package.cmdData.begin() + 2; it != package.cmdData.end(); it++)
+		modes = modes + " " + *it;
 }
