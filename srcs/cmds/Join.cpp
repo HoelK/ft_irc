@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:32 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 22:28:29 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:24:14 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static bool checkInvite(Channel *channel)
 
 static bool	checkKey(Channel *channel)
 {
+	std::cout << "[KEY] " << channel->getOpKey() << std::endl;
 	if (!channel->getOpKey())
 		return (true);
 	if (package.cmdData.size() < 2)
