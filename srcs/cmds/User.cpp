@@ -6,12 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:49 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:12:21 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 02:08:45 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "User.hpp"
-# include "RPL.hpp"
+# include "Errors.hpp"
 
 bool User::Check(Server &server)
 {

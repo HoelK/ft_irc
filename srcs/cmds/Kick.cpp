@@ -6,12 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:42:58 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:11:00 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 02:08:17 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Kick.hpp"
-# include "RPL.hpp"
+# include "Errors.hpp"
 
 bool Kick::Check(Server &server)
 {

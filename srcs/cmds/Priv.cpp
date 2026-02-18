@@ -6,12 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:11:27 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 02:08:32 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Priv.hpp"
-# include "RPL.hpp"
+# include "Errors.hpp"
 
 static bool checkChannelSend(Server &server, std::string const &target)
 {

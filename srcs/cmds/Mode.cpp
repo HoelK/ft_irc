@@ -6,12 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:39 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 01:28:31 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 02:07:25 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Mode.hpp"
-# include "RPL.hpp"
+# include "Errors.hpp"
 
 static std::map<char, void (*)(Server &, bool, int &)> initMode()
 {

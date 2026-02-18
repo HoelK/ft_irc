@@ -6,12 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:44:04 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:10:47 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 02:08:02 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Invite.hpp"
-# include "RPL.hpp"
+# include "Errors.hpp"
 
 bool	Invite::Check(Server &server)
 {

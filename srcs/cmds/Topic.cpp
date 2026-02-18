@@ -6,12 +6,12 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:56 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:11:42 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 02:08:24 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Topic.hpp"
-# include "RPL.hpp"
+# include "Errors.hpp"
 
 bool Topic::Check(Server &server)
 {
