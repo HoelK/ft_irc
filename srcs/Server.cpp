@@ -68,6 +68,12 @@ void	Server::launch(void)
 					this->authenticate(*(this->clients[this->fds[x].fd]));
 				fds_ready--;
 			}
+			if ((int)this->fds.size() > x && this->fds[x].revents & POLLOUT)
+			{
+				Client *client = this->clients[this->fds[x].fd];
+				if (client->getAuth() && !(client->getSendBuffer().empty()))
+					client->sendMsg();
+			}
 		}
 	}
 }
@@ -82,11 +88,11 @@ void	Server::acceptMessage(Client &client)
 		return (this->disconnectClient(client.getFd()));
 	while (!buffer.empty())
 	{
-		line = client.getBuffer() + Ft::extractLine(buffer);
-		client.setBuffer("");
-		std::cout << "[CMD] " << line;
+		line = client.getRecvBuffer() + Ft::extractLine(buffer);
+		client.clearRecvBuffer();
 		if (!Ft::endsWithCRLF(line))
-			return (client.setBuffer(line));
+			return (client.appendRecvBuffer(line));
+		std::cout << "[CMD] " << line;
 		MSG::sendData(&client, line);
 		CMD::apply(*this);
 		RPL::reply(*this);
@@ -97,18 +103,19 @@ void	Server::acceptMessage(Client &client)
 
 void	Server::acceptClient(void)
 {
-	struct pollfd	p;
+	int				fd;
+	struct pollfd	pfd;
 
 	if (this->clients.size() >= FD_MAX)
 		return ;
-	Client client(accept(this->fd, (sockaddr *) NULL, NULL));
-	fcntl(client.getFd(), F_SETFL, O_NONBLOCK);
+	fd = accept(this->fd, (sockaddr *) NULL, NULL);
+	fcntl(fd, F_SETFL, O_NONBLOCK);
 
-	p.fd = client.getFd();
-	p.events = POLLIN;
-	p.revents = 0;
-	this->fds.push_back(p);
-	this->clients[p.fd] = new Client(client);
+	pfd.fd = fd;
+	pfd.events = POLLIN | POLLOUT;
+	pfd.revents = 0;
+	this->fds.push_back(pfd);
+	this->clients[pfd.fd] = new Client(&(this->fds.back()));
 }
 
 void	Server::authenticate(Client &client)
@@ -121,11 +128,11 @@ void	Server::authenticate(Client &client)
 		return (this->disconnectClient(client.getFd()));
 	while (!buffer.empty())
 	{
-		line = client.getBuffer() + Ft::extractLine(buffer);
-		client.setBuffer("");
+		line = client.getRecvBuffer() + Ft::extractLine(buffer);
+		client.clearRecvBuffer();
 		std::cout << "[AUTH][CMD] " << line;
 		if (!Ft::endsWithCRLF(line))
-			return (client.setBuffer(line));
+			return (client.appendRecvBuffer(line));
 		MSG::sendData(&client, line);
 
 		if (client.getPass().empty() && package.cmd != "PASS")
@@ -146,7 +153,7 @@ void	Server::authenticate(Client &client)
 	if (!client.isAuth(this->password))
 		return ;
 
-	RPL::Welcome(client.getFd(), client.getNick());
+	RPL::Welcome(&client, client.getNick());
 	client.setAuth(true);
 	std::cout << "[AUTH][INFO] " << client.getNick() << " Connected" << std::endl;
 }

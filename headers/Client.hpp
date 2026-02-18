@@ -22,18 +22,19 @@ class Channel;
 class Client
 {
     private:
-        int								fd;
 		bool							auth;
+		struct pollfd					*pfd;
         std::string						nick;
 		std::string						username;
         std::string						realname;
 		std::string						password;
-        std::string						buffer;
+        std::string						recvBuffer;
+		std::string						sendBuffer;
 		std::map<std::string, Channel *> channels;
 
     public:
 		Client(void);
-        Client(int fd);
+        Client(struct pollfd *pfd);
 		Client(Client const &copy);
 		Client &operator=(Client const &copy);
         ~Client(void);
@@ -44,15 +45,20 @@ class Client
         const std::string	&getName(void)		const;
 		const std::string	&getUser(void)		const;
 		const std::string	&getPass(void)		const;
-		const std::string	&getBuffer(void)	const;
+		const std::string	&getSendBuffer(void)const;
+		const std::string	&getRecvBuffer(void)const;
 		Channel				*getChannel(std::string const &topic) const;
 		void				setAuth(bool auth);
 		void				setNick(std::string const &nick);
 		void				setName(std::string const &name);
 		void				setUser(std::string const &name);
 		void				setPass(std::string const &pass);
-		void				setBuffer(std::string const &buff);
+		void				appendSendBuffer(std::string const &buff);
+		void				appendRecvBuffer(std::string const &buff);
+		void				clearSendBuffer(void);
+		void				clearRecvBuffer(void);
 		const std::map<std::string, Channel *> &getChannels(void) const;
+		void				sendMsg(void);
 
 		bool				isChannel(std::string const &topic);
 		bool				isAuth(std::string const &password);

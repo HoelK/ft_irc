@@ -13,44 +13,57 @@
 # include "Client.hpp"
 # include "Server.hpp"
 
-Client::Client(void): fd(0), auth(false) {};
+Client::Client(void): auth(false), pfd(NULL){};
 Client::~Client(void) {};
-Client::Client(int fd): fd(fd), auth(false) {};
+Client::Client(struct pollfd *pfd): auth(false), pfd(pfd) {};
 Client::Client(Client const &copy) { (*this) = copy; };
 
 Client &Client::operator=(Client const &copy)
 {
-	this->fd = copy.fd;
+	this->pfd = copy.pfd;
 	this->nick = copy.nick;
 	this->auth = copy.auth;
 	this->username = copy.username;
 	this->realname = copy.realname;
 	this->password = copy.password;
-	this->buffer = copy.buffer;
+	this->sendBuffer = copy.sendBuffer;
+	this->recvBuffer = copy.recvBuffer;
 	this->channels = copy.channels;
 
 	return (*this);
 }
 
-const int			&Client::getFd(void)		const			{ return (this->fd); };
+const int			&Client::getFd(void)		const			{ return (this->pfd->fd); };
 const bool			&Client::getAuth(void)		const			{ return (this->auth); };
 const std::string	&Client::getNick(void)		const			{ return (this->nick); };
 const std::string	&Client::getName(void)		const			{ return (this->realname); };
 const std::string	&Client::getUser(void)		const			{ return (this->username); };
 const std::string	&Client::getPass(void)		const			{ return (this->password); };
-const std::string	&Client::getBuffer(void)	const			{ return (this->buffer); };
+const std::string	&Client::getSendBuffer(void)	const		{ return (this->sendBuffer); };
+const std::string	&Client::getRecvBuffer(void)	const		{ return (this->recvBuffer); };
 Channel				*Client::getChannel(std::string const &topic) const { return (this->channels.find(topic)->second); };
 void				Client::setAuth(bool auth)					{ this->auth = auth; };
 void				Client::setNick(std::string const &nick)	{ this->nick = nick; };
 void				Client::setName(std::string const &name)	{ this->realname = name; };
 void				Client::setUser(std::string const &user)	{ this->username = user; };
 void				Client::setPass(std::string const &pass)	{ this->password = pass; };
-void				Client::setBuffer(std::string const &buff)	{ this->buffer = buff; };
+void				Client::appendSendBuffer(std::string const &buff)	{ this->sendBuffer = this->sendBuffer + buff; };
+void				Client::appendRecvBuffer(std::string const &buff)	{ this->recvBuffer = this->recvBuffer + buff; };
+void				Client::clearSendBuffer(void) { this->sendBuffer.clear(); };
+void				Client::clearRecvBuffer(void) { this->recvBuffer.clear(); };
 void				Client::addChannel(Channel *channel)		{ this->channels[channel->getName()] = channel; };
 void				Client::delChannel(std::string const &topic){ this->channels.erase(topic); };
 bool				Client::isChannel(std::string const &topic) { return (this->channels.find(topic) != this->channels.end()); };
 bool				Client::inChannel(void) const				{ return (!this->channels.size()); };
 const std::map<std::string, Channel *> &Client::getChannels(void) const { return (this->channels); }
+
+void				Client::sendMsg(void)
+{
+	this->sendBuffer = (!(this->pfd->revents & POLLOUT)
+	 || send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), 0) == -1)
+		? this->sendBuffer
+		: "";
+}
 
 void				Client::updateInChannel(std::string const &oldNick)
 {
@@ -106,7 +119,7 @@ std::ostream &operator<<(std::ostream &stream, Client const &client)
 	stream <<	"==== CLIENT ====" << std::endl;
 	stream << "Fd : "	<<	client.getFd() << std::endl; 
 	stream << "Name : "	<<	client.getName() << std::endl;
-	stream << "Nick : "	<<	client.getNick() << std::endl;
+stream << "Nick : "	<<	client.getNick() << std::endl;
 	stream << "User : "	<<	client.getUser() << std::endl;
 	stream << client.getChannels();
 

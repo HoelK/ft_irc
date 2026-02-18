@@ -130,7 +130,7 @@ void				Channel::broadcastMessage(Client *sender, std::string const &msg)
 		client = it->second;
 		if (client == sender)
 			continue ;
-		send(client->getFd(), msg.c_str(), msg.size(), 0);
+		client->appendSendBuffer(msg);
 	}
 
 }
