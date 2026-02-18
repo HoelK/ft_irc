@@ -39,15 +39,15 @@
 # define RPL_ENDOFNAMES								"End of /NAMES list"
 
 //Numeric replies
-# define RPL_STR(nick, user, cmd, data)				":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " " + std::string(data)
+# define RPL_STR(nick, user, cmd)					":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " "
 
-# define RPL_TOP(topic)								" :" + std::string(topic)
+# define RPL_TOP(channel, topic)					std::string(channel) + " :" + std::string(topic)
 # define RPL_NICK(nick)								nick
 # define RPL_PRIV(msg)								" :" + std::string(msg)
 # define RPL_KICK(user, data)						" " + std::string(user) + " :" + std::string(data)
 # define RPL_JOIN(channel)							" :" + std::string(channel)
-# define RPL_INVITE(channel)						" :" + std::string(channel)
-# define RPL_MODE(modes)							" " + std::string(modes)
+# define RPL_INVITE(nick, channel)					std::string(nick) + " :" + std::string(channel)
+# define RPL_MODE(channel, modes)					std::string(channel) + " " + std::string(modes)
 # define RPL_QUIT(message)							" " + std::string(message)
 
 class Server;

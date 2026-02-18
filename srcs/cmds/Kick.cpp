@@ -48,6 +48,5 @@ void Kick::Kicking(void)
 	package.channel =			package.client->getChannel(kickChannel);
 	Client	*target	=			package.channel->getClient(kickNick);
 
-	package.rplData = kickChannel;
 	package.channel->removeClient(target->getNick());
 }

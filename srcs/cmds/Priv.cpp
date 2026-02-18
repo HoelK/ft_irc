@@ -50,9 +50,9 @@ bool Priv::Check(Server &server)
 
 void Priv::Send(Server &server)
 {
-	package.rplData =	package.cmdData[PRIV_TARGET];
-	Channel	*channel =	server.getChannel(package.rplData);
+	std::string target =	package.cmdData[PRIV_TARGET];
+	Channel	*channel =		server.getChannel(target);
 
-	if (package.rplData[0] == '#' && channel)
+	if (target[0] == '#' && channel)
 		package.channel = channel;
 }

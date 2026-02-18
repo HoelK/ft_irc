@@ -21,9 +21,9 @@ typedef struct	s_package
 {
 	std::string					cmd;
 	std::vector<std::string>	cmdData;
+	std::string					quitMessage;
 	std::string					errNick;
 	std::string					errChanName;
-	std::string					rplData;
 	std::string					errMode;
 	Client						oldClient;
 	Client						*client;

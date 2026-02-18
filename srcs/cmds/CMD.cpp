@@ -68,10 +68,9 @@ void	CMD::Quit(Server &server)
 	std::string	msg;
 
 	package.quit = true;
-	package.rplData = (package.cmdData.size() < 1)
+	package.quitMessage = (package.cmdData.size() < 1)
 		? DEFAULT_QUIT_MSG
 		: package.cmdData[QUIT_REASON];
-
 }
 
 void	CMD::User(Server &server)

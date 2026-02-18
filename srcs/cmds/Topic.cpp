@@ -43,5 +43,4 @@ void Topic::Set(Server &server)
 
 	channel->setTopic(newTopic);
 	package.channel	= channel;
-	package.rplData	= newTopic;
 }

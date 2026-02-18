@@ -19,7 +19,7 @@ void	t_package::clear(void)
 {
 	cmd.clear();
 	cmdData.clear();
-	rplData.clear();
+	quitMessage.clear();
 	errNick.clear();
 	errChanName.clear();
 	errMode.clear();
