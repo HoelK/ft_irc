@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 21:13:25 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:45:19 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,15 @@ void	Client::disconnection(Server &server)
 		this->channels.erase(channel->getName());
 		if (channel->getClientAmount() == 0)
 			server.deleteChannel(channel->getName());
+	}
+}
+
+void	Client::broadcastMsg(std::string const &msg)
+{
+	for (std::map<std::string, Channel *>::iterator it = this->channels.begin(); it != this->channels.end(); it++)
+	{
+		Channel *channel = it->second;
+		channel->broadcastMessage(this, msg);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 23:53:26 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:57:37 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static std::map<std::string, void (*)(Server &)> initRpls()
 {
     std::map<std::string, void (*)(Server &)> m;
 
-	m[CMD_QUIT] = &RPL::Default;
+	m[CMD_QUIT] = &RPL::Quit;
 	m[CMD_NICK] = &RPL::Nick;
 	m[CMD_JOIN] = &RPL::Join;
 	m[CMD_PRIV] = &RPL::Priv;
@@ -49,35 +49,35 @@ static std::string	codeToErr(short code)
 {
 	if (code == ERR_PASSWDMISMATCH)
 		return (ERR_PASSWDMISMATCH_STR);
-	if (code == ERR_NEEDMOREPARAMS)
+	else if (code == ERR_NEEDMOREPARAMS)
 		return (ERR_NEEDMOREPARAMS_STR(package.cmd));
-	if (code == ERR_USERNOTINCHANNEL)
+	else if (code == ERR_USERNOTINCHANNEL)
 		return (ERR_USERNOTINCHANNEL_STR(package.errNick, package.errChanName));
-	if (code == ERR_NOSUCHCHANNEL)
+	else if (code == ERR_NOSUCHCHANNEL)
 		return (ERR_NOSUCHCHANNEL_STR(package.errChanName));
-	if (code == ERR_NOSUCHNICK)
+	else if (code == ERR_NOSUCHNICK)
 		return (ERR_NOSUCHNICK_STR(package.errNick));
-	if (code == ERR_USERONCHANNEL)
+	else if (code == ERR_USERONCHANNEL)
 		return (ERR_USERONCHANNEL_STR(package.errNick, package.errChanName));
-	if (code == ERR_NONICKNAMEGIVEN)
+	else if (code == ERR_NONICKNAMEGIVEN)
 		return (ERR_NONICKNAMEGIVEN_STR);
-	if (code == ERR_ONEUSNICKNAME)
+	else if (code == ERR_ONEUSNICKNAME)
 		return (ERR_ONEUSNICKNAME_STR(package.errNick));
-	if (code == ERR_NICKNAMEINUSE)
+	else if (code == ERR_NICKNAMEINUSE)
 		return (ERR_NICKNAMEINUSE_STR(package.errNick));
-	if (code == ERR_NOTONCHANNEL)
+	else if (code == ERR_NOTONCHANNEL)
 		return (ERR_NOTONCHANNEL_STR(package.errChanName));
-	if (code == ERR_ALREADYREGISTRED)
+	else if (code == ERR_ALREADYREGISTRED)
 		return (ERR_ALREADYREGISTRED_STR);
-	if (code == ERR_CHANNELISFULL)
+	else if (code == ERR_CHANNELISFULL)
 		return (ERR_CHANNELISFULL_STR(package.channel->getName()));
-	if (code == ERR_INVITEONLYCHAN)
+	else if (code == ERR_INVITEONLYCHAN)
 		return (ERR_INVITEONLYCHAN_STR(package.channel->getName()));
-	if (code == ERR_BADCHANNELKEY)
+	else if (code == ERR_BADCHANNELKEY)
 		return (ERR_BADCHANNELKEY_STR(package.channel->getName()));
-	if (code == ERR_CHANOPRIVSNEEDED)
+	else if (code == ERR_CHANOPRIVSNEEDED)
 		return (ERR_CHANOPRIVSNEEDED_STR(package.errChanName));
-	if (code == ERR_UNKNOWNMODE)
+	else if (code == ERR_UNKNOWNMODE)
 		return (ERR_UNKNOWNMODE_STR(package.errMode));
 	
 	return ("");
@@ -100,6 +100,20 @@ void RPL::Welcome(const int &fd, std::string const &nick)
 	send(fd, msg.c_str(), msg.size(), 0);
 	msg = HEADER_STR("005", nick, "", "") + RPL_ISUPPORT_STR + "\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
+}
+
+void RPL::Quit(Server &server)
+{
+	(void) server;
+
+	std::string	msg = getRPL();
+	msg = msg + ((package.cmdData[QUIT_REASON].empty())
+		? RPL_QUIT(package.cmdData[QUIT_REASON])
+		: RPL_QUIT(DEFAULT_QUIT_MSG));
+	msg = msg + "\r\n";
+	
+	std::cout << "[RPL] " << msg << std::endl;
+	package.client->broadcastMsg(msg);
 }
 
 void	RPL::Default(Server &server)

@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 00:11:59 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:34:26 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,13 @@ void	CMD::Nick(Server &server)
 void	CMD::Quit(Server &server)
 {
 	(void) server;
+	std::string	msg;
 
 	package.quit = true;
 	package.rplData = (package.cmdData.size() < 1)
 		? DEFAULT_QUIT_MSG
 		: package.cmdData[QUIT_REASON];
+
 }
 
 void	CMD::User(Server &server)

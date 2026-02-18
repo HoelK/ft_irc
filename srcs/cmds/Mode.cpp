@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:39 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 01:14:35 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:28:31 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,10 +153,6 @@ void	Mode::k(Server &server, bool add, int &argCount)
 {
 	(void) server;
 	(void) argCount;
-
-	std::cout << "[MODE] ";
-	(add) ? std::cout << "+k" : std::cout << "-k";
-	std::cout << std::endl;
 
 	(add) ? package.channel->setOpKey(true, package.cmdData[argCount]) : package.channel->setOpKey(false, "");
 	argCount++;

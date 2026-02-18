@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 23:46:46 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:54:34 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@
 # define RPL_JOIN(channel)							" :" + std::string(channel)
 # define RPL_INVITE(channel)						" :" + std::string(channel)
 # define RPL_MODE(modes)							" " + std::string(modes)
+# define RPL_QUIT(message)							" " + std::string(message)
 
 class Server;
 
@@ -105,4 +106,5 @@ class RPL
 		static void	Error(Server &server);
 		static void	Invite(Server &server);
 		static void Mode(Server &server);
+		static void Quit(Server &server);
 };

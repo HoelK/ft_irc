@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/17 21:03:23 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/18 01:37:28 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class Client
 		void				updateChannel(std::string const &oldTopic);
 		void				updateInChannel(std::string const &oldNick);
 		void				disconnection(Server &server);
+		void				broadcastMsg(std::string const &msg);
 };
 
 std::ostream &operator<<(std::ostream &stream, Client const &client);
