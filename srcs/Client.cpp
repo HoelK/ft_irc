@@ -85,6 +85,7 @@ bool				Client::isAuth(std::string const &password)
 
 void	Client::disconnection(Server &server)
 {
+	this->sendMsg();
 	while (!this->channels.empty())
 	{
 		Channel *channel = this->channels.begin()->second;

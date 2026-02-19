@@ -72,7 +72,7 @@ void	Server::launch(void)
 			if ((int)this->fds.size() > x && this->fds[x].revents & POLLOUT)
 			{
 				Client *client = this->clients[this->fds[x].fd];
-				if (client->getAuth() && !(client->getSendBuffer().empty()))
+				if (!(client->getSendBuffer().empty()))
 					client->sendMsg();
 			}
 		}
