@@ -59,8 +59,7 @@ const std::map<std::string, Channel *> &Client::getChannels(void) const { return
 
 void				Client::sendMsg(void)
 {
-	this->sendBuffer = (!(this->pfd.revents & POLLOUT)
-	 || send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), 0) == -1)
+	this->sendBuffer = (send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), 0) == -1)
 		? this->sendBuffer
 		: "";
 }
