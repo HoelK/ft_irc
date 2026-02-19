@@ -1,0 +1,16 @@
+Run des tests
+
+no error message when connecting without pass | fixed
+nc does not receive error when setting nick to one already in use | fixed
+error sent after disconection when using wrong pass | fixed
+
+op only cmd like kick should send notop instead of notenough param if not op
+using mode cmd with invalid arguments like arguments without the + or - does't return notop message
+PRIVMSG not working with nc or idk how to use it
+TOPIC #test not working in nc :ft.irc 461 test TOPIC :Not enough parameters, should send the topic
+
+Fixed:
+when joining invite only channel without being invited receive Not enough parameters instead of ERR_INVITEONLYCHAN
+when joining key channel without key return not enough arg error instead of ERR_BADCHANNELKEY
+when joining a key channel with wrong key segfault
+when joining a channel when limit of users is already reached segfault
