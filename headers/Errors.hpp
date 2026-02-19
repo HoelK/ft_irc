@@ -6,6 +6,7 @@
 # define ERR_NOSUCHNICK_STR(nick)					std::string(nick) + " :No such nick"
 # define ERR_PASSWDMISMATCH_STR						":Password incorrect"
 # define ERR_NONICKNAMEGIVEN_STR					":No nickname given"
+# define ERR_NOTREGISTERED_STR						":You have not registered"
 # define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) +	" :Erroneous nickname"
 # define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) +	" :Nickname is already in use"
 # define ERR_NEEDMOREPARAMS_STR(cmd)				std::string(cmd) +	" :Not enough parameters"
@@ -30,6 +31,7 @@ enum ERR_ID
 	ERR_USERNOTINCHANNEL =	441,
 	ERR_NOTONCHANNEL =		442,
 	ERR_USERONCHANNEL =		443,
+	ERR_NOTREGISTERED =		451,
 	ERR_NEEDMOREPARAMS =	461,
 	ERR_ALREADYREGISTRED =	462,
 	ERR_PASSWDMISMATCH =	464,

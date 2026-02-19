@@ -49,6 +49,8 @@ std::string	codeToErr(short code)
 		return (ERR_CHANOPRIVSNEEDED_STR(package.errChanName));
 	else if (code == ERR_UNKNOWNMODE)
 		return (ERR_UNKNOWNMODE_STR(package.errMode));
+	else if (code == ERR_NOTREGISTERED)
+		return (ERR_NOTREGISTERED_STR);
 	
 	return ("");
 }
