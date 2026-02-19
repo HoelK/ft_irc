@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 02:07:11 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 00:25:23 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	CMD::apply(Server &server)
 
 	it = cmds.find(package.cmd);
 	if (it == cmds.end())
-		return ;
+		return (package.setError(ERR_UNKNOWNCOMMAND));
 	it->second(server);
 }
 

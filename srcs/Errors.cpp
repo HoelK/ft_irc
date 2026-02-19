@@ -51,6 +51,8 @@ std::string	codeToErr(short code)
 		return (ERR_UNKNOWNMODE_STR(package.errMode));
 	else if (code == ERR_NOTREGISTERED)
 		return (ERR_NOTREGISTERED_STR);
+	else if (code == ERR_UNKNOWNCOMMAND)
+		return (ERR_UNKNOWNCOMMAND_STR(package.cmd));
 	
 	return ("");
 }

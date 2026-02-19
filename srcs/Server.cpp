@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 00:11:12 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/20 00:25:52 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,21 +142,17 @@ void	Server::authenticate(Client &client)
 			RPL::reply(*this);
 			continue ;
 		}
-		if (!client.getPass().empty()
-		&& (package.cmd != "NICK"
-		&& package.cmd != "USER"))
-			continue ;
 
 		CMD::apply(*this);
 		if (package.error)
 			RPL::reply(*this);
 	}
-	if (!client.getPass().empty() && client.getPass() != this->password)
+	if (!client.isAuth(this->password))
+		return ;
+	if (client.getPass().empty() || client.getPass() != this->password)
 		return (package.setError(ERR_PASSWDMISMATCH),
 				RPL::reply(*this),
 				this->disconnectClient(client.getFd()));
-	if (!client.isAuth(this->password))
-		return ;
 
 	RPL::Welcome(&client, client.getNick());
 	client.setAuth(true);
