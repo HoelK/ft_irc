@@ -32,6 +32,7 @@ bool	Server::init(void)
 	struct pollfd	p;
 
 	this->fd = socket(IPV4, SOCK_STREAM, DEFAULT_PROTOCOL);
+	this->fds.reserve(1034);
 	if (this->fd == -1 || fcntl(this->fd, F_SETFL, O_NONBLOCK))
 		return (false);
 	this->addr.sin_family		= IPV4;
@@ -115,7 +116,7 @@ void	Server::acceptClient(void)
 	pfd.events = POLLIN | POLLOUT;
 	pfd.revents = 0;
 	this->fds.push_back(pfd);
-	this->clients[pfd.fd] = new Client(&(this->fds.back()));
+	this->clients[pfd.fd] = new Client(this->fds.back());
 }
 
 void	Server::authenticate(Client &client)
