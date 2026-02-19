@@ -75,7 +75,7 @@ bool Ft::isValidNickname(const std::string &nick)
 
 bool Ft::isValidChannelName(std::string const &name)
 {
-    if (name.empty() || name.length() > 200 || name[0] != '#')
+    if (name.empty() || name.length() > 200 || name[0] != '#' || name.size() < 2)
         return (false);
     
     for (size_t i = 1; i < name.length(); ++i)

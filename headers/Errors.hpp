@@ -4,7 +4,7 @@
 # define HEADER_ERROR(code, nick)					":" SERVER_NAME " " + std::string(code) + " " + std::string(nick) + " "
 
 # define ERR_NOSUCHNICK_STR(nick)					std::string(nick) + " :No such nick"
-# define ERR_PASSWDMISMATCH_STR						"Password incorrect"
+# define ERR_PASSWDMISMATCH_STR						":Password incorrect"
 # define ERR_NONICKNAMEGIVEN_STR					":No nickname given"
 # define ERR_ONEUSNICKNAME_STR(nick)				std::string(nick) +	" :Erroneous nickname"
 # define ERR_NICKNAMEINUSE_STR(nick)				std::string(nick) +	" :Nickname is already in use"

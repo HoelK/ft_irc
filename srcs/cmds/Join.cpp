@@ -37,7 +37,11 @@ bool	Join::Check()
 {
 	if (package.cmdData.size() < 1)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
-	package.errChanName = package.cmdData[JOIN_CHANNEL];
+	std::string chanName = package.cmdData[JOIN_CHANNEL];
+	package.errChanName = chanName;
+	if (!Ft::isValidChannelName(chanName))
+		return (package.setError(ERR_NOSUCHCHANNEL), false);
+
 	return (true);
 }
 

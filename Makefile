@@ -45,4 +45,4 @@ clean:
 	@printf "\e[1;31m [DELETING RESIDUAL FILES]\n\033[0m"
 	@rm -f $(OBJS)
 
-re: clean all
+re: fclean all
