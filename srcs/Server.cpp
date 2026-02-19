@@ -116,7 +116,7 @@ void	Server::acceptClient(void)
 	pfd.events = POLLIN | POLLOUT;
 	pfd.revents = 0;
 	this->fds.push_back(pfd);
-	this->clients[pfd.fd] = new Client(this->fds.back());
+	this->clients[pfd.fd] = new Client(&(this->fds.back()));
 }
 
 void	Server::authenticate(Client &client)
@@ -131,9 +131,9 @@ void	Server::authenticate(Client &client)
 	{
 		line = client.getRecvBuffer() + Ft::extractLine(buffer);
 		client.clearRecvBuffer();
-		std::cout << "[AUTH][CMD] " << line;
 		if (!Ft::endsWithCRLF(line))
 			return (client.appendRecvBuffer(line));
+		std::cout << "[AUTH][CMD] " << line;
 		MSG::sendData(&client, line);
 
 		if (client.getPass().empty() && package.cmd != "PASS")
@@ -165,6 +165,7 @@ void	Server::disconnectClient(const int &fd)
 	
 	client->disconnection(*this);
 	close(client->getFd());
+	this->clients.erase(fd);
 	for (std::vector<struct pollfd>::iterator it = this->fds.begin(); it != this->fds.end(); it++)
 	{
 		if (it->fd == fd)
@@ -173,7 +174,6 @@ void	Server::disconnectClient(const int &fd)
 			break ;
 		}
 	}
-	this->clients.erase(fd);
 	delete (client);
 }
 
