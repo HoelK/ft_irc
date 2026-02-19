@@ -29,9 +29,15 @@ bool	argCheck(int ac, char **av)
 		std::cerr << "Too much arguments" << std::endl;
 		return (false);
 	}
+	if (std::string(av[PASS_ID]).empty())
+	{
+		std::cerr << "Empty pass unauthorized" << std::endl;
+		return (false);
+	}
 	stream << std::string(av[PORT_ID]);
 	stream >> port;
-	if (stream.fail() || port < 1 || port > 65535)
+	if (!stream.eof() || stream.fail()
+	|| port < 1 || port > 65535)
 	{
 		std::cerr << "Invalid Port" << std::endl;
 		return (false);
@@ -46,6 +52,6 @@ int	main(int ac, char **av)
 
 	std::signal(SIGINT, handleSignal);
 	Server server(std::string(av[PASS_ID]), Ft::strToInt(std::string(av[PORT_ID])));
-	server.init();
-	server.launch();
+	if (!server.init())
+		server.launch();
 }
