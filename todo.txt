@@ -2,8 +2,9 @@ Run des tests
 
 no error message when connecting without pass
 nc does not receive error when setting nick to one already in use
+error sent after disconection when using wrong pass
 
-for both above the message get received only after auth is succesfull:
+for above the message get received only after auth is succesfull:
 
 PASS 42irc
 NICK test2
@@ -18,8 +19,6 @@ NICK test5
 :ft.irc 004 test5 :test5 ft.irc 1.0 0 +itkol
 :ft.irc 005 test5 :
 
-
-error sent after disconection when using wrong pass
 op only cmd like kick should send notop instead of notenough param if not op
 using mode cmd with invalid arguments like arguments without the + or - does't return notop message
 PRIVMSG not working with nc or idk how to use it
