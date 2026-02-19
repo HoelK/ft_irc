@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
+/*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:26:31 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/15 17:56:08 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/19 21:51:32 by dedavid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,6 @@ int	main(int ac, char **av)
 
 	std::signal(SIGINT, handleSignal);
 	Server server(std::string(av[PASS_ID]), Ft::strToInt(std::string(av[PORT_ID])));
-	if (!server.init())
+	if (server.init())
 		server.launch();
 }
