@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:10 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 02:48:20 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 05:41:23 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ const std::map<std::string, Channel *> &Client::getChannels(void) const { return
 
 void				Client::sendMsg(void)
 {
-	this->sendBuffer = (send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), 0) == -1)
+	this->sendBuffer = (send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), MSG_NOSIGNAL) == -1)
 		? this->sendBuffer
 		: "";
 }

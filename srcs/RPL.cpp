@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 02:47:13 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 05:31:15 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ void RPL::Welcome(Client *client, std::string const &nick)
 	msg = HEADER_STR("003", nick, "", "") + RPL_CREATED_STR(Ft::getTime()) + "\r\n";
 	client->appendSendBuffer(msg);
 	msg = HEADER_STR("004", nick, "", "") + RPL_MYINFO_STR(nick) + "\r\n";
-	client->appendSendBuffer(msg);
-	msg = HEADER_STR("005", nick, "", "") + RPL_ISUPPORT_STR + "\r\n";
 	client->appendSendBuffer(msg);
 }
 
