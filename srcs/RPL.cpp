@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 02:05:27 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 01:00:47 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,23 @@ void	RPL::Topic(Server &server)
 	(void) server;
 	std::string	msg;
 
-	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd)
-		+ RPL_TOP(package.cmdData[TOPIC_CHANNEL], package.cmdData[TOPIC_NEW]) + "\r\n";
+
+	if (package.channel->getTopic().empty())
+		std::cout << "OUI" << std::endl;
+	if (package.cmdData.size() < 2)
+	{
+		if (package.channel->getTopic().empty())
+			msg = HEADER_STR("331", package.client->getNick(), " ", package.channel->getName()) + RPL_TOP(package.channel->getName(), "No topic is set") + "\r\n";
+		else
+			msg = HEADER_STR("332", package.client->getNick(), " ", package.channel->getName()) + " Welcome to " + package.channel->getName() + "\r\n";
+	}
+	else
+	{
+		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd)
+			+ RPL_TOP(package.cmdData[TOPIC_CHANNEL], package.cmdData[TOPIC_NEW]) + "\r\n";
+	}
+	std::cout << "[RPL] " << msg; 
+
 	package.client->appendSendBuffer(msg);
 	if (package.channel)
 		package.channel->broadcastMessage(package.client, msg);

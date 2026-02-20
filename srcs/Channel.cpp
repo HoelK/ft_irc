@@ -6,7 +6,7 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:48:22 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/17 21:28:56 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 00:53:23 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ Channel	&Channel::operator=(Channel const &copy)
 	this->opLimit = copy.opLimit;
 	this->opInvite = copy.opInvite;
 	this->name = copy.name;
+	this->topic = copy.topic;
 	this->invited = copy.invited;
 	this->operators = copy.operators;
 	this->clients = copy.clients;

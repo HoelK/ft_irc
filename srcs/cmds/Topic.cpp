@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:43:56 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 02:08:24 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 01:02:29 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 bool Topic::Check(Server &server)
 {
-	if (package.cmdData.size() < 2)
+	if (package.cmdData.size() < 1)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
 
 	std::string	topicChan =	package.cmdData[TOPIC_CHANNEL];
@@ -38,9 +38,11 @@ bool Topic::Check(Server &server)
 void Topic::Set(Server &server)
 {
 	std::string	topicChan	= package.cmdData[TOPIC_CHANNEL];
-	std::string newTopic	= package.cmdData[TOPIC_NEW];
 	Channel		*channel	= server.getChannel(topicChan);
+	package.channel	= channel;
+	if (package.cmdData.size() < 2)
+		return ;
+	std::string newTopic	= package.cmdData[TOPIC_NEW];
 
 	channel->setTopic(newTopic);
-	package.channel	= channel;
 }
