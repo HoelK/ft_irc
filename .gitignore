@@ -1,3 +1,6 @@
 *.o
 ft_irc
 vgcore*
+valgrind.log
+.gitignore
+valgrind_py.log
