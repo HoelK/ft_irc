@@ -65,8 +65,6 @@ class Client
 		void				addChannel(Channel *channel);
 		void				delChannel(std::string const &topic);
 		bool				inChannel(void) const;
-		void				updateChannel(std::string const &oldTopic);
-		void				updateInChannel(std::string const &oldNick);
 		void				disconnection(Server &server);
 		void				broadcastMsg(std::string const &msg);
 };

@@ -20,7 +20,7 @@ static bool checkChannelSend(Server &server, std::string const &target)
 		return (package.setError(ERR_NOSUCHCHANNEL), false);
 
 	Channel *channel =	server.getChannel(target);
-	if (!channel->isClient(package.client->getNick()))
+	if (!channel->isClient(package.client->getFd()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
 
 	return (true);

@@ -64,16 +64,6 @@ void				Client::sendMsg(void)
 		: "";
 }
 
-void				Client::updateInChannel(std::string const &oldNick)
-{
-	Channel *channel;
-	for (std::map<std::string, Channel *>::const_iterator it = this->channels.begin(); it != this->channels.end(); it++)
-	{
-		channel = it->second;
-		channel->updateClient(oldNick);
-	}
-}
-
 bool				Client::isAuth(std::string const &password)
 {
 	return (!this->nick.empty()
@@ -88,9 +78,9 @@ void	Client::disconnection(Server &server)
 	while (!this->channels.empty())
 	{
 		Channel *channel = this->channels.begin()->second;
-		channel->removeOperator(this->nick);
-		channel->removeInvited(this->nick);
-		channel->removeClient(this->nick);
+		channel->removeOperator(this->fd);
+		channel->removeInvited(this->fd);
+		channel->removeClient(this->fd);
 		this->channels.erase(channel->getName());
 		if (channel->getClientAmount() == 0)
 			server.deleteChannel(channel->getName());

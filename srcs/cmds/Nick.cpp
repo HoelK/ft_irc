@@ -34,5 +34,4 @@ void Nick::Change(void)
 	std::string	nick =		package.cmdData[NICK_NICK];
 
 	package.client->setNick(nick);
-	package.client->updateInChannel(oldNick);
 }

@@ -50,10 +50,11 @@ static bool checkModes(std::string const &modes)
 	return (true);
 }
 
-bool	Mode::Check(Server &server, std::string const &modes)
+bool	Mode::Check(Server &server)
 {
 	std::string	set	= CMODES;
 	std::string nick = package.client->getNick();
+	const int	fd = package.client->getFd();
 
 	if (package.cmdData.size() < 1)
 		return (package.setError(ERR_NEEDMOREPARAMS), false);
@@ -68,11 +69,11 @@ bool	Mode::Check(Server &server, std::string const &modes)
 	package.channel = server.getChannel(chanName);
 	if (package.cmdData.size() == 1)
 		return (false);
-	if (!package.channel->isClient(nick))
+	if (!package.channel->isClient(fd))
 		return (package.setError(ERR_NOTONCHANNEL), false);
-	if (!package.channel->isOperator(nick) && package.cmdData.size() >= 2)
+	if (!package.channel->isOperator(package.client->getFd()) && package.cmdData.size() >= 2)
 		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
-	return (checkModes(modes));
+	return (checkModes(package.cmdData[MODE_MODES]));
 }
 
 bool	Mode::singleCheck(std::string &modes, char m, int &argCount)
@@ -102,14 +103,14 @@ void	Mode::o(Server &server, bool add, int &argCount)
 
 	if (!server.isClient(nick))
 		return (package.setError(ERR_NOSUCHNICK));
-	if (!package.channel->isClient(nick))
+	if (!package.channel->isClient(package.client->getFd()))
 		return (package.setError(ERR_NOTONCHANNEL));
 	Client		*client = server.getClient(nick);
 
-	if (add && package.channel->isOperator(client->getNick()))
+	if (add && package.channel->isOperator(client->getFd()))
 		return ;
 
-	(add) ? package.channel->addOperator(client) : (void)package.channel->removeOperator(client->getNick());
+	(add) ? package.channel->addOperator(client) : (void)package.channel->removeOperator(client->getFd());
 	argCount++;
 }
 

@@ -100,7 +100,7 @@ void	CMD::Kick(Server &server)
 {
 	if (!Kick::Check(server))
 		return ;
-	Kick::Kicking();
+	Kick::Kicking(server);
 }
 
 void	CMD::Topic(Server &server)
@@ -121,14 +121,10 @@ void	CMD::Mode(Server &server)
 {
 	int			argCount	= 2;
 	bool		add			= false;
-	std::string	&modes		= package.cmdData[MODE_MODES]; //if wrong mode :
-														   //- Erase it from modes
-														   //- Put it in package.errMode (w/ arguement if needed)
-														   //- Set package.error
-														   //- Call reply
-														   //- Reset error params
-	if (!Mode::Check(server, modes))
+
+	if (!Mode::Check(server))
 		return ;
+	std::string	&modes		= package.cmdData[MODE_MODES]; 
 	for (int i = 0; i < (int)modes.length(); i++)
 	{
 		char m = modes[i];

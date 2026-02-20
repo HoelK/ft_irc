@@ -36,9 +36,9 @@ class Channel
         std::string						name;
 		std::string						topic;
 		std::string						password;
-		std::vector<Client *>			invited;
-		std::vector<Client *>			operators;
-		std::map<std::string, Client *>	clients;
+		std::map<const int, Client *>	invited;
+		std::map<const int, Client *>	operators;
+		std::map<const int, Client *>	clients;
 
     public:
 		Channel(void);
@@ -65,20 +65,19 @@ class Channel
 		bool				Auth(std::string const &password);
 		bool				isFull(void);
 
-		bool				isClient(std::string const &nick);
-		Client				*getClient(std::string const &nick);
         void				addClient(Client *client);
-        bool				removeClient(std::string const &name);
-		void				updateClient(std::string const &oldNick);
+        bool				removeClient(const int &fd);
+		bool				isClient(const int &fd);
+		Client				*getClient(const int &fd);
 		int					getClientAmount(void) const;
 
 		void				addInvited(Client *client);
-		bool				removeInvited(std::string const &nick);
-		bool				isInvited(std::string const &nick);
+		bool				removeInvited(const int &fd);
+		bool				isInvited(const int &fd) const;
 
 		void				addOperator(Client *client);
-		bool				removeOperator(std::string const &nick);
-		bool				isOperator(std::string const &nick) const;
+		bool				removeOperator(const int &fd);
+		bool				isOperator(const int &fd) const;
 
 		std::string			getModes(void);
 

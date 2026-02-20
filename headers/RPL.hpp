@@ -56,7 +56,7 @@ class RPL
 {
 	public:
 		static void	reply(Server &server);
-		static void Welcome(Client *client, std::string const &nick);
+		static void Welcome(Server &server, Client *client, std::string const &nick);
 		static void	Nick(Server &server);
 		static void	Topic(Server &server);
 		static void	Join(Server &server);

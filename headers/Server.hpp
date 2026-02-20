@@ -47,6 +47,7 @@ class Server
 		struct sockaddr_in				addr;
 		int								port;
 		std::string						password;
+		std::string						startTime;
 		std::map<int, Client *>			clients;
 		std::map<std::string, Channel>	channels;
 		std::vector<struct pollfd>		fds;
@@ -73,6 +74,8 @@ class Server
 		void	acceptMessage(Client &client);
 		bool	isChannel(std::string const &name);
 		bool	isClient(std::string const &nick);
+
+		std::string	const &getStartTime(void) const;
 
 		~Server(void);
 };

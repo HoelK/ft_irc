@@ -17,5 +17,5 @@ class Kick
 {
 	public:
 		static bool Check(Server &server);
-		static void	Kicking(void);
+		static void	Kicking(Server &server);
 };

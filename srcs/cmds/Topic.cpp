@@ -26,10 +26,10 @@ bool Topic::Check(Server &server)
 		return (package.setError(ERR_NOSUCHCHANNEL), false);
 	Channel *channel = server.getChannel(topicChan);
 
-	if (!channel->isClient(package.client->getNick()))
+	if (!channel->isClient(package.client->getFd()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
 	if (channel->getOpTopic()
-	&& !channel->isOperator(package.client->getNick()))
+	&& !channel->isOperator(package.client->getFd()))
 		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
 
 	return (true);

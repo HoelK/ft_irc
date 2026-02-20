@@ -46,6 +46,19 @@ void				Channel::setOpLimit(int const &limit)		{ this->opLimit = limit; };
 void				Channel::setName(std::string const &name)	{ this->name = name; };
 void				Channel::setTopic(std::string const &topic)	{ this->topic = topic; };
 
+void				Channel::addInvited(Client *client)		{ this->invited[client->getFd()] = client; };
+bool				Channel::removeInvited(const int &fd)	{ return (this->invited.erase(fd)); };
+bool				Channel::isInvited(const int &fd) const		{ return (this->invited.count(fd)); };
+
+void				Channel::addOperator(Client *client)	{ this->operators[client->getFd()] = client; };
+bool				Channel::removeOperator(const int &fd)	{ return (this->operators.erase(fd)); };
+bool				Channel::isOperator(const int &fd) const		{ return (this->operators.count(fd)); };
+
+Client				*Channel::getClient(const int &fd)		{ return (this->clients.find(fd)->second); };
+void				Channel::addClient(Client *client)		{ this->clients[client->getFd()] = client; };
+bool				Channel::removeClient(const int &fd)	{ return (this->clients.erase(fd)); };
+bool				Channel::isClient(const int &fd)		{ return (this->clients.count(fd)); };
+
 bool				Channel::isFull(void) { return (this->opLimit && (int)this->clients.size() >= this->opLimit); }
 bool				Channel::Auth(std::string const &password) { return (this->password == password); };
 
@@ -71,62 +84,13 @@ std::string			Channel::getModes(void)
 	return (result + " " + params);
 }
 
-void				Channel::addInvited(Client *client) { this->invited.push_back(client); };
-bool				Channel::removeInvited(std::string const &nick)
-{ 
-	for (std::vector<Client *>::iterator it = this->invited.begin(); it != this->invited.end(); it++)
-	{
-		Client *client = *it;
-		if (client->getNick() == nick)
-			return (this->invited.erase(it), true);
-	}
-	return (false);
-}
-
-bool				Channel::isInvited(std::string const &nick)
-{
-	for (std::vector<Client *>::iterator it = this->invited.begin(); it != this->invited.end(); it++)
-	{
-		Client *client = *it;
-		if (client->getNick() == nick)
-			return (true);
-	}
-	return (false);
-}
-
-void				Channel::addOperator(Client *client) { this->operators.push_back(client); };
-bool				Channel::removeOperator(std::string const &nick)
-{
-	for (std::vector<Client *>::iterator it = this->operators.begin(); it != this->operators.end(); it++)
-	{
-		Client *client = *it;
-		if (client->getNick() == nick)
-			return (this->operators.erase(it), true);
-	}
-	return (false);
-}
-
-bool				Channel::isOperator(std::string const &nick) const
-{
-	for (std::vector<Client *>::const_iterator it = this->operators.begin(); it != this->operators.end(); it++)
-	{
-		Client *client = *it;
-		if (client->getNick() == nick)
-			return (true);
-	}
-	return (false);
-}
-
-void				Channel::addClient(Client *client) { this->clients[client->getNick()] = client; };
-bool				Channel::removeClient(std::string const &name) { return (this->clients.erase(name)); };
-
 void				Channel::broadcastMessage(Client *sender, std::string const &msg)
 {
 	Client *client;
 
 	if (this->clients.empty())
 		return ;
-	for (std::map<std::string, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	for (std::map<const int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
 		client = it->second;
 		if (client == sender)
@@ -142,10 +106,10 @@ std::string			Channel::getNameList(void) const
 	std::string	res;
 	std::string user;
 
-	for (std::map<std::string, Client *>::const_iterator it = clients.begin(); it != clients.end(); it++)
+	for (std::map<const int, Client *>::const_iterator it = clients.begin(); it != clients.end(); it++)
 	{
 		client = it->second;
-		if (this->isOperator(client->getNick()))
+		if (this->isOperator(client->getFd()))
 			user = "@";
 		user = user + client->getNick();
 		res = res + " " + user;
@@ -153,16 +117,6 @@ std::string			Channel::getNameList(void) const
 	}
 
 	return (res);
-}
-
-bool	Channel::isClient(std::string const &nick) { return (this->clients.find(nick) != this->clients.end()); };
-Client	*Channel::getClient(std::string const &nick) { return (this->clients.find(nick)->second); };
-void	Channel::updateClient(std::string const &oldNick)
-{
-	Client *client = this->clients[oldNick];
-
-	this->clients.erase(oldNick);
-	this->clients[client->getNick()] = client;
 }
 
 std::ostream &operator<<(std::ostream &stream, Channel const &channel)

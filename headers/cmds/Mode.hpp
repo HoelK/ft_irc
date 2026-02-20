@@ -21,7 +21,7 @@ class Mode
 {
 	public :
 		static std::map<char, void (*)(Server &, bool, int &)> mode;
-		static bool	Check(Server &server, std::string const &modes);
+		static bool	Check(Server &server);
 		static bool singleCheck(std::string &modes, char m, int &argCount);
 		static void	i(Server &server, bool add, int &argCount);
 		static void	t(Server &server, bool add, int &argCount);

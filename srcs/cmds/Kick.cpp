@@ -28,25 +28,25 @@ bool Kick::Check(Server &server)
 
 	Channel		*channel =	server.getChannel(kickChan);
 
-	if (!channel->isClient(package.client->getNick()))
+	if (!channel->isClient(package.client->getFd()))
 		return (package.setError(ERR_NOTONCHANNEL), false);
-	if (!channel->isOperator(package.client->getNick()))
+	if (!channel->isOperator(package.client->getFd()))
 		return (package.setError(ERR_CHANOPRIVSNEEDED), false);
 	package.errNick = kickNick;
 	if (!server.isClient(kickNick))
 		return (package.setError(ERR_NOSUCHNICK), false);
 	package.channel = channel;
-	if (!channel->isClient(kickNick))
+	if (!channel->isClient(server.getClient(kickNick)->getFd()))
 		return (package.setError(ERR_USERNOTINCHANNEL), false);
 	return (true);
 }
 
-void Kick::Kicking(void)
+void Kick::Kicking(Server &server)
 {
 	std::string	kickNick =		package.cmdData[KICK_USER];
 	std::string	kickChannel	=	package.cmdData[KICK_CHANNEL];
 	package.channel =			package.client->getChannel(kickChannel);
-	Client	*target	=			package.channel->getClient(kickNick);
+	Client	*target	=			server.getClient(kickNick);
 
-	package.channel->removeClient(target->getNick());
+	package.channel->removeClient(target->getFd());
 }

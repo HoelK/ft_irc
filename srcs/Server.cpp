@@ -47,6 +47,7 @@ bool	Server::init(void)
 	p.events = POLLIN;
 	p.revents = 0;
 	this->fds.push_back(p);
+	this->startTime = Ft::getTime();
 	return (true);
 }
 
@@ -155,7 +156,7 @@ void	Server::authenticate(Client &client)
 				RPL::reply(*this),
 				this->disconnectClient(client.getFd()));
 
-	RPL::Welcome(&client, client.getNick());
+	RPL::Welcome((*this), &client, client.getNick());
 	client.setAuth(true);
 	std::cout << "[AUTH][INFO] " << client.getNick() << " Connected" << std::endl;
 }
@@ -178,11 +179,13 @@ void	Server::disconnectClient(const int &fd)
 	delete (client);
 }
 
+std::string const &Server::getStartTime(void) const		{ return (this->startTime); };
 Client	*Server::getClient(int const &id)				{ return (this->clients.find(id)->second); };
 void	Server::createChannel(Channel &channel)			{ this->channels[channel.getName()] = channel; };
 bool	Server::deleteChannel(std::string const &name)	{ return (this->channels.erase(name)); };
 bool	Server::isChannel(std::string const &name)		{ return (this->channels.find(name) != this->channels.end()); };
 Channel	*Server::getChannel(std::string const &name)	{ return (&(this->channels.find(name)->second)); };
+bool	Server::isClient(std::string const &nick) { return (this->getClient(nick) != NULL); };
 Client	*Server::getClient(std::string const &nick)
 {
 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
@@ -191,14 +194,4 @@ Client	*Server::getClient(std::string const &nick)
 			return (it->second);
 	}
 	return (NULL);
-}
-
-bool	Server::isClient(std::string const &nick)
-{
-	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
-	{
-		if (it->second->getNick() == nick)
-			return (true);
-	}
-	return (false);
 }

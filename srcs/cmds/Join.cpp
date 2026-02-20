@@ -17,7 +17,7 @@ static bool checkInvite(Channel *channel)
 {
 	if (!channel->getOpInvite())
 		return (true);
-	if (!channel->isInvited(package.client->getNick()))
+	if (!channel->isInvited(package.client->getFd()))
 		return (package.setError(ERR_INVITEONLYCHAN), false);
 	return (true);
 }

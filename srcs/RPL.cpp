@@ -33,7 +33,7 @@ std::map<std::string, void (*)(Server &)> rpls = initRpls();
 
 static std::string	getRPL(void)									{ return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd)); };
 
-void RPL::Welcome(Client *client, std::string const &nick)
+void RPL::Welcome(Server &server, Client *client, std::string const &nick)
 {
 	std::string msg;
 
@@ -41,7 +41,7 @@ void RPL::Welcome(Client *client, std::string const &nick)
 	client->appendSendBuffer(msg);
 	msg = HEADER_STR("002", nick, "", "") + RPL_YOURHOST_STR + "\r\n";
 	client->appendSendBuffer(msg);
-	msg = HEADER_STR("003", nick, "", "") + RPL_CREATED_STR(Ft::getTime()) + "\r\n";
+	msg = HEADER_STR("003", nick, "", "") + RPL_CREATED_STR(server.getStartTime()) + "\r\n";
 	client->appendSendBuffer(msg);
 	msg = HEADER_STR("004", nick, "", "") + RPL_MYINFO_STR(nick) + "\r\n";
 	client->appendSendBuffer(msg);
