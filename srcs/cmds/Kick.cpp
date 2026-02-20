@@ -49,4 +49,5 @@ void Kick::Kicking(Server &server)
 	Client	*target	=			server.getClient(kickNick);
 
 	package.channel->removeClient(target->getFd());
+	target->delChannel(package.channel->getName());
 }
