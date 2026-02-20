@@ -13,14 +13,14 @@
 # include "Client.hpp"
 # include "Server.hpp"
 
-Client::Client(void): auth(false), pfd(NULL) {};
+Client::Client(void): auth(false), fd(-1) {};
 Client::~Client(void) {};
-Client::Client(struct pollfd *pfd): auth(false), pfd(pfd) {};
+Client::Client(int fd): auth(false), fd(fd) {};
 Client::Client(Client const &copy) { (*this) = copy; };
 
 Client &Client::operator=(Client const &copy)
 {
-	this->pfd = copy.pfd;
+	this->fd = copy.fd;
 	this->nick = copy.nick;
 	this->auth = copy.auth;
 	this->username = copy.username;
@@ -33,7 +33,7 @@ Client &Client::operator=(Client const &copy)
 	return (*this);
 }
 
-const int			&Client::getFd(void)		const			{ return (this->pfd->fd); };
+const int			&Client::getFd(void)		const			{ return (this->fd); };
 const bool			&Client::getAuth(void)		const			{ return (this->auth); };
 const std::string	&Client::getNick(void)		const			{ return (this->nick); };
 const std::string	&Client::getName(void)		const			{ return (this->realname); };
@@ -59,10 +59,8 @@ const std::map<std::string, Channel *> &Client::getChannels(void) const { return
 
 void				Client::sendMsg(void)
 {
-	this->sendBuffer = (!(this->pfd->revents & POLLOUT)
-		|| send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), 0) == -1)
-		? this->sendBuffer
-		: "";
+	if (send(this->getFd(), this->sendBuffer.c_str(), this->sendBuffer.size(), 0) != -1)
+		this->sendBuffer.clear();
 }
 
 void				Client::updateInChannel(std::string const &oldNick)

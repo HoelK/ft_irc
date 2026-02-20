@@ -24,7 +24,7 @@ class Client
 {
     private:
 		bool							auth;
-		struct pollfd					*pfd;
+		int								fd;
         std::string						nick;
 		std::string						username;
         std::string						realname;
@@ -35,7 +35,7 @@ class Client
 
     public:
 		Client(void);
-        Client(struct pollfd *pfd);
+        Client(int fd);
 		Client(Client const &copy);
 		Client &operator=(Client const &copy);
         ~Client(void);

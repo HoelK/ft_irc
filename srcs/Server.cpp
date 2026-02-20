@@ -116,7 +116,7 @@ void	Server::acceptClient(void)
 	pfd.events = POLLIN | POLLOUT;
 	pfd.revents = 0;
 	this->fds.push_back(pfd);
-	this->clients[pfd.fd] = new Client(&(this->fds.back()));
+	this->clients[pfd.fd] = new Client(pfd.fd);
 }
 
 void	Server::authenticate(Client &client)
