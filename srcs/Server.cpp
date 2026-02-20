@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:25:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 00:25:52 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/20 02:58:23 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,13 +110,14 @@ void	Server::acceptClient(void)
 	if (this->clients.size() >= FD_MAX)
 		return ;
 	fd = accept(this->fd, (sockaddr *) NULL, NULL);
-	fcntl(fd, F_SETFL, O_NONBLOCK);
+	if (fd == -1 || fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
+		return ;
 
 	pfd.fd = fd;
 	pfd.events = POLLIN | POLLOUT;
 	pfd.revents = 0;
 	this->fds.push_back(pfd);
-	this->clients[pfd.fd] = new Client(&(this->fds.back()));
+	this->clients[pfd.fd] = new Client(this->fds.back().fd);
 }
 
 void	Server::authenticate(Client &client)

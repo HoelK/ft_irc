@@ -6,14 +6,13 @@
 /*   By: sbonneau <sbonneau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 03:30:32 by sbonneau          #+#    #+#             */
-/*   Updated: 2026/02/18 01:37:28 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 02:41:17 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include <map>
-# include "poll.h"
 # include <iostream>
 # define MAX_BUFFER_SIZE 8192
 
@@ -24,7 +23,7 @@ class Client
 {
     private:
 		bool							auth;
-		struct pollfd					*pfd;
+		int								fd;
         std::string						nick;
 		std::string						username;
         std::string						realname;
@@ -35,7 +34,7 @@ class Client
 
     public:
 		Client(void);
-        Client(struct pollfd *pfd);
+        Client(int fd);
 		Client(Client const &copy);
 		Client &operator=(Client const &copy);
         ~Client(void);

@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 01:00:47 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/20 02:47:13 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void RPL::Priv(Server &server)
     std::string messageContent = package.cmdData[PRIV_MSG];
     std::string recipient = package.cmdData[PRIV_TARGET];
     
-    std::string formattedMessage = getRPL() + RPL_PRIV(messageContent) + "\r\n";
+	std::string formattedMessage = getRPL() + recipient + RPL_PRIV(messageContent) + "\r\n";
     
     bool isChannelMessage = (recipient[0] == '#');
     
@@ -121,6 +121,7 @@ void RPL::Priv(Server &server)
         Client *receiver = server.getClient(recipient);
 		receiver->appendSendBuffer(formattedMessage);
     }
+	std::cout << "[RPL] " << formattedMessage;
     
     if (shouldTriggerFeurBot(messageContent))
         sendFeurBotResponse();
