@@ -111,6 +111,8 @@ void	Server::acceptClient(void)
 		return ;
 	fd = accept(this->fd, (sockaddr *) NULL, NULL);
 	fcntl(fd, F_SETFL, O_NONBLOCK);
+	int flag = 1;
+	setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
 
 	pfd.fd = fd;
 	pfd.events = POLLIN | POLLOUT;
