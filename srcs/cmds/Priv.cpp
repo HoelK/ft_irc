@@ -51,8 +51,7 @@ bool Priv::Check(Server &server)
 void Priv::Send(Server &server)
 {
 	std::string target =	package.cmdData[PRIV_TARGET];
-	Channel	*channel =		server.getChannel(target);
 
-	if (target[0] == '#' && channel)
-		package.channel = channel;
+	if (target[0] == '#' && server.isChannel(target))
+		package.channel = server.getChannel(target);
 }

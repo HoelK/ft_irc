@@ -110,7 +110,7 @@ void RPL::Priv(Server &server)
     std::string messageContent = package.cmdData[PRIV_MSG];
     std::string recipient = package.cmdData[PRIV_TARGET];
     
-    std::string formattedMessage = getRPL() + RPL_PRIV(messageContent) + "\r\n";
+    std::string formattedMessage = getRPL() + recipient + RPL_PRIV(messageContent) + "\r\n";
     
     bool isChannelMessage = (recipient[0] == '#');
     
