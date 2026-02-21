@@ -147,7 +147,7 @@ void	RPL::Join(Server &server)
 	msg = RPL_STR(clientNick, package.client->getUser(), package.cmd) + RPL_JOIN(channelJoin) + "\r\n";
 	package.client->appendSendBuffer(msg);
 	package.channel->broadcastMessage(package.client, msg);
-	msg = (channelJoin.empty())
+	msg = (package.channel->getTopic().empty())
 		? HEADER_STR("332", clientNick, " ", channelJoin) + RPL_NOTOPIC
 		: HEADER_STR("332", clientNick, " ", channelJoin) + RPL_TOPIC(package.channel->getTopic());
 	msg = msg + "\r\n";
