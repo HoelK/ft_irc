@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:27:59 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 00:25:23 by dedavid          ###   ########.fr       */
+/*   Updated: 2026/02/22 23:50:45 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static std::map<std::string, void (*)(Server &)> initCmds()
 {
     std::map<std::string, void (*)(Server &)> m;
 
+	m[CMD_PING] = &CMD::Ping;
 	m[CMD_NICK] = &CMD::Nick;
 	m[CMD_USER] = &CMD::User;
 	m[CMD_PASS] = &CMD::Pass;
@@ -42,6 +43,16 @@ void	CMD::apply(Server &server)
 	if (it == cmds.end())
 		return (package.setError(ERR_UNKNOWNCOMMAND));
 	it->second(server);
+}
+
+void	CMD::Ping(Server &server)
+{
+	(void) server;
+
+	if (package.cmdData.size() < 1)
+		return (package.setError(ERR_NEEDMOREPARAMS));
+	
+	return ;
 }
 
 void	CMD::Pass(Server &server)

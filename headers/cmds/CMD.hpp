@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:28:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/17 23:17:22 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/22 23:50:03 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 
+# define CMD_PING	"PING"
 # define CMD_PASS	"PASS"
 # define CMD_NICK	"NICK"
 # define CMD_USER	"USER"
@@ -39,6 +40,7 @@
 
 enum	cmdDataIds
 {
+	PING_TOKEN		= 0,
 	NICK_NICK		= 0,
 	PASS_PASS		= 0,
 	USER_USERNAME	= 0,
@@ -65,6 +67,7 @@ class CMD
 {
 	public:
 		static void	apply(Server &server);
+		static void Ping(Server &server);
 		static void	Nick(Server &server);
 		static void	User(Server &server);
 		static void	Pass(Server &server);

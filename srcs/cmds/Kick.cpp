@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/17 20:42:58 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/18 02:08:17 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/23 00:08:35 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,7 @@ void Kick::Kicking(Server &server)
 	Client	*target	=			server.getClient(kickNick);
 
 	package.channel->removeClient(target->getFd());
+	package.channel->removeOperator(target->getFd());
+	package.channel->removeInvited(target->getFd());
 	target->delChannel(package.channel->getName());
 }

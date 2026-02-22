@@ -6,7 +6,7 @@
 /*   By: dedavid <dedavid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 16:29:20 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 05:31:15 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/22 23:57:40 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static std::map<std::string, void (*)(Server &)> initRpls()
 {
     std::map<std::string, void (*)(Server &)> m;
 
+	m[CMD_PING] = &RPL::Ping;
 	m[CMD_QUIT] = &RPL::Quit;
 	m[CMD_NICK] = &RPL::Nick;
 	m[CMD_JOIN] = &RPL::Join;
@@ -53,6 +54,16 @@ void RPL::Welcome(Server &server, Client *client, std::string const &nick)
 	client->appendSendBuffer(msg);
 	msg = HEADER_STR("004", nick, "", "") + RPL_MYINFO_STR(nick) + "\r\n";
 	client->appendSendBuffer(msg);
+}
+
+void RPL::Ping(Server &server)
+{
+	(void) server;
+	std::string msg;
+
+	msg = RPL_PING "\r\n";
+	std::cout << "[RPL] " << msg;
+	package.client->appendSendBuffer(msg);
 }
 
 void RPL::Quit(Server &server)

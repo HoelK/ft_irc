@@ -6,7 +6,7 @@
 /*   By: hkeromne <student@42lehavre.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 20:28:57 by hkeromne          #+#    #+#             */
-/*   Updated: 2026/02/20 05:30:53 by hkeromne         ###   ########.fr       */
+/*   Updated: 2026/02/22 23:57:06 by hkeromne         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 //Numeric replies
 # define RPL_STR(nick, user, cmd)					":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " "
 
+# define RPL_PING									"PONG " SERVER_NAME
 # define RPL_NICK(nick)								nick
 # define RPL_JOIN(channel)							":" + std::string(channel)
 # define RPL_QUIT(message)							std::string(message)
@@ -57,6 +58,7 @@ class RPL
 	public:
 		static void	reply(Server &server);
 		static void Welcome(Server &server, Client *client, std::string const &nick);
+		static void Ping(Server &server);
 		static void	Nick(Server &server);
 		static void	Topic(Server &server);
 		static void	Join(Server &server);
