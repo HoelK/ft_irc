@@ -41,14 +41,14 @@
 //Numeric replies
 # define RPL_STR(nick, user, cmd)					":" + std::string(nick) + "!" + std::string(user) + "@" SERVER_NAME " " + std::string(cmd) + " "
 
-# define RPL_TOP(channel, topic)					std::string(channel) + " :" + std::string(topic)
 # define RPL_NICK(nick)								nick
-# define RPL_PRIV(msg)								" :" + std::string(msg)
-# define RPL_KICK(user, data)						" " + std::string(user) + " :" + std::string(data)
-# define RPL_JOIN(channel)							" :" + std::string(channel)
+# define RPL_JOIN(channel)							":" + std::string(channel)
+# define RPL_QUIT(message)							std::string(message)
+# define RPL_TOP(channel, topic)					std::string(channel) + " :" + std::string(topic)
+# define RPL_PRIV(target, msg)						std::string(target) + " :" + std::string(msg)
+# define RPL_KICK(channel, user, data)				std::string(channel) + " " + std::string(user) + " :" + std::string(data)
 # define RPL_INVITE(nick, channel)					std::string(nick) + " :" + std::string(channel)
 # define RPL_MODE(channel, modes)					std::string(channel) + " " + std::string(modes)
-# define RPL_QUIT(message)							" " + std::string(message)
 
 class Server;
 

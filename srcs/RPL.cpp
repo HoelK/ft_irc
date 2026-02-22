@@ -97,19 +97,18 @@ static bool shouldTriggerFeurBot(const std::string &message)
     return (lastFourChars == "quoi");
 }
 
-static void sendFeurBotResponse(Server &server, std::string const &recipient)
+static void sendFeurBotResponse(Server &server, std::string const &target)
 {
     std::string botMessage = RPL_STR("Feur-bot", "Feur-bot", package.cmd)
-		+ recipient
-		+ RPL_PRIV("feur")
+		+ RPL_PRIV(target, "feur")
 		+ "\r\n";
     
 	std::cout << "[RPL] " << botMessage;
-	if (recipient[0] == '#')
+	if (target[0] == '#')
 		package.channel->broadcastMessage(package.client, botMessage);
 	else
     {
-        Client *receiver = server.getClient(recipient);
+        Client *receiver = server.getClient(target);
 		receiver->appendSendBuffer(botMessage);
     }
 	package.client->appendSendBuffer(botMessage);
@@ -117,22 +116,22 @@ static void sendFeurBotResponse(Server &server, std::string const &recipient)
 
 void RPL::Priv(Server &server)
 {
+    std::string target = package.cmdData[PRIV_TARGET];
     std::string messageContent = package.cmdData[PRIV_MSG];
-    std::string recipient = package.cmdData[PRIV_TARGET];
     
-	std::string formattedMessage = getRPL() + recipient + RPL_PRIV(messageContent) + "\r\n";
+	std::string msg = getRPL() + RPL_PRIV(target, messageContent) + "\r\n";
     
-    if (recipient[0] == '#')
-        package.channel->broadcastMessage(package.client, formattedMessage);
+    if (target[0] == '#')
+        package.channel->broadcastMessage(package.client, msg);
     else
     {
-        Client *receiver = server.getClient(recipient);
-		receiver->appendSendBuffer(formattedMessage);
+        Client *receiver = server.getClient(target);
+		receiver->appendSendBuffer(msg);
     }
-	std::cout << "[RPL] " << formattedMessage;
+	std::cout << "[RPL] " << msg;
     
     if (shouldTriggerFeurBot(messageContent))
-        sendFeurBotResponse(server, recipient);
+        sendFeurBotResponse(server, target);
 }
 
 void	RPL::Kick(Server &server)
@@ -141,7 +140,8 @@ void	RPL::Kick(Server &server)
 		return ;
 	Client		*client =	server.getClient(package.cmdData[KICK_USER]);
 	std::string	msg =		getRPL()
-	+ RPL_KICK(package.cmdData[KICK_USER], package.cmdData[KICK_MSG]) + "\r\n";
+		+ RPL_KICK(package.cmdData[KICK_CHANNEL], package.cmdData[KICK_USER], package.cmdData[KICK_MSG])
+		+ "\r\n";
 
 	std::cout << "[RPL] " << msg;
 	client->appendSendBuffer(msg);
