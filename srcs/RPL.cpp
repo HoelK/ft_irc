@@ -31,7 +31,14 @@ static std::map<std::string, void (*)(Server &)> initRpls()
 
 std::map<std::string, void (*)(Server &)> rpls = initRpls();
 
-static std::string	getRPL(void)									{ return (RPL_STR(package.oldClient.getNick(), package.client->getUser(), package.cmd)); };
+static std::string	getRPL(void)
+{
+	std::string nick = package.oldClient.getNick();
+	std::string user = package.client->getUser();
+	std::string cmd = package.cmd;
+
+	return (RPL_STR(nick, user, cmd));
+}
 
 void RPL::Welcome(Server &server, Client *client, std::string const &nick)
 {
@@ -157,7 +164,7 @@ void	RPL::Join(Server &server)
 	std::string clientNick = package.client->getNick();
 	std::string channelJoin = package.cmdData[JOIN_CHANNEL];
 
-	msg = RPL_STR(clientNick, package.client->getUser(), package.cmd)
+	msg = getRPL()
 		+ RPL_JOIN(channelJoin)
 		+ "\r\n";
 	std::cout << "[RPL] " << msg;
@@ -203,7 +210,7 @@ void	RPL::Topic(Server &server)
 	}
 	else
 	{
-		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd)
+		msg = getRPL()
 			+ RPL_TOP(package.cmdData[TOPIC_CHANNEL], package.cmdData[TOPIC_NEW])
 			+ "\r\n";
 	}
@@ -218,7 +225,7 @@ void	RPL::Invite(Server &server)
 	(void) server;
 	std::string msg;
 
-	msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd)
+	msg = getRPL()
 		+ RPL_INVITE(package.cmdData[INVITE_NICK], package.channel->getName())
 		+ "\r\n";
 	std::cout << "[RPL] " << msg;
@@ -244,7 +251,7 @@ void	RPL::Mode(Server &server)
 			+ package.channel->getModes()
 			+ "\r\n";
 	else
-		msg = RPL_STR(package.client->getNick(), package.client->getUser(), package.cmd)
+		msg = getRPL()
 			+ RPL_MODE(package.channel->getName(), package.cmdData[MODE_MODES])
 			+ "\r\n";
 	std::cout << "[RPL] " << msg;
