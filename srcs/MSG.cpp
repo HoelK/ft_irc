@@ -43,7 +43,8 @@ static std::vector<std::string>	getCmdData(std::string const &line)
 			if (token[token.size() - 1] == '\r')
 				token.erase(token.size() - 1);
 		}
-		data.push_back(token);
+		if (!token.empty())
+			data.push_back(token);
 	}
 	return (data);
 }

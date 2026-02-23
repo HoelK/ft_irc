@@ -75,6 +75,8 @@ class Server
 		bool	isChannel(std::string const &name);
 		bool	isClient(std::string const &nick);
 
+		bool	passCheck(std::string const &pass);
+
 		std::string	const &getStartTime(void) const;
 
 		~Server(void);

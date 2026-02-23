@@ -121,6 +121,8 @@ void	Server::acceptClient(void)
 	this->clients[pfd.fd] = new Client(this->fds.back().fd);
 }
 
+bool	Server::passCheck(std::string const &pass) { return (this->password == pass); };
+
 void	Server::authenticate(Client &client)
 {
 	std::string line;
@@ -138,7 +140,25 @@ void	Server::authenticate(Client &client)
 		std::cout << "[AUTH][CMD] " << line;
 		MSG::sendData(&client, line);
 
-		if (client.getPass().empty() && package.cmd != "PASS")
+		if (!client.getPass().empty())
+		{
+			if (!this->passCheck(client.getPass()))
+			{
+				package.setError(ERR_PASSWDMISMATCH);
+				RPL::reply(*this);
+				return (this->disconnectClient(client.getFd()));
+			}
+			if ((client.getNick().empty()
+				|| client.getUser().empty()
+				|| client.getName().empty())
+				&& (package.cmd != "NICK" && package.cmd != "USER"))
+			{
+				package.setError(ERR_NOTREGISTERED);
+				RPL::reply(*this);
+				continue ;
+			}
+		}
+		else if (package.cmd != "PASS")
 		{
 			package.setError(ERR_NOTREGISTERED);
 			RPL::reply(*this);
@@ -146,15 +166,10 @@ void	Server::authenticate(Client &client)
 		}
 
 		CMD::apply(*this);
-		if (package.error)
-			RPL::reply(*this);
+		RPL::reply(*this);
 	}
 	if (!client.isAuth(this->password))
 		return ;
-	if (client.getPass().empty() || client.getPass() != this->password)
-		return (package.setError(ERR_PASSWDMISMATCH),
-				RPL::reply(*this),
-				this->disconnectClient(client.getFd()));
 
 	RPL::Welcome((*this), &client, client.getNick());
 	client.setAuth(true);
@@ -179,14 +194,16 @@ void	Server::disconnectClient(const int &fd)
 	delete (client);
 }
 
-std::string const &Server::getStartTime(void) const		{ return (this->startTime); };
-Client	*Server::getClient(int const &id)				{ return (this->clients.find(id)->second); };
-void	Server::createChannel(Channel &channel)			{ this->channels[channel.getName()] = channel; };
-bool	Server::deleteChannel(std::string const &name)	{ return (this->channels.erase(name)); };
-bool	Server::isChannel(std::string const &name)		{ return (this->channels.find(name) != this->channels.end()); };
-Channel	*Server::getChannel(std::string const &name)	{ return (&(this->channels.find(name)->second)); };
-bool	Server::isClient(std::string const &nick) { return (this->getClient(nick) != NULL); };
-Client	*Server::getClient(std::string const &nick)
+std::string const	&Server::getStartTime(void) const				{ return (this->startTime); };
+
+Channel				*Server::getChannel(std::string const &name)	{ return (&(this->channels.find(name)->second)); };
+void				Server::createChannel(Channel &channel)			{ this->channels[channel.getName()] = channel; };
+bool				Server::deleteChannel(std::string const &name)	{ return (this->channels.erase(name)); };
+bool				Server::isChannel(std::string const &name)		{ return (this->channels.find(name) != this->channels.end()); };
+
+bool				Server::isClient(std::string const &nick)		{ return (this->getClient(nick) != NULL); };
+Client				*Server::getClient(int const &id)				{ return (this->clients.find(id)->second); };
+Client				*Server::getClient(std::string const &nick)
 {
 	for (std::map<int, Client *>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
