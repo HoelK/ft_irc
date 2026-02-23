@@ -1,5 +1,7 @@
 CC=c++
 FLAGS=-Werror -Wall -Wextra -std=c++98 -g3
+SRC_DIR	:= srcs
+OBJ_DIR := obj
 SRCS=srcs/main.cpp \
 	 srcs/Server.cpp \
 	 srcs/Client.cpp \
@@ -18,7 +20,7 @@ SRCS=srcs/main.cpp \
 	 srcs/cmds/Nick.cpp \
 	 srcs/cmds/User.cpp \
 	 srcs/Errors.cpp
-OBJS=$(SRCS:.cpp=.o)
+OBJS=$(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 NAME=ircserv
 
 .PHONY: all start $(NAME)
@@ -33,7 +35,8 @@ $(NAME): $(OBJS)
 	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
 	@printf "\e[1;32m [FT_IRC] Build Complete !\n\033[0m"
 
-%.o: %.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
 	@printf "\e[1;32m [FT_IRC] Compiling $^\n\033[0m"
 	@$(CC) $(FLAGS) $^ -c -o $@ -I./headers/ -I./headers/cmds/
 
@@ -43,6 +46,6 @@ fclean: clean
 
 clean:
 	@printf "\e[1;31m [DELETING RESIDUAL FILES]\n\033[0m"
-	@rm -f $(OBJS)
+	@rm -rf $(OBJ_DIR)
 
 re: fclean all
