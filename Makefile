@@ -19,7 +19,7 @@ SRCS=srcs/main.cpp \
 	 srcs/cmds/User.cpp \
 	 srcs/Errors.cpp
 OBJS=$(SRCS:.cpp=.o)
-NAME=ft_irc
+NAME=ircserv
 
 .PHONY: all start $(NAME)
 
